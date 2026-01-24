@@ -53,7 +53,7 @@ template< class T >
 T *_CreateEntityTemplate( T *newEnt, const char *className )
 {
 	MEM_ALLOC_CREDIT_("Entities");
-//	newEnt = new T; // this is the only place 'new' should be used!
+	newEnt = new T; // this is the only place 'new' should be used!
 	newEnt->PostConstructor( className );
 	return newEnt;
 }
