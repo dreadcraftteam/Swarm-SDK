@@ -977,6 +977,24 @@ void CSDKPlayer::InitProne( void )
 }
 #endif // SDK_USE_PRONE
 
+#if defined ( SDK_USE_SPRINTING )
+void CSDKPlayer::InitSprinting(void)
+{
+	m_Shared.SetSprinting(false);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Returns whether or not we are allowed to sprint now.
+//-----------------------------------------------------------------------------
+bool CSDKPlayer::CanSprint()
+{
+	return (
+		//!IsWalking() &&									// Not if we're walking
+		!(m_Local.m_bDucked && !m_Local.m_bDucking) &&	// Nor if we're ducking
+		(GetWaterLevel() != 3));							// Certainly not underwater
+}
+#endif // SDK_USE_SPRINTING
+
 //------------------------------------------------------------------------------------------------
 // Player state management.
 //------------------------------------------------------------------------------------------------
