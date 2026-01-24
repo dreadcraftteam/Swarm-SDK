@@ -1,0 +1,29 @@
+//-------------------------------------------------------------------------
+//
+// Swarms SDK Template FGD
+//
+//-------------------------------------------------------------------------
+
+@include "base.fgd"
+
+//-------------------------------------------------------------------------
+//
+// Point Classes
+//
+//-------------------------------------------------------------------------
+@PointClass base(Angles,Targetname,EnableDisable) studio("models/editor/playerstart.mdl") = info_player_deathmatch :
+	"This entity marks the start point for players in deathmatch."
+[
+]
+
+//-------------------------------------------------------------------------
+//
+// Solid Classes
+//
+//-------------------------------------------------------------------------
+@SolidClass = func_ladder : 
+	"Ladder. Players will be able to freely along this brush, as if it was a ladder. If you are using a model prop " +
+	"for the visual representation of the ladder in the map, apply the toolsinvisibleladder material to the " +
+	"func_ladder brush."
+[
+]

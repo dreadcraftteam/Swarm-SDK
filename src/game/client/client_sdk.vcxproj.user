@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LocalDebuggerCommand>D:\Windows\Steam\steamapps\common\Alien Swarm\swarm.exe</LocalDebuggerCommand>
+    <LocalDebuggerCommandArguments>-game "C:\Users\DREADCRAFT\Desktop\Swarm-SDK\game\mod_sdk" -override_vpk -windowed -w 1024 -h 768</LocalDebuggerCommandArguments>
+    <LocalDebuggerWorkingDirectory>D:\Windows\Steam\steamapps\common\Alien Swarm\</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+</Project>

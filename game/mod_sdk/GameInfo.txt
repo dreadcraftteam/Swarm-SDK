@@ -1,0 +1,37 @@
+"GameInfo"
+{
+	"game"				"Swarm SDK"
+	"title"				"Alien Swarm SDK"	
+
+	"type"				"multiplayer_only"
+
+	"icon"				"resource/game"
+
+	GameData			"swarmsdk.fgd"
+	InstancePath			"tilegen/instances/"
+	
+	SupportsDX8			1
+	nomodels			1
+	nohimodel 			1
+	nocrosshair 		1
+
+	"hidden_maps"
+	{
+		"test_speakers"		"1"
+		"test_hardware"		"1"
+	}
+
+	"FileSystem"
+	{
+		"SteamAppId"      "630" 
+		"ToolsAppId"      "211"
+
+		"SearchPaths"
+		{
+			"Game"          "|gameinfo_path|."
+			"Game"          "swarm"
+			"Game"          "swarm_base"
+			"Game"          "platform"
+		}
+	}
+}
