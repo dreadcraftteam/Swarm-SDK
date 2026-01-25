@@ -71,6 +71,7 @@ _master.cache
 textwindow_temp.html
 game/mod_sdk/downloads
 game/mod_sdk/materials/temp
+game/mod_sdk/cfg/config.cfg
 
 # shader files
 *.tmp
