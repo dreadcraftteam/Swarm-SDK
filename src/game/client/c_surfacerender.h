@@ -23,6 +23,7 @@
 
 #ifdef SDK_USE_BLOBULATOR
 
+void Surface_DrawSpheres(IMaterial* pMaterial, float flRadius);
 void Surface_Draw( IClientRenderable *pClientRenderable, const Vector &vecRenderOrigin, IMaterial *pMaterial, float flCubeWidth, bool bSurfaceNoParticleCull = false );
 void Surface_SafeLightCubeUpdate( const Vector &vecRenderOrigin, Vector4D *cachedCubeColours );
 

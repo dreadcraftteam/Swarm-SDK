@@ -35,11 +35,11 @@ ConVar r_surface_blr_cubewidth( "r_surface_blr_cubewidth", "0.8", FCVAR_NONE, "S
 ConVar r_surface_blr_render_radius( "r_surface_blr_render_radius", "1.3", FCVAR_NONE, "Set render radius (how far from particle center surface will be)" );
 ConVar r_surface_blr_cutoff_radius( "r_surface_blr_cutoff_radius", "3.3", FCVAR_NONE, "Set cutoff radius (how far field extends from each particle)" );
 
-ConVar r_surface_calc_uv_and_tan( "r_surface_calc_uv_and_tan", "1", FCVAR_ARCHIVE, "Calculate UVs and Tangents" );
-ConVar r_surface_calc_tan_only( "r_surface_calc_tan_only", "0", FCVAR_ARCHIVE, "Calculate Only Tangents" );
-ConVar r_surface_calc_color( "r_surface_calc_color", "0", FCVAR_ARCHIVE, "Just interpolate colors" );
-ConVar r_surface_calc_hifreq_color( "r_surface_calc_hifreq_color", "0", FCVAR_ARCHIVE, "Experimental hi-freq colors" );
-ConVar r_surface_calc_tile_color( "r_surface_calc_tile_color", "0", FCVAR_ARCHIVE, "Shows color of the tile" );
+ConVar r_surface_calc_uv_and_tan( "r_surface_calc_uv_and_tan", "1", FCVAR_NONE, "Calculate UVs and Tangents" );
+ConVar r_surface_calc_tan_only( "r_surface_calc_tan_only", "0", FCVAR_NONE, "Calculate Only Tangents" );
+ConVar r_surface_calc_color( "r_surface_calc_color", "0", FCVAR_NONE, "Just interpolate colors" );
+ConVar r_surface_calc_hifreq_color( "r_surface_calc_hifreq_color", "0", FCVAR_NONE, "Experimental hi-freq colors" );
+ConVar r_surface_calc_tile_color( "r_surface_calc_tile_color", "0", FCVAR_NONE, "Shows color of the tile" );
 
 ConVar r_surface_debug_use_tiler("r_surface_debug_use_tiler", "1", FCVAR_NONE, "Use the tiler");
 ConVar r_surface_debug_max_tiles( "r_surface_debug_max_tiles", "-1", FCVAR_NONE, "The maximum number of tiles to draw" );
