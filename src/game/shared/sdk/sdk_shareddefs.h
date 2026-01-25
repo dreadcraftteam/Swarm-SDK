@@ -68,6 +68,15 @@ typedef enum
 const char *WeaponIDToAlias( int id );
 int AliasToWeaponID( const char *alias );
 
+#if defined ( SDK_USE_PRONE )
+
+#define TIME_TO_PRONE	1.2f
+#define VEC_PRONE_HULL_MIN	SDKGameRules()->GetSDKViewVectors()->m_vProneHullMin
+#define VEC_PRONE_HULL_MAX	SDKGameRules()->GetSDKViewVectors()->m_vProneHullMax
+#define VEC_PRONE_VIEW SDKGameRules()->GetSDKViewVectors()->m_vProneView
+
+#endif // SDK_USE_PRONE
+
 // The various states the player can be in during the join game process.
 enum SDKPlayerState
 {

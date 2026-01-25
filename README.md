@@ -12,9 +12,13 @@ This project was created to simplify the creation of your own games on the Sourc
 5. Well done
 
 ## Features
+- Added headers for blobulator technology (by [theKlaxon](https://github.com/theKlaxon/Blobulator-ASW.git))
+- Updated surface render code for blobulator
+- Fixed building with SDK_USE_PRONE
 - Removed teams
-- Removed MOTD, Team menu, Class menu
-- Removed classes
-- Player spawn fixes
-- Some game fixes
-- Cleanup code 
+- Removed class system
+- Removed MOTD
+- Removed Team Menu
+- Removed Class Menu
+- Fixed player spawn
+- Also game fixes and code cleanup
