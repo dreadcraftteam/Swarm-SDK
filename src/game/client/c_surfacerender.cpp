@@ -1,10 +1,10 @@
-//=============================================================================//
+//========= Copyright Valve Corporation, All rights reserved. ============//
 //
-// Blobulator surface rendering
-//
-// By VALVe and heavily modified by DREADCRAFT
+// Purpose: Blobulator surface rendering
 // 
-//=============================================================================//
+// By VALVe and heavily modified by DREADCRAFT
+//
+//========================================================================//
 
 #include "cbase.h"
 
