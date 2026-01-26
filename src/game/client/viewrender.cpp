@@ -3983,7 +3983,6 @@ static inline bool BlurTest( IClientRenderable *pRenderable, int drawFlags, bool
 	return false;
 }
 
-
 //-----------------------------------------------------------------------------
 // Unified bit of draw code for opaque and translucent renderables
 //-----------------------------------------------------------------------------

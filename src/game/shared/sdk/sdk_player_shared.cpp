@@ -158,6 +158,19 @@ void CSDKPlayer::FireBullet(
 		// add damage to entity that we hit
 
 #ifdef GAME_DLL
+#ifdef MT_DLL
+		CTakeDamageInfo info(pevAttacker, pevAttacker, fCurrentDamage, iDamageType);
+
+		info.SetDamagePosition(tr.endpos);
+
+		// force
+		Vector vecForce = vecDir * fCurrentDamage * 200.0f;
+		info.SetDamageForce(vecForce);
+
+		info.SetDamageType(info.GetDamageType() & ~DMG_PREVENT_PHYSICS_FORCE);
+
+		tr.m_pEnt->TakeDamage(info);
+#else
 		ClearMultiDamage();
 
 		CTakeDamageInfo info( pevAttacker, pevAttacker, fCurrentDamage, iDamageType );
@@ -167,6 +180,7 @@ void CSDKPlayer::FireBullet(
 		TraceAttackToTriggers( info, tr.startpos, tr.endpos, vecDir );
 
 		ApplyMultiDamage();
+#endif
 #endif
 }
 
