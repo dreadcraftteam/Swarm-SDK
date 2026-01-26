@@ -19,7 +19,10 @@
 #include "sdk_player.h"
 #include "sdk_gamerules.h"
 #include "tier0/vprof.h"
-#include "sdk_bot_temp.h"
+
+#ifdef USE_SDK_BOTS
+#include "sdk/sdk_bot_temp.h"
+#endif // USE_SDK_BOTS
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -137,8 +140,10 @@ void GameStartFrame( void )
 
 	gpGlobals->teamplay = false;
 	
+#ifdef USE_SDK_BOTS
 	extern void Bot_RunAll();
 	Bot_RunAll();
+#endif // USE_SDK_BOTS
 }
 
 //=========================================================

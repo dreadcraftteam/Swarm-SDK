@@ -3986,8 +3986,12 @@ const char *CNavMesh::GetPlayerSpawnName( void ) const
 	if (m_spawnName)
 		return m_spawnName;
 
+#if defined( TF_DLL )
+	return "info_player_teamspawn";
+#else
 	// default value
 	return "info_player_start";
+#endif
 }
 
 //--------------------------------------------------------------------------------------------------------------

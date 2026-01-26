@@ -20,6 +20,7 @@ $Include "$SRCDIR\game\server\nav_mesh.vpc"
 // SDK_SHOOT_WHILE_SPRINTING - If you're allowing sprinting, do you want to be able to shoot while sprinting?
 // SDK_SHOOT_ON_LADDERS - Do you want your players to be able to shoot while climing ladders?
 // SDK_USE_BLOBULATOR - Enable blobulator code
+// USE_SDK_BOTS - Enable PerfBots code (also add perfbots code to this project!!!)
 //
 
 $Configuration
@@ -27,7 +28,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;.\sdk,$SRCDIR\game\shared\sdk,$SRCDIR\game\shared\Multiplayer"
-		$PreprocessorDefinitions		"$BASE;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;SDK_USE_BLOBULATOR"
+		$PreprocessorDefinitions		"$BASE;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;SDK_USE_BLOBULATOR;NEXT_BOT"
 	}
 }
 
@@ -73,6 +74,73 @@ $Project "Server (SDK)"
 		$File	"$SRCDIR\game\shared\playerclass_info_parse.cpp"
 		$File	"$SRCDIR\game\shared\playerclass_info_parse.h"
 		
+		$Folder "NextBot"
+		{
+			$File	"NextBot\NextBot.cpp"
+			$File	"NextBot\NextBot.h"
+			$File	"NextBot\NextBotBehavior.h"
+			$File	"NextBot\NextBotManager.cpp"
+			$File	"NextBot\NextBotManager.h"
+			$File	"NextBot\NextBotUtil.h"
+			$File	"NextBot\NextBotKnownEntity.h"
+			$File	"NextBot\NextBotGroundLocomotion.cpp"
+			$File	"NextBot\NextBotGroundLocomotion.h"
+			$File	"NextBot\simple_bot.cpp"
+			$File	"NextBot\simple_bot.h"
+				
+			$Folder "NextBotInterfaces"
+			{
+				$File	"NextBot\NextBotBodyInterface.cpp"
+				$File	"NextBot\NextBotBodyInterface.h"
+				$File	"NextBot\NextBotComponentInterface.cpp"
+				$File	"NextBot\NextBotComponentInterface.h"
+				$File	"NextBot\NextBotEventResponderInterface.h"
+				$File	"NextBot\NextBotHearingInterface.h"
+				$File	"NextBot\NextBotIntentionInterface.cpp"
+				$File	"NextBot\NextBotIntentionInterface.h"
+				$File	"NextBot\NextBotInterface.cpp"
+				$File	"NextBot\NextBotInterface.h"
+				$File	"NextBot\NextBotLocomotionInterface.cpp"
+				$File	"NextBot\NextBotLocomotionInterface.h"
+				$File	"NextBot\NextBotVisionInterface.cpp"
+				$File	"NextBot\NextBotVisionInterface.h"
+				$File	"NextBot\NextBotContextualQueryInterface.h"
+			}
+
+			$Folder "NextBotPath"
+			{
+				$File	"NextBot\Path\NextBotChasePath.cpp"
+				$File	"NextBot\Path\NextBotChasePath.h"
+				$File	"NextBot\Path\NextBotRetreatPath.h"
+				$File	"NextBot\Path\NextBotPath.cpp"
+				$File	"NextBot\Path\NextBotPath.h"
+				$File	"NextBot\Path\NextBotPathFollow.cpp"
+				$File	"NextBot\Path\NextBotPathFollow.h"
+			}
+				
+			$Folder "NextBotPlayer"
+			{
+				$File	"NextBot\Player\NextBotPlayerBody.cpp"
+				$File	"NextBot\Player\NextBotPlayerBody.h"
+				$File	"NextBot\Player\NextBotPlayerLocomotion.cpp"
+				$File	"NextBot\Player\NextBotPlayerLocomotion.h"
+				$File	"NextBot\Player\NextBotPlayer.cpp"
+				$File	"NextBot\Player\NextBotPlayer.h"
+			}
+
+			$Folder "NextBotCommonBehaviors"
+			{
+				$File	"NextBot\Behavior\BehaviorBackUp.h"
+				$File	"NextBot\Behavior\BehaviorMoveTo.h"
+			}
+
+			$Folder "NextBotNavMeshEntities"
+			{
+				$File	"NextBot\NavMeshEntities\func_nav_prerequisite.cpp"
+				$File	"NextBot\NavMeshEntities\func_nav_prerequisite.h"
+			}
+		}
+		
 		$Folder	"SDK"
 		{
 			$File	"sdk\sdk_brushentity.cpp"
@@ -92,13 +160,7 @@ $Project "Server (SDK)"
 			$File	"sdk\te_firebullets.h"
 			$File	"$SRCDIR\game\shared\sdk\sdk_player_shared.cpp"
 			$File	"$SRCDIR\game\shared\sdk\sdk_playerclass_info_parse.cpp"
-			$File	"$SRCDIR\game\shared\sdk\sdk_playerclass_info_parse.h"	
-
-			$Folder	"PerfBots"
-			{
-				$File	"sdk\sdk_bot_temp.cpp"
-				$File	"sdk\sdk_bot_temp.h"
-			}
+			$File	"$SRCDIR\game\shared\sdk\sdk_playerclass_info_parse.h"
 
 			$Folder	"Player"
 			{

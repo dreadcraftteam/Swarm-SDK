@@ -26,7 +26,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories		"$BASE;.\sdk;.\sdk\vgui;.\sdk\hud;$SRCDIR\game\shared\sdk;$SRCDIR\game\shared\Multiplayer"
-		$PreprocessorDefinitions		"$BASE;USE_DETAIL_SHAPES;ENABLE_HTMLWINDOW;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;SDK_USE_BLOBULATOR"
+		$PreprocessorDefinitions		"$BASE;USE_DETAIL_SHAPES;ENABLE_HTMLWINDOW;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;SDK_USE_BLOBULATOR;NEXT_BOT"
 	}
 }
 
@@ -55,6 +55,12 @@ $Project "Client (SDK)"
 		$File	"hud_basedeathnotice.h"
 		$File	"$SRCDIR\game\shared\playerclass_info_parse.cpp"
 		$File	"$SRCDIR\game\shared\playerclass_info_parse.h"
+		
+		$Folder	"NextBot"
+		{
+			$File	"NextBot\C_NextBot.cpp"
+			$File	"NextBot\C_NextBot.h"
+		}
 
 		$Folder	"game_controls"
 		{

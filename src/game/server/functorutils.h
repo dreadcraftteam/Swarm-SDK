@@ -5,7 +5,7 @@
 #ifndef _FUNCTOR_UTILS_H_
 #define _FUNCTOR_UTILS_H_
 
-#ifdef NEXTBOTS
+#ifdef NEXT_BOT
 #include "NextBotInterface.h"
 #include "NextBotManager.h"
 #endif
@@ -337,7 +337,7 @@ inline bool ForEachActor( Functor &func )
 	}
 
 	// iterate all NextBots
-#ifdef NEXTBOTS
+#ifdef NEXT_BOT
 	return TheNextBots().ForEachCombatCharacter( func );
 #else
 	return true;
@@ -370,7 +370,7 @@ public:
 template <>
 inline bool ForEachActor( IActorFunctor &func )
 {
-#ifdef NEXTBOTS
+#ifdef NEXT_BOT
 	func.OnBeginIteration();
 
 	bool isComplete = true;

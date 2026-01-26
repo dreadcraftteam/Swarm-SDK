@@ -714,6 +714,86 @@ inline void SearchSurroundingAreas( CNavArea *startArea, ISearchSurroundingAreas
 	func.PostSearch();
 }
 
+#if defined( TF_DLL )
+//--------------------------------------------------------------------------------------------------------------
+/**
+ * Starting from 'startArea', collect adjacent areas via a breadth-first search continuing outward until
+ * 'travelDistanceLimit' is reached.
+ * Areas in the collection will be "marked", returning true for IsMarked(). 
+ * Each area in the collection's GetCostSoFar() will be approximate travel distance from 'startArea'.
+ */
+inline void CollectSurroundingAreas( CUtlVector< CNavArea * > *nearbyAreaVector, CNavArea *startArea, float travelDistanceLimit = 1500.0f, float maxStepUpLimit = StepHeight, float maxDropDownLimit = 100.0f )
+{
+	nearbyAreaVector->RemoveAll();
+
+	if ( startArea )
+	{
+		CNavArea::MakeNewMarker();
+		CNavArea::ClearSearchLists();
+
+		startArea->AddToOpenList();
+		startArea->SetTotalCost( 0.0f );
+		startArea->SetCostSoFar( 0.0f );
+		startArea->SetParent( NULL );
+		startArea->Mark();
+
+		CUtlVector< CNavArea * > adjVector;
+
+		while( !CNavArea::IsOpenListEmpty() )
+		{
+			// get next area to check
+			CNavArea *area = CNavArea::PopOpenList();
+
+			if ( travelDistanceLimit > 0.0f && area->GetCostSoFar() > travelDistanceLimit )
+				continue;
+
+			if ( area->GetParent() )
+			{
+				float deltaZ = area->GetParent()->ComputeAdjacentConnectionHeightChange( area );
+
+				if ( deltaZ > maxStepUpLimit )
+					continue;
+
+				if ( deltaZ < -maxDropDownLimit )
+					continue;
+			}
+
+			nearbyAreaVector->AddToTail( area );
+
+			// mark here to ensure all marked areas are also valid areas that are in the collection
+			area->Mark();
+
+			// search adjacent outgoing connections
+			for( int dir=0; dir<NUM_DIRECTIONS; ++dir )
+			{
+				int count = area->GetAdjacentCount( (NavDirType)dir );
+				for( int i=0; i<count; ++i )
+				{
+					CNavArea *adjArea = area->GetAdjacentArea( (NavDirType)dir, i );
+
+					if ( adjArea->IsBlocked( TEAM_ANY ) )
+					{
+						continue;
+					}
+
+					if ( !adjArea->IsMarked() )
+					{
+						adjArea->SetTotalCost( 0.0f );
+						adjArea->SetParent( area );
+
+						// compute approximate travel distance from start area of search
+						float distAlong = area->GetCostSoFar();
+						distAlong += ( adjArea->GetCenter() - area->GetCenter() ).Length();
+						adjArea->SetCostSoFar( distAlong );
+						adjArea->AddToOpenList();
+					}
+				}
+			}
+		}
+	}
+}
+#endif
+
 
 //--------------------------------------------------------------------------------------------------------------
 /**

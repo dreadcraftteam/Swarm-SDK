@@ -27,6 +27,9 @@ ipch
 *.user
 src/game/client/Release_mod_sdk/*
 src/game/server/Release_mod_sdk/*
+src/game/client/sdk/c_npc_surface.cpp
+src/game/server/sdk/npc_surface.cpp
+src/game/server/sdk/npc_surface.h
 
 # CodeLite
 *.project

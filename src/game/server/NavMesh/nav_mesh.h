@@ -431,6 +431,69 @@ public:
 	int GetSelecteSetSize( void ) const;
 	const NavAreaVector &GetSelectedSet( void ) const;					// return the selected set
 
+#if defined( TF_DLL )
+	//-------------------------------------------------------------------------------------
+	/**
+	 * Populate the given vector with all navigation areas that overlap the given extent.
+	 */
+	template< typename NavAreaType >
+	void CollectAreasOverlappingExtent( const Extent &extent, CUtlVector< NavAreaType * > *outVector )
+	{
+		if ( !m_grid.Count() )
+		{
+			return;
+		}
+
+		static unsigned int searchMarker = RandomInt( 0, 1024*1024 );
+		if ( ++searchMarker == 0 )
+		{
+			++searchMarker;
+		}
+
+		Extent areaExtent;
+
+		// get list in cell that contains position
+		int startX = WorldToGridX( extent.lo.x );
+		int endX = WorldToGridX( extent.hi.x );
+		int startY = WorldToGridY( extent.lo.y );
+		int endY = WorldToGridY( extent.hi.y );
+
+		for( int x = startX; x <= endX; ++x )
+		{
+			for( int y = startY; y <= endY; ++y )
+			{
+				int iGrid = x + y*m_gridSizeX;
+				if ( iGrid >= m_grid.Count() )
+				{
+					ExecuteNTimes( 10, Warning( "** Walked off of the CNavMesh::m_grid in CollectAreasOverlappingExtent()\n" ) );
+					return;
+				}
+
+				NavAreaVector *areaVector = &m_grid[ iGrid ];
+
+				// find closest area in this cell
+				for( int v=0; v<areaVector->Count(); ++v )
+				{
+					CNavArea *area = areaVector->Element( v );
+
+					// skip if we've already visited this area
+					if ( area->m_nearNavSearchMarker == searchMarker )
+						continue;
+
+					// mark as visited
+					area->m_nearNavSearchMarker = searchMarker;
+					area->GetExtent( &areaExtent );
+
+					if ( extent.IsOverlapping( areaExtent ) )
+					{
+						outVector->AddToTail( (NavAreaType *)area );
+					}
+				}
+			}
+		}
+	}
+#endif
+
 	/**
 	 * Apply the functor to all navigation areas in the Selected Set,
 	 * or the current selected area.
