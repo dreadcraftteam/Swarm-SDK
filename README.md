@@ -12,13 +12,14 @@ This project was created to simplify the creation of your own games on the Sourc
 5. Well done
 
 ## Features
+- Added [NextBot AI](https://developer.valvesoftware.com/wiki/NextBot) (Ported from Source SDK 2013)
 - Added headers for blobulator technology (by [theKlaxon](https://github.com/theKlaxon/Blobulator-ASW.git))
-- Updated surface render code for blobulator
-- Fixed building with SDK_USE_PRONE
-- Removed teams
-- Removed class system
-- Removed MOTD
-- Removed Team Menu
-- Removed Class Menu
+- Updated surface renderer code for blobulator
+- Fixed NavMesh for NextBots
 - Fixed player spawn
-- Also game fixes and code cleanup
+- Small game fixes
+- Removed teams
+- Removed classes
+- Removed Motd
+- Removed "Team Menu"
+- Removed "Class Menu"
