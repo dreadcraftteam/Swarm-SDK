@@ -21,5 +21,5 @@ This project was created to simplify the creation of your own games on the Sourc
 - Removed teams
 - Removed classes
 - Removed Motd
-- Removed "Team Menu"
-- Removed "Class Menu"
+- Removed "Team Menu" (Does not work here)
+- Removed "Class Menu" (Does not work here)
