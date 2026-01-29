@@ -19,7 +19,6 @@ $Include "$SRCDIR\game\server\nav_mesh.vpc"
 // SDK_USE_PRONE - Can your players go prone?
 // SDK_SHOOT_WHILE_SPRINTING - If you're allowing sprinting, do you want to be able to shoot while sprinting?
 // SDK_SHOOT_ON_LADDERS - Do you want your players to be able to shoot while climing ladders?
-// SDK_USE_BLOBULATOR - Enable blobulator code
 // USE_SDK_BOTS - Enable PerfBots code (also add perfbots code to this project!!!)
 //
 
@@ -28,7 +27,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;.\sdk,$SRCDIR\game\shared\sdk,$SRCDIR\game\shared\Multiplayer"
-		$PreprocessorDefinitions		"$BASE;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;SDK_USE_BLOBULATOR;NEXT_BOT"
+		$PreprocessorDefinitions		"$BASE;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;NEXT_BOT"
 	}
 }
 

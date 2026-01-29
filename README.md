@@ -2,15 +2,15 @@
 > [!IMPORTANT]
 > This project is based on the [swarm-sdk-template](https://github.com/FriskTheFallenHuman/swarm-sdk-template/tree/master) created by Krispy (FriskTheFallenHuman)
 
-This project was created to simplify the creation of your own games on the Source (Alien Swarm engine branch). It uses the ported Source 2007 SDK template by Krispy for Alien Swarm with some changes and fixes.
+This project was created to simplify the creation of your own games on the Alien Swarm engine branch. It uses the ported Source 2007 SDK template by Krispy for Alien Swarm with some changes and fixes.
 
 ## Features
 - Added [NextBot AI](https://developer.valvesoftware.com/wiki/NextBot) (Ported from Source SDK 2013)
-- Added headers for blobulator technology (by [theKlaxon](https://github.com/theKlaxon/Blobulator-ASW.git))
-- Updated surface renderer code for blobulator
+- Updated ShaderCompile to 2.0
 - Fixed NavMesh for NextBots
 - Fixed player spawn
-- Small game fixes
+- Fixed shaders building
+- Some game fixes
 - Removed teams
 - Removed classes
 - Removed Motd

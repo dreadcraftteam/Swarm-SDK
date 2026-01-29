@@ -18,7 +18,6 @@ $Include "$SRCDIR\game\client\client_base.vpc"
 // SDK_USE_PRONE - Can your players go prone?
 // SDK_SHOOT_WHILE_SPRINTING - If you're allowing sprinting, do you want to be able to shoot while sprinting?
 // SDK_SHOOT_ON_LADDERS - Do you want your players to be able to shoot while climing ladders?
-// SDK_USE_BLOBULATOR - Enable blobulator code
 //
 
 $Configuration
@@ -26,7 +25,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories		"$BASE;.\sdk;.\sdk\vgui;.\sdk\hud;$SRCDIR\game\shared\sdk;$SRCDIR\game\shared\Multiplayer"
-		$PreprocessorDefinitions		"$BASE;USE_DETAIL_SHAPES;ENABLE_HTMLWINDOW;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;SDK_USE_BLOBULATOR;NEXT_BOT"
+		$PreprocessorDefinitions		"$BASE;USE_DETAIL_SHAPES;ENABLE_HTMLWINDOW;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;NEXT_BOT"
 	}
 }
 
