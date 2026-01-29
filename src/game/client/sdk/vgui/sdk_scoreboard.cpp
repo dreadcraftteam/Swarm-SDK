@@ -100,14 +100,6 @@ void CSDKScoreboard::InitScoreboardSections()
 	// fill out the structure of the scoreboard
 	AddHeader();
 
-#if defined ( SDK_USE_TEAMS )
-	if ( SDKGameRules()->IsTeamplay() )
-	{
-		// add the team sections
-		AddSection( TYPE_TEAM, SDK_TEAM_BLUE );
-		AddSection( TYPE_TEAM, SDK_TEAM_RED );
-	}
-#endif
 	AddSection( TYPE_TEAM, TEAM_UNASSIGNED );
 	AddSection( TYPE_SPECTATORS, TEAM_SPECTATOR );
 }
@@ -248,12 +240,7 @@ void CSDKScoreboard::AddSection(int teamType, int teamNumber)
 		}
 
 		//Tony; don't make unassigned always visible when using teams.
-#if defined ( SDK_USE_TEAMS )
-		if ( teamNumber != TEAM_UNASSIGNED )
-			m_pPlayerList->SetSectionAlwaysVisible(sectionID);
-#else
-			m_pPlayerList->SetSectionAlwaysVisible(sectionID);
-#endif
+		m_pPlayerList->SetSectionAlwaysVisible(sectionID);	
 	}
 	else if ( teamType == TYPE_SPECTATORS )
 	{
@@ -267,12 +254,6 @@ int CSDKScoreboard::GetSectionFromTeamNumber( int teamNumber )
 {
 	switch ( teamNumber )
 	{
-#if defined ( SDK_USE_TEAMS )
-	case SDK_TEAM_BLUE:
-		return SCORESECTION_TEAM1;
-	case SDK_TEAM_RED:
-		return SCORESECTION_TEAM2;
-#endif
 	case TEAM_SPECTATOR:
 		return SCORESECTION_SPECTATOR;
 	default:

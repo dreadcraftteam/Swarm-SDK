@@ -32,11 +32,6 @@ $Configuration
 
 $Project "Client (SDK)"
 {
-	$Folder	"game_controls Header Files"
-	{
-		$File	"game_controls\ClassMenu.h"
-	}
-
 	$Folder	"Source Files"
 	{
 		-$File	"$SRCDIR\game\shared\weapon_parse_default.cpp"
@@ -60,11 +55,6 @@ $Project "Client (SDK)"
 		{
 			$File	"NextBot\C_NextBot.cpp"
 			$File	"NextBot\C_NextBot.h"
-		}
-
-		$Folder	"game_controls"
-		{
-			$File	"game_controls\ClassMenu.cpp"
 		}
 
 		$Folder	"SDK"
@@ -129,8 +119,6 @@ $Project "Client (SDK)"
 
 			$Folder	"Rules"
 			{
-				$File	"sdk\c_sdk_team.cpp"
-				$File	"sdk\c_sdk_team.h"
 				$File	"$SRCDIR\game\shared\sdk\sdk_gamerules.cpp"
 				$File	"$SRCDIR\game\shared\sdk\sdk_gamerules.h"			
 			}

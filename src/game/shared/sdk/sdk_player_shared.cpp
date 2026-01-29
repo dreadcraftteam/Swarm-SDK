@@ -158,21 +158,6 @@ void CSDKPlayer::FireBullet(
 		// add damage to entity that we hit
 
 #ifdef GAME_DLL
-#ifdef MT_DLL
-		CTakeDamageInfo info(pevAttacker, pevAttacker, fCurrentDamage, iDamageType);
-
-		info.SetDamagePosition(tr.endpos);
-
-		// force
-		Vector vecForce = vecDir * fCurrentDamage * 200.0f;
-		info.SetDamageForce(vecForce);
-
-		info.SetDamageType(info.GetDamageType() & ~DMG_PREVENT_PHYSICS_FORCE);
-
-		tr.m_pEnt->TakeDamage(info);
-#else
-		ClearMultiDamage();
-
 		CTakeDamageInfo info( pevAttacker, pevAttacker, fCurrentDamage, iDamageType );
 		CalculateBulletDamageForce( &info, iBulletType, vecDir, tr.endpos );
 		tr.m_pEnt->DispatchTraceAttack( info, vecDir, &tr );
@@ -180,7 +165,6 @@ void CSDKPlayer::FireBullet(
 		TraceAttackToTriggers( info, tr.startpos, tr.endpos, vecDir );
 
 		ApplyMultiDamage();
-#endif
 #endif
 }
 
@@ -549,23 +533,5 @@ void CSDKPlayer::InitSpeeds()
 //-----------------------------------------------------------------------------
 bool CSDKPlayer::ShouldCollide( int collisionGroup, int contentsMask ) const
 {
-	// Only check these when using teams, otherwise it's normal!
-#if defined ( SDK_USE_TEAMS )
-	if ( collisionGroup == COLLISION_GROUP_PLAYER_MOVEMENT || collisionGroup == COLLISION_GROUP_PROJECTILE )
-	{
-		switch( GetTeamNumber() )
-		{
-		case SDK_TEAM_BLUE:
-			if ( !( contentsMask & CONTENTS_TEAM2 ) )
-				return false;
-			break;
-
-		case SDK_TEAM_RED:
-			if ( !( contentsMask & CONTENTS_TEAM1 ) )
-				return false;
-			break;
-		}
-	}
-#endif
 	return BaseClass::ShouldCollide( collisionGroup, contentsMask );
 }

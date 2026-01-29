@@ -180,8 +180,6 @@ $Project "Server (SDK)"
 			{
 				$File	"$SRCDIR\game\shared\sdk\sdk_gamerules.cpp"
 				$File	"$SRCDIR\game\shared\sdk\sdk_gamerules.h"
-				$File	"sdk\sdk_team.cpp"
-				$File	"sdk\sdk_team.h"
 			}
 
 			$Folder	"Weapons"
