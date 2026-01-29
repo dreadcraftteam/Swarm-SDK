@@ -23,3 +23,9 @@ This project was created to simplify the creation of your own games on the Alien
 3. Open everything.bat (or games.bat) to create .sln file
 4. Open .sln file and build solution
 5. Well done
+
+## How to build shaders
+1. Open materialsystem/stdshaders/buildsdkshaders.bat and build shaders
+2. Open shaders.bat to create .sln file
+3. Build solution
+5. Well done
