@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 
 $Macro OUTBINNAME	"client"
-$Macro OUTBINDIR	"$SRCDIR\..\game\$GAMENAME\bin"
+$Macro OUTBINDIR	"$SRCDIR\..\build\$GAMENAME\bin"
 
 $MacroRequired "GAMENAME"
 

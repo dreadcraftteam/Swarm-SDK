@@ -8,7 +8,6 @@
 	"icon"				"resource/game"
 
 	GameData			"swarmsdk.fgd"
-	InstancePath			"tilegen/instances/"
 	
 	SupportsDX8			1
 	nomodels			1
