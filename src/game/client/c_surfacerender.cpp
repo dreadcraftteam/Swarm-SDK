@@ -13,6 +13,7 @@
 #include "iviewrender.h"
 #include "engine/ivdebugoverlay.h"
 
+#ifdef SDK_USE_BLOBULATOR
 #include "../../common/blobulator/Implicit/ImpDefines.h"
 #include "../../common/blobulator/Implicit/ImpRenderer.h"
 #include "../../common/blobulator/Implicit/ImpTiler.h"
@@ -22,8 +23,6 @@
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
-
-#ifdef SDK_USE_BLOBULATOR
 
 ConVar r_surface_draw_isosurface( "r_surface_draw_isosurface", "1", 0, "Draws the surface as an isosurface" );
 
