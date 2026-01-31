@@ -339,6 +339,9 @@ void CSDKPlayer::Spawn()
 	m_hRagdoll = NULL;
 	
 	BaseClass::Spawn();
+	
+	m_iLastWeaponFireUsercmd = 0;
+
 #if defined ( SDK_USE_STAMINA ) || defined ( SDK_USE_SPRINTING )
 	m_Shared.SetStamina( 100 );
 #endif
@@ -358,9 +361,9 @@ void CSDKPlayer::Spawn()
 
 	SetArmorValue(SpawnArmorValue());
 
-	SetContextThink( &CSDKPlayer::SDKPushawayThink, gpGlobals->curtime + PUSHAWAY_THINK_INTERVAL, SDK_PUSHAWAY_THINK_CONTEXT );
 	pl.deadflag = false;
 
+	SetContextThink( &CSDKPlayer::SDKPushawayThink, gpGlobals->curtime + PUSHAWAY_THINK_INTERVAL, SDK_PUSHAWAY_THINK_CONTEXT );
 }
 
 bool CSDKPlayer::SelectSpawnSpot( const char *pEntClassName, CBaseEntity* &pSpot )

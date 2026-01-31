@@ -76,6 +76,7 @@ void ClientActive( edict_t *pEdict, bool bLoadGame )
 	CSDKPlayer *pPlayer = ToSDKPlayer( CBaseEntity::Instance( pEdict ) );
 	FinishClientPutInServer( pPlayer );
 }
+
 void ClientFullyConnect( edict_t *pEntity )
 {
 

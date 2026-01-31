@@ -68,7 +68,8 @@ void DrawLightmappedPaint_DX9( CBaseVSShader *pShader, IMaterialVar** params, IS
 		}
 
 		bool hasBump = g_pConfig->UseBumpmapping();
-		bool hasSSBump = hasBump && (info.m_nSelfShadowedBumpFlag != -1) &&	( params[info.m_nSelfShadowedBumpFlag]->GetIntValue() );
+		// RETRACT: Changing hasSSBump to always be false
+		bool hasSSBump = false;//hasBump && (info.m_nSelfShadowedBumpFlag != -1) &&	( params[info.m_nSelfShadowedBumpFlag]->GetIntValue() );
 		bool hasSelfIllum = IS_FLAG_SET( MATERIAL_VAR_SELFILLUM );
 		
 		bool bHasBlendModulateTexture = 
@@ -248,6 +249,12 @@ void DrawLightmappedPaint_DX9( CBaseVSShader *pShader, IMaterialVar** params, IS
 					SET_STATIC_PIXEL_SHADER_COMBO( FLASHLIGHT, hasFlashlight);
 //#endif
 					SET_STATIC_PIXEL_SHADER_COMBO( SHADER_SRGB_READ, bShaderSrgbRead );
+					
+					//#define SET_STATIC_PIXEL_SHADER_COMBO( var, val )
+					//int staticpixshadercombo_SHADER_SRGB_READ_missingcurlybraces = 0;
+					//staticpixshadercombo_SHADER_SRGB_READ_missingcurlybraces = staticpixshadercombo_SHADER_SRGB_READ_missingcurlybraces;
+					//_pshIndex.SetSHADER_SRGB_READ( ( bShaderSrgbRead ) ); if(g_shaderConfigDumpEnable){printf("\n   PS stat var %s = %d (%s)", "SHADER_SRGB_READ", (int) bShaderSrgbRead, "bShaderSrgbRead" );};
+					//int psh_forgot_to_set_static_SHADER_SRGB_READ = 0;
 					SET_STATIC_PIXEL_SHADER( lightmappedpaint_ps20b );
 				}
 				else
@@ -487,7 +494,6 @@ void DrawLightmappedPaint_DX9( CBaseVSShader *pShader, IMaterialVar** params, IS
 			DynamicCmdsOut.SetVertexShaderConstant4( 12, vEyeDir[0], vEyeDir[1], vEyeDir[2], 1.0f );
 		}
 
-		MaterialFogMode_t fogType = pShaderAPI->GetSceneFogMode();
 		DECLARE_DYNAMIC_VERTEX_SHADER( lightmappedgeneric_vs20 );
 		SET_DYNAMIC_VERTEX_SHADER_COMBO( FASTPATH,  bVertexShaderFastPath );
 		SET_DYNAMIC_VERTEX_SHADER_CMD( DynamicCmdsOut, lightmappedgeneric_vs20 );
@@ -497,20 +503,6 @@ void DrawLightmappedPaint_DX9( CBaseVSShader *pShader, IMaterialVar** params, IS
 		if ( nFixedLightingMode != ENABLE_FIXED_LIGHTING_NONE )
 		{
 			bPixelShaderFastPath = false;
-		}
-		bool bWriteDepthToAlpha;
-		bool bWriteWaterFogToAlpha;
-		if(  pContextData->m_bFullyOpaque ) 
-		{
-			bWriteDepthToAlpha = pShaderAPI->ShouldWriteDepthToDestAlpha();
-			bWriteWaterFogToAlpha = (fogType == MATERIAL_FOG_LINEAR_BELOW_FOG_Z);
-			AssertMsg( !(bWriteDepthToAlpha && bWriteWaterFogToAlpha), "Can't write two values to alpha at the same time." );
-		}
-		else
-		{
-			//can't write a special value to dest alpha if we're actually using as-intended alpha
-			bWriteDepthToAlpha = false;
-			bWriteWaterFogToAlpha = false;
 		}
 
 		bool bFlashlightShadows = false;

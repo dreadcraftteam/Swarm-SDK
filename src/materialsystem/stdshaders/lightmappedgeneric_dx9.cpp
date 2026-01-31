@@ -189,7 +189,7 @@ END_SHADER_PARAMS
 		
 		// If the game/mod can potentially support the paint feature, then we need to always record snapshots 
 		// as though there may be a 2nd pass.  When in a map containing paint, you need to also draw the 2nd pass.
-		if ( g_pConfig->m_bPaintInGame )
+		if ( g_pConfig->m_bPaintInGame && !IS_FLAG_SET( MATERIAL_VAR_DECAL ) && !TextureIsTranslucent( s_info.m_nBaseTexture, true ) )
 		{	
 			// If recording snapshots OR in a map with paint...
 			if ( ( pShaderShadow || g_pConfig->m_bPaintInMap ) && r_twopasspaint.GetBool() )

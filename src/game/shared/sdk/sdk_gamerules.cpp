@@ -225,12 +225,11 @@ void InitBodyQue()
 //---------------------------------------------------------------------------------------------------
 CSDKGameRules::CSDKGameRules()
 {
-	InitTeams();
-
 	m_bLevelInitialized = false;
 
 	m_flGameStartTime = 0;
 }
+
 void CSDKGameRules::ServerActivate()
 {
 	// Tony; initialize the level
@@ -518,27 +517,6 @@ void CSDKGameRules::PlayerSpawn( CBasePlayer *p )
 
 	pPlayer->GiveDefaultItems();
 	pPlayer->SetMaxSpeed(600);
-}
-
-void CSDKGameRules::InitTeams( void )
-{
-	Assert( g_Teams.Count() == 0 );
-
-	g_Teams.Purge();	// just in case
-
-	// Create the team managers
-
-	//Tony; we have a special unassigned team incase our mod is using classes but not teams.
-	CTeam *pUnassigned = static_cast<CTeam*>(CreateEntityByName( "sdk_team_unassigned" ));
-	Assert( pUnassigned );
-	pUnassigned->Init( pszTeamNames[TEAM_UNASSIGNED], TEAM_UNASSIGNED );
-	g_Teams.AddToTail( pUnassigned );
-
-	//Tony; just use a plain ole sdk_team_manager for spectators
-	CTeam *pSpectator = static_cast<CTeam*>(CreateEntityByName( "sdk_team_manager" ));
-	Assert( pSpectator );
-	pSpectator->Init( pszTeamNames[TEAM_SPECTATOR], TEAM_SPECTATOR );
-	g_Teams.AddToTail( pSpectator );
 }
 
 /* create some proxy entities that we use for transmitting data */
