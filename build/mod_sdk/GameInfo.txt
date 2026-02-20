@@ -12,7 +12,7 @@
 	SupportsDX8			1
 	nomodels			1
 	nohimodel 			1
-	nocrosshair 		1
+	nocrosshair 			1
 
 	"hidden_maps"
 	{
