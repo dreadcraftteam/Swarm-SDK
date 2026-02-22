@@ -6,14 +6,15 @@ $Group "game"
 
 $Group "shaders"
 {
-	"game_shader_generic"
-	"game_shader_generic_std"
+	"shaderlib"
+	"game_shader"
 }
 
 $Group "everything"
 {
 	"client"
 	"server"
-	"game_shader_generic"
-	"game_shader_generic_std"
+	"shaderlib"
+	"game_shader"
+	"responserules_runtime"
 }

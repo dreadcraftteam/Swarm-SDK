@@ -1,11 +1,11 @@
 $Project "client"
 {
-	"game\client\client_mt.vpc"	[$SDK]
+	"game\client\client_sdk.vpc" [$SDK]
 }
 
 $Project "server"
 {
-	"game\server\server_mt.vpc"	[$SDK]
+	"game\server\server_sdk.vpc" [$SDK]
 }
 
 $Project "shaderlib"
@@ -13,12 +13,12 @@ $Project "shaderlib"
 	"materialsystem\shaderlib\shaderlib.vpc"
 }
 
-$Project "game_shader_generic"
+$Project "game_shader"
 {
-	"materialsystem\stdshaders\game_shader_generic_hl2mp.vpc" [$SDK]
+	"materialsystem\stdshaders\game_shader_dx9_sdk.vpc" [$SDK]
 }
 
-$Project "game_shader_generic_std"
+$Project "responserules_runtime"
 {
-	"materialsystem\stdshaders\game_shader_generic_std_hl2mp.vpc" [$SDK]
+	"responserules\runtime\responserules_runtime.vpc"
 }
