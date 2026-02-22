@@ -189,6 +189,18 @@ PLATFORM_INTERFACE bool DoNewAssertDialog( const tchar *pFile, int line, const t
 #define  Verify( _exp )           							Assert( _exp )
 #define  VerifyEquals( _exp, _expectedValue )           	AssertEquals( _exp, _expectedValue )
 
+#ifdef _DEBUG
+#define DbgAssert( _exp )	Assert( _exp )
+#else
+#define DbgAssert( _exp )	((void)0)
+#endif
+
+#ifdef _DEBUG
+#define DbgAssert( _exp )	Assert( _exp )
+#else
+#define DbgAssert( _exp )	((void)0)
+#endif
+
 #define  AssertMsg(  _exp, _msg )  										AssertMsg_( _exp, _T( _msg ) )
 #define  AssertMsg1( _exp, _msg, a1 )									AssertMsg_( _exp, (const tchar *)(CDbgFmtMsg( _T( _msg ), a1 )) )
 #define  AssertMsg2( _exp, _msg, a1, a2 )								AssertMsg_( _exp, (const tchar *)(CDbgFmtMsg( _T( _msg ), a1, a2 )) )
@@ -212,6 +224,7 @@ PLATFORM_INTERFACE bool DoNewAssertDialog( const tchar *pFile, int line, const t
 #define  AssertFloatEquals( _exp, _expectedValue, _tol )	((void)0)
 #define  Verify( _exp )										(_exp)
 #define  VerifyEquals( _exp, _expectedValue )           	(_exp)
+#define	 DbgAssert( _exp )									((void)0)
 
 #define  AssertMsg1( _exp, _msg, a1 )									((void)0)
 #define  AssertMsg2( _exp, _msg, a1, a2 )								((void)0)
@@ -225,6 +238,9 @@ PLATFORM_INTERFACE bool DoNewAssertDialog( const tchar *pFile, int line, const t
 #define  AssertMsg9( _exp, _msg, a1, a2, a3, a4, a5, a6, a7, a8, a9 )	((void)0)
 
 #endif // DBGFLAG_ASSERT
+
+// Source2 compatibility macro
+#define AssertDbg( X ) DbgAssert( X )
 
 #define FILE_LINE_FUNCTION_STRINGIFY(x) #x
 #define FILE_LINE_FUNCTION_TOSTRING(x) FILE_LINE_FUNCTION_STRINGIFY(x)

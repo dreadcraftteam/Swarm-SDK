@@ -76,6 +76,8 @@ textwindow_temp.html
 game/mod_sdk/downloads
 game/mod_sdk/materials/temp
 game/mod_sdk/cfg/config.cfg
+src/materialsystem/shaderlib/Release/*
+src/materialsystem/stdshaders/Release_dx9_mod_sdk/*
 
 # shader files
 *.tmp

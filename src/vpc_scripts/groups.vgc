@@ -16,5 +16,7 @@ $Group "everything"
 	"server"
 	"shaderlib"
 	"game_shader"
+	"interfaces"
 	"responserules_runtime"
+	"meshutils"
 }

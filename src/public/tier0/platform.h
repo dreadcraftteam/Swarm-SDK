@@ -254,6 +254,13 @@ typedef signed char					int8;
 		#define __m128				__vector4
 	#endif
 
+	// Use this to specify that a function is an override of a virtual function.
+	// This lets the compiler catch cases where you meant to override a virtual
+	// function but you accidentally changed the function signature and created
+	// an overloaded function. Usage in function declarations is like this:
+	// int GetData() const OVERRIDE;
+	#define OVERRIDE override
+
 #else // !COMPILER_MSVC
 
 	typedef short					int16;
@@ -270,6 +277,17 @@ typedef signed char					int8;
 		typedef unsigned int		uintp;
 	#endif
 	typedef void *HWND;
+
+	// Avoid redefinition warnings if a previous header defines this.
+	#undef OVERRIDE
+	#if defined(__clang__)
+		#define OVERRIDE override
+		// warning: 'override' keyword is a C++11 extension [-Wc++11-extensions]
+		// Disabling this warning is less intrusive than enabling C++11 extensions
+		#pragma GCC diagnostic ignored "-Wc++11-extensions"
+	#else
+		#define OVERRIDE
+	#endif
 
 #endif // else COMPILER_MSVC
 
@@ -1599,6 +1617,19 @@ int	_V_stricmp_NegativeForUnequal	  ( const char *s1, const char *s2 );
 #define stricmp(s1,s2) _V_stricmp(s1, s2)
 #define strcmpi(s1,s2) _V_stricmp(s1, s2)
 #define strnicmp V_strncasecmp 
+#endif
+
+// Portable alternative to __alignof
+template<class T> struct AlignOf_t { AlignOf_t(){} AlignOf_t & operator=(const AlignOf_t &) { return *this; } byte b; T t; };
+
+// !!! NOTE: if you get a compile error here, you are using VALIGNOF on an abstract type :NOTE !!!
+#define VALIGNOF_PORTABLE( type ) ( sizeof( AlignOf_t<type> ) - sizeof( type ) )
+
+#if defined( COMPILER_GCC ) || defined( COMPILER_MSVC )
+#define VALIGNOF( type ) __alignof( type )
+#define VALIGNOF_TEMPLATE_SAFE( type ) VALIGNOF_PORTABLE( type )
+#else
+#error "PORT: Code only tested with MSVC! Must validate with new compiler, and use built-in keyword if available."
 #endif
 
 #endif /* PLATFORM_H */

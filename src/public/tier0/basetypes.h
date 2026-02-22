@@ -200,6 +200,10 @@ FORCEINLINE int ieqsel( int x, int y, int a, int b )
 
 #endif
 
+// At some point, we will need a unified API.
+#define imin( x, y ) ( (x) < (y) ? (x) : (y) )
+#define imax( x, y ) ( (x) > (y) ? (x) : (y) )
+
 #if CROSS_PLATFORM_VERSION < 1
 
 #ifndef DONT_DEFINE_BOOL // Needed for Cocoa stuff to compile.

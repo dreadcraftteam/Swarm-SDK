@@ -18,7 +18,17 @@ $Project "game_shader"
 	"materialsystem\stdshaders\game_shader_dx9_sdk.vpc" [$SDK]
 }
 
+$Project "interfaces"
+{
+	"interfaces\interfaces.vpc"
+}
+
 $Project "responserules_runtime"
 {
 	"responserules\runtime\responserules_runtime.vpc"
+}
+
+$Project "meshutils"
+{
+	"meshutils\meshutils.vpc"
 }
