@@ -18,7 +18,7 @@ $Configuration
 	}
 }
 
-$Project "ShaderLib"
+$Project "Shader Lib"
 {
 	$Folder "External Header Files"
 	{
