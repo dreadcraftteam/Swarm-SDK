@@ -3,6 +3,10 @@ This project was created to simplify the creation of your own games on the Alien
 
 ## Features
 - Added NextBot AI (Ported from Source SDK 2013)
+- Added "Mesh Utils" library
+- Added "Interfaces" library
+- Added "ResponseRules Runtime" library
+- Added "Shader Lib" library
 - Updated ShaderCompile to 2.0
 - Fixed NavMesh for NextBots
 - Fixed player spawn
