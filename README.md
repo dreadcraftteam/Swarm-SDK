@@ -1,4 +1,4 @@
-![alt text](https://i.ibb.co/pjgm3w88/swarm-sdk-logo1.png)
+![Logo](https://i.ibb.co/pjgm3w88/swarm-sdk-logo1.png)
 
 ## Swarm-SDK
 This project was created to simplify the creation of your own games on the Alien Swarm engine branch. It uses the ported Source 2007 SDK template by [Krispy](https://github.com/FriskTheFallenHuman/swarm-sdk-template/tree/master) for Alien Swarm with some changes and fixes.
