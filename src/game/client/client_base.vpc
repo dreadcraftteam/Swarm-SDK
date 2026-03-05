@@ -1148,6 +1148,7 @@ $Project
 		$Lib		dmxloader
 		$Lib		mathlib
 		$Lib		matsys_controls
+		$Lib		meshutils
 		$Lib		npsclient
 		$Lib		particles
 		$Lib		raytrace
