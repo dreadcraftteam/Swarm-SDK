@@ -72,15 +72,14 @@ COptionsDialog::COptionsDialog(vgui::Panel *parent) : PropertyDialog(parent, "Op
 		AddPage(new COptionsSubVoice(this), "#GameUI_Voice");
 	}
 
+#ifndef MT_DLL // Unused
 	// add the multiplay page last, if we're combo single/multi or just multi
 	if ( (ModInfo().IsMultiplayerOnly() && !ModInfo().IsSinglePlayerOnly()) ||
 		 (!ModInfo().IsMultiplayerOnly() && !ModInfo().IsSinglePlayerOnly()) )
 	{
 		AddPage(new COptionsSubMultiplayer(this), "#GameUI_Multiplayer");
 	}
-
-//	double s5 = system()->GetCurrentTime();
-//	Msg("COptionsDialog::COptionsDialog(): %.3fms\n", (float)(s5 - s4) * 1000.0f);
+#endif // !MT_DLL
 
 	SetApplyButtonVisible(true);
 	GetPropertySheet()->SetTabWidth(84);

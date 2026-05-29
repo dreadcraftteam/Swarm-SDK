@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+﻿//========= Copyright Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Blobulator surface rendering
 //
@@ -10,3 +10,5 @@
 #include "view_shared.h"
 #include "iviewrender.h"
 #include "engine/ivdebugoverlay.h"
+
+#include "c_surfacerender.h"

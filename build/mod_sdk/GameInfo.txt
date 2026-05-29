@@ -3,8 +3,6 @@
 	"game"				"Swarm SDK"
 	"title"				"Alien Swarm SDK"	
 
-	"type"				"multiplayer_only"
-
 	"icon"				"resource/game"
 
 	GameData			"swarmsdk.fgd"

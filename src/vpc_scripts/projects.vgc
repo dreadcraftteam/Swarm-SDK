@@ -3,6 +3,11 @@ $Project "client"
 	"game\client\client_sdk.vpc" [$SDK]
 }
 
+$Project "fgdlib"
+{
+	"fgdlib/fgdlib.vpc"
+}
+
 $Project "server"
 {
 	"game\server\server_sdk.vpc" [$SDK]
@@ -31,4 +36,9 @@ $Project "responserules_runtime"
 $Project "meshutils"
 {
 	"meshutils\meshutils.vpc"
+}
+
+$Project "videocfg"
+{
+	"videocfg/videocfg.vpc"
 }

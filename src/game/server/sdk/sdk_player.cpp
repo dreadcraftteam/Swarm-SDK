@@ -364,6 +364,8 @@ void CSDKPlayer::Spawn()
 	pl.deadflag = false;
 
 	SetContextThink( &CSDKPlayer::SDKPushawayThink, gpGlobals->curtime + PUSHAWAY_THINK_INTERVAL, SDK_PUSHAWAY_THINK_CONTEXT );
+	
+	SetContextThink( &CSDKPlayer::GiveDefaultItems, gpGlobals->curtime + 3.0f, "GiveDefaultItems" );
 }
 
 bool CSDKPlayer::SelectSpawnSpot( const char *pEntClassName, CBaseEntity* &pSpot )

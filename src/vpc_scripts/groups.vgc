@@ -15,8 +15,10 @@ $Group "everything"
 	"client"
 	"server"
 	"shaderlib"
+	"fgdlib"
 	"game_shader"
 	"interfaces"
 	"responserules_runtime"
 	"meshutils"
+	videocfg
 }
