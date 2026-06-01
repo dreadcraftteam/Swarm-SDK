@@ -673,23 +673,19 @@ void CSDKPlayer::Event_Killed( const CTakeDamageInfo &info )
 
 }
 
-void CSDKPlayer::ThrowActiveWeapon( void )
+void CSDKPlayer::ThrowActiveWeapon(void)
 {
-	CWeaponSDKBase *pWeapon = (CWeaponSDKBase *)GetActiveWeapon();
+	CWeaponSDKBase* pWeapon = (CWeaponSDKBase*)GetActiveWeapon();
 
-	if( pWeapon && pWeapon->CanWeaponBeDropped() )
+	if (pWeapon && pWeapon->CanWeaponBeDropped())
 	{
-		QAngle gunAngles;
-		VectorAngles( BodyDirection2D(), gunAngles );
+		Vector VecForward;
 
-		Vector vecForward;
-		AngleVectors( gunAngles, &vecForward, NULL, NULL );
+		EyeVectors(&VecForward, NULL, NULL);
 
-		float flDiameter = sqrt( CollisionProp()->OBBSize().x * CollisionProp()->OBBSize().x + CollisionProp()->OBBSize().y * CollisionProp()->OBBSize().y );
+		VecForward *= 300.0f;
 
-		pWeapon->Holster(NULL);
-		SwitchToNextBestWeapon( pWeapon );
-		SDKThrowWeapon( pWeapon, vecForward, gunAngles, flDiameter );
+		BaseClass::Weapon_Drop(pWeapon, NULL, &VecForward);
 	}
 }
 

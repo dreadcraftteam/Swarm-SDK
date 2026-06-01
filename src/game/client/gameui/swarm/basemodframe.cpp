@@ -163,8 +163,8 @@ void CBaseModFrame::LoadLayout()
 		m_bDelayPushModalInputFocus = false;
 	}
 
-	HCursor blah = surface()->CreateCursorFromFile( "materials/dev/cursor.cur" );
-	SetCursor( blah );
+	//HCursor blah = surface()->CreateCursorFromFile( "materials/dev/cursor.cur" );
+	//SetCursor( blah );
 }
 
 //=============================================================================

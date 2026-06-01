@@ -57,6 +57,8 @@ GenericConfirmation::GenericConfirmation( Panel *parent, const char *panelName )
 	SetDeleteSelfOnClose( true );
 	SetLowerGarnishEnabled( false );
 	SetMoveable( false );
+
+	SetCursor(dc_arrow);
 }
 
 //=============================================================================

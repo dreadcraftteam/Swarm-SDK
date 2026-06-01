@@ -40,6 +40,7 @@ protected:
 	virtual void OnThink();
 	virtual void OnOpen();
 	virtual void RunFrame();
+	virtual void OnCursorMoved(int x, int y);
 	virtual void PaintBackground();
 
 	void	Demo_DisableButtons( void );

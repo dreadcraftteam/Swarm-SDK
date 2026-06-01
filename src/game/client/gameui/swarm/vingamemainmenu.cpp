@@ -52,6 +52,8 @@ BaseClass( parent, panelName, false, true )
 	SetLowerGarnishEnabled( true );
 
 	SetFooterState();
+
+	SetCursor(dc_arrow);
 }
 
 //=============================================================================

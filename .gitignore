@@ -78,6 +78,11 @@ game/mod_sdk/materials/temp
 game/mod_sdk/cfg/config.cfg
 src/materialsystem/shaderlib/Release/*
 src/materialsystem/stdshaders/Release_dx9_mod_sdk/*
+src/lib/public/fgdlib.lib
+src/lib/public/interfaces.lib
+src/lib/public/responserules_runtime.lib
+src/lib/public/shaderlib.lib
+src/lib/public/videocfg.lib
 
 # shader files
 *.tmp

@@ -1013,6 +1013,9 @@ void MainMenu::ApplySchemeSettings( IScheme *pScheme )
 	}
 #endif
 
+	SetCursor(dc_arrow);
+	SetMouseInputEnabled(true);
+
 	LoadControlSettings( pSettings );
 
 	BaseModHybridButton *button = dynamic_cast< BaseModHybridButton* >( FindChildByName( "BtnPlaySolo" ) );
@@ -1170,6 +1173,13 @@ void MainMenu::ApplySchemeSettings( IScheme *pScheme )
 		Warning( "======= SIGNIN RESET SIGNIN RESET SIGNIN RESET SIGNIN RESET ==========\n" );
 	}
 #endif
+}
+
+void MainMenu::OnCursorMoved(int x, int y)
+{
+	BaseClass::OnCursorMoved(x, y);
+
+	SetCursor(dc_arrow);
 }
 
 const char *pDemoDisabledButtons[] = { "BtnVersus", "BtnSurvival", "BtnStatsAndAchievements", "BtnExtras" };

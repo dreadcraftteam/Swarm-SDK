@@ -70,6 +70,8 @@ AchievementListItem::AchievementListItem( IAchievement *pAchievement ) : BaseCla
 	SetAchievementGoal( pAchievement->GetGoal() );
 	SetGamerScore( pAchievement->GetPointValue() );
 	SetAchievementProgress( pAchievement->GetGoal() );	
+
+	SetCursor(dc_arrow);
 }
 
 //=============================================================================
