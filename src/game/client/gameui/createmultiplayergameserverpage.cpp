@@ -38,50 +38,9 @@ CCreateMultiplayerGameServerPage::CCreateMultiplayerGameServerPage(vgui::Panel *
 	// we can use this if we decide we want to put "listen server" at the end of the game name
 	m_pMapList = new ComboBox(this, "MapList", 12, false);
 
-	if ( ModInfo().UseBots() )
-	{
-		m_pEnableBotsCheck = new CheckButton( this, "EnableBotsCheck", "" );
-		m_pEnableBotsCheck->SetVisible( false );
-		m_pEnableBotsCheck->SetEnabled( false );
-	}
-	else
-	{
-		vgui::Panel *div = dynamic_cast< vgui::Panel * >(FindChildByName("BotDivider"));
-		if (div)
-			div->MarkForDeletion();
-
-		vgui::TextEntry *test = dynamic_cast< vgui::TextEntry * >(FindChildByName("BotQuotaCombo"));
-		if (test)
-			test->MarkForDeletion();
-
-		vgui::CheckButton *check = dynamic_cast< vgui::CheckButton * >(FindChildByName("EnableBotsCheck"));
-		if (check)
-			check->MarkForDeletion();
-
-		vgui::RadioButton *button = dynamic_cast< vgui::RadioButton * >(FindChildByName("SkillLevel0"));
-		if (button)
-			button->MarkForDeletion();
-
-		vgui::RadioButton *button1 = dynamic_cast< vgui::RadioButton * >(FindChildByName( "SkillLevel1" ));
-		if (button1)
-			button1->MarkForDeletion();
-
-		vgui::RadioButton *button2 = dynamic_cast< vgui::RadioButton * >(FindChildByName( "SkillLevel2" ));
-		if (button2)
-			button2->MarkForDeletion();
-
-		vgui::RadioButton *button3 = dynamic_cast< vgui::RadioButton * >(FindChildByName( "SkillLevel3" ));
-		if (button3)
-			button3->MarkForDeletion();
-
-		vgui::Label *label = dynamic_cast< vgui::Label * >(FindChildByName("BotDifficultyLabel"));
-		if (label)
-			label->MarkForDeletion();
-
-		vgui::Label *label2 = dynamic_cast< vgui::Label * >(FindChildByName("BotQuotaLabel"));
-		if (label2)
-			label2->MarkForDeletion();
-	}
+	m_pEnableBotsCheck = new CheckButton( this, "EnableBotsCheck", "" );
+	m_pEnableBotsCheck->SetVisible( false );
+	m_pEnableBotsCheck->SetEnabled( false );
 
 	LoadControlSettings("Resource/CreateMultiplayerGameServerPage.res");
 

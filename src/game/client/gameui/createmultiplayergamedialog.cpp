@@ -8,7 +8,7 @@
 #include "CreateMultiplayerGameDialog.h"
 #include "CreateMultiplayerGameServerPage.h"
 #include "CreateMultiplayerGameGameplayPage.h"
-#include "CreateMultiplayerGameBotPage.h"
+// #include "CreateMultiplayerGameBotPage.h"
 
 #include "EngineInterface.h"
 #include "ModInfo.h"
@@ -38,12 +38,14 @@ CCreateMultiplayerGameDialog::CCreateMultiplayerGameDialog(vgui::Panel *parent) 
 	SetTitle("#GameUI_CreateServer", true);
 	SetOKButtonText("#GameUI_Start");
 
-	if ( ModInfo().UseBots() )
+	if (!stricmp( ModInfo().GetGameName(), "Swarm SDK Template" ))
+	{
 		m_bBotsEnabled = true;
+	}
 
 	m_pServerPage = new CCreateMultiplayerGameServerPage(this, "ServerPage");
 	m_pGameplayPage = new CCreateMultiplayerGameGameplayPage(this, "GameplayPage");
-	m_pBotPage = NULL;
+//	m_pBotPage = NULL;
 
 	AddPage(m_pServerPage, "#GameUI_Server");
 	AddPage(m_pGameplayPage, "#GameUI_Game");
@@ -67,9 +69,9 @@ CCreateMultiplayerGameDialog::CCreateMultiplayerGameDialog(vgui::Panel *parent) 
 	{
 		// add a page of advanced bot controls
 		// NOTE: These controls will use the bot keys to initialize their values
-		m_pBotPage = new CCreateMultiplayerGameBotPage( this, "BotPage", m_pSavedData );
-		AddPage( m_pBotPage, "#GameUI_CPUPlayerOptions" );
-		m_pServerPage->EnableBots( m_pSavedData );
+//		m_pBotPage = new CCreateMultiplayerGameBotPage( this, "BotPage", m_pSavedData );
+//		AddPage( m_pBotPage, "#GameUI_CPUPlayerOptions" );
+//		m_pServerPage->EnableBots( m_pSavedData );
 	}
 }
 
@@ -127,24 +129,13 @@ bool CCreateMultiplayerGameDialog::OnOK(bool applyOnly)
 
 	char szMapCommand[1024];
 
-	if (m_pGameplayPage->GetMaxPlayers() == 1)
-	{
-		Q_snprintf(szMapCommand, sizeof(szMapCommand), "disconnect\nwait\nwait\nsv_lan 1\nsv_pausable 1\nsetmaster enable\nmaxplayers %i\nsv_password \"%s\"\nhostname \"%s\"\nprogress_enable\nmap %s\n",
-			m_pGameplayPage->GetMaxPlayers(),
-			szPassword,
-			szHostName,
-			szMapName
-		);
-	}
-	else
-	{
-		Q_snprintf(szMapCommand, sizeof(szMapCommand), "disconnect\nwait\nwait\nsv_lan 1\nsetmaster enable\nmaxplayers %i\nsv_password \"%s\"\nhostname \"%s\"\nprogress_enable\nmap %s\n",
-			m_pGameplayPage->GetMaxPlayers(),
-			szPassword,
-			szHostName,
-			szMapName
-		);
-	}
+	// create the command to execute
+	Q_snprintf(szMapCommand, sizeof( szMapCommand ), "disconnect\nwait\nwait\nsv_lan 1\nsetmaster enable\nmaxplayers %i\nsv_password \"%s\"\nhostname \"%s\"\nprogress_enable\nmap %s\n",
+		m_pGameplayPage->GetMaxPlayers(),
+		szPassword,
+		szHostName,
+		szMapName
+	);
 
 	// exec
 	engine->ClientCmd_Unrestricted(szMapCommand);

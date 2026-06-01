@@ -24,8 +24,9 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories		"$BASE;.\sdk;.\sdk\vgui;.\sdk\hud;$SRCDIR\game\shared\sdk;$SRCDIR\game\shared\Multiplayer"
-		$PreprocessorDefinitions		"$BASE;USE_DETAIL_SHAPES;ENABLE_HTMLWINDOW;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;NEXT_BOT"
+		$AdditionalIncludeDirectories		"$BASE;.\sdk;.\sdk\vgui;.\sdk\hud;$SRCDIR\game\shared\sdk;$SRCDIR\game\shared\Multiplayer;.\gameui;.\gameui\matchmaking"
+		$PreprocessorDefinitions		"$BASE;USE_DETAIL_SHAPES;ENABLE_HTMLWINDOW;SDK_DLL;SWARM_DLL;SDK_USE_STAMINA;SDK_USE_SPRINTING;SDK_SHOOT_WHILE_JUMPING;NEXT_BOT;GAMEUI_EMBEDDED;GAMEUI_EXPORTS"
+		
 	}
 }
 
@@ -72,6 +73,10 @@ $Project "Client (SDK)"
 
 			$Folder	"GUI"
 			{
+				$File	"sdk\vgui\nb_button.cpp"
+				$File	"sdk\vgui\nb_button.h"
+				$File	"sdk\vgui\nb_header_footer.cpp"
+				$File	"sdk\vgui\nb_header_footer.h"
 				$File	"sdk\vgui\sdk_backgroundpanel.cpp"
 				$File	"sdk\vgui\sdk_backgroundpanel.h"
 				$File	"sdk\vgui\sdk_scoreboard.cpp"
@@ -82,6 +87,8 @@ $Project "Client (SDK)"
 				$File	"sdk\vgui\sdk_textwindow.h"
 				$File	"sdk\vgui\sdkviewport.cpp"
 				$File	"sdk\vgui\sdkviewport.h"
+				$File	"sdk\vgui\vcreditspage.cpp"
+				$File	"sdk\vgui\vcreditspage.h"
 				$File	"sdk\vgui\vgui_rootpanel_sdk.cpp"
 				$File	"sdk\vgui\vgui_rootpanel_sdk.h"
 			}
@@ -151,6 +158,272 @@ $Project "Client (SDK)"
 			{
 				$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.cpp"
 				$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.h"
+			}
+		}
+
+		$Folder "GameUI - Embedded"
+		{
+			$Folder "Base GameUI"
+			{
+				$Folder "Headers"
+				{
+					$File	"gameui\backgroundmenubutton.h" \
+							"gameui\basepanel.h" \
+							"gameui\basesavegamedialog.h" \
+							"gameui\bitmapimagepanel.h" \
+							"gameui\commandcheckbutton.h" \
+							"gameui\contentcontroldialog.h" \
+							"gameui\createmultiplayergamebotpage.h" \
+							"gameui\createmultiplayergamedialog.h" \
+							"gameui\createmultiplayergamegameplaypage.h" \
+							"gameui\createmultiplayergameserverpage.h" \
+							"gameui\customtabexplanationdialog.h" \
+							"gameui\cvarnegatecheckbutton.h" \
+							"gameui\cvarslider.h" \
+							"gameui\cvartextentry.h" \
+							"gameui\cvartogglecheckbutton.h" \
+							"gameui\engineinterface.h" \
+							"gameui\gameconsole.h" \
+							"gameui\gameconsoledialog.h" \
+							"gameui\gameui_interface.h" \
+							"gameui\gameui_util.h" \
+							"gameui\keytogglecheckbutton.h" \
+							"gameui\labeledcommandcombobox.h" \
+							"gameui\loadingdialog.h" \
+							"gameui\loadingtippanel.h" \
+							"gameui\modinfo.h" \
+							"gameui\mousemessageforwardingpanel.h" \
+							"gameui\multiplayeradvanceddialog.h" \
+							"gameui\optionsdialog.h" \
+							"gameui\optionssubaudio.h" \
+							"gameui\optionssubdifficulty.h" \
+							"gameui\optionssubgame.h" \
+							"gameui\optionssubkeyboard.h" \
+							"gameui\optionssubmouse.h" \
+							"gameui\optionssubmultiplayer.h" \
+							"gameui\optionssubportal.h" \
+							"gameui\optionssubvideo.h" \
+							"gameui\optionssubvoice.h" \
+							"gameui\panellistpanel.h" \
+							"gameui\playerlistdialog.h" \
+							"gameui\rungameengine.h" \
+							"gameui\scriptobject.h" \
+							"gameui\sys_utils.h" \
+							"gameui\textentrybox.h" \
+							"gameui\urlbutton.h" \
+							"gameui\vcontrolslistpanel.h" \
+							"gameui\vguisystemmoduleloader.h"
+				}
+				$File	"gameui\backgroundmenubutton.cpp" \
+						"gameui\basesavegamedialog.cpp" \
+						"gameui\bitmapimagepanel.cpp" \
+						"gameui\commandcheckbutton.cpp" \
+						"gameui\contentcontroldialog.cpp" \
+						"gameui\createmultiplayergamebotpage.cpp" \
+						"gameui\createmultiplayergamedialog.cpp" \
+						"gameui\createmultiplayergamegameplaypage.cpp" \
+						"gameui\createmultiplayergameserverpage.cpp" \
+						"gameui\customtabexplanationdialog.cpp" \
+						"gameui\cvarnegatecheckbutton.cpp" \
+						"gameui\cvarslider.cpp" \
+						"gameui\cvartextentry.cpp" \
+						"gameui\cvartogglecheckbutton.cpp" \
+						"gameui\gameconsole.cpp" \
+						"gameui\gameconsoledialog.cpp" \
+						"gameui\gameui_interface.cpp" \
+						"gameui\gameui_util.cpp" \
+						"gameui\keytogglecheckbutton.cpp" \
+						"gameui\labeledcommandcombobox.cpp" \
+						"gameui\loadingdialog.cpp" \
+						"gameui\loadingtippanel.cpp" \
+						"gameui\logofile.cpp" \
+						"gameui\modinfo.cpp" \
+						"gameui\mousemessageforwardingpanel.cpp" \
+						"gameui\multiplayeradvanceddialog.cpp" \
+						"gameui\optionsdialog.cpp" \
+						"gameui\optionssubaudio.cpp" \
+						"gameui\optionssubdifficulty.cpp" \
+						"gameui\optionssubgame.cpp" \
+						"gameui\optionssubkeyboard.cpp" \
+						"gameui\optionssubmouse.cpp" \
+						"gameui\optionssubmultiplayer.cpp" \
+						"gameui\optionssubportal.cpp" \
+						"gameui\optionssubvideo.cpp" \
+						"gameui\optionssubvoice.cpp" \
+						"gameui\panellistpanel.cpp" \
+						"gameui\playerlistdialog.cpp" \
+						"gameui\rungameengine.cpp" \
+						"gameui\scriptobject.cpp" \
+						"gameui\sys_utils.cpp" \
+						"gameui\textentrybox.cpp" \
+						"gameui\urlbutton.cpp" \
+						"gameui\vcontrolslistpanel.cpp" \
+						"gameui\vguisystemmoduleloader.cpp"
+				{
+					$Configuration
+					{
+						$Compiler
+						{
+							$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+						}
+					}
+				}
+			}
+			
+			$Folder "External Stuff"
+			{
+				$File	"$SRCDIR\common\language.cpp"
+				{
+					$Configuration
+					{
+						$Compiler
+						{
+							$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+						}
+					}
+				}
+			}
+
+			$Folder "Swarm GameUI"
+			{
+				$Folder "Headers"
+				{
+					$File	"gameui\swarm\basemodframe.h" \
+							"gameui\swarm\basemodpanel.h" \
+							"gameui\swarm\basemodui.h" \
+							"gameui\swarm\gamemodes.h" \
+							"gameui\swarm\uiavatarimage.h" \
+							"gameui\swarm\uigamedata.h" \
+							"gameui\swarm\vachievements.h" \
+							"gameui\swarm\vaddonassociation.h" \
+							"gameui\swarm\vaddons.h" \
+							"gameui\swarm\vattractscreen.h" \
+							"gameui\swarm\vaudio.h" \
+							"gameui\swarm\vaudiovideo.h" \
+							"gameui\swarm\vcloud.h" \
+							"gameui\swarm\vcontrolleroptions.h" \
+							"gameui\swarm\vcontrolleroptionsbuttons.h" \
+							"gameui\swarm\vcontrolleroptionssticks.h" \
+							"gameui\swarm\vcustomcampaigns.h" \
+							"gameui\swarm\vdownloadcampaign.h" \
+							"gameui\swarm\vdownloads.h" \
+							"gameui\swarm\vdropdownmenu.h" \
+							"gameui\swarm\vflyoutmenu.h" \
+							"gameui\swarm\vfooterpanel.h" \
+							"gameui\swarm\vfoundgames.h" \
+							"gameui\swarm\vfoundgroupgames.h" \
+							"gameui\swarm\vfoundpublicgames.h" \
+							"gameui\swarm\vgamelobby.h" \
+							"gameui\swarm\vgamelobbychat.h" \
+							"gameui\swarm\vgameoptions.h" \
+							"gameui\swarm\vgamesettings.h" \
+							"gameui\swarm\vgenericconfirmation.h" \
+							"gameui\swarm\vgenericpanellist.h" \
+							"gameui\swarm\vgenericwaitscreen.h" \
+							"gameui\swarm\vgetlegacydata.h" \
+							"gameui\swarm\vhybridbutton.h" \
+							"gameui\swarm\vingamechapterselect.h" \
+							"gameui\swarm\vingamedifficultyselect.h" \
+							"gameui\swarm\vingamekickplayerlist.h" \
+							"gameui\swarm\vingamemainmenu.h" \
+							"gameui\swarm\vjukebox.h" \
+							"gameui\swarm\vkeyboard.h" \
+							"gameui\swarm\vkeyboardmouse.h" \
+							"gameui\swarm\vleaderboard.h" \
+							"gameui\swarm\vloadingprogress.h" \
+							"gameui\swarm\vmainmenu.h" \
+							"gameui\swarm\vmultiplayer.h" \
+							"gameui\swarm\voptions.h" \
+							"gameui\swarm\vpasswordentry.h" \
+							"gameui\swarm\vquickjoin.h" \
+							"gameui\swarm\vquickjoingroups.h" \
+							"gameui\swarm\vsignindialog.h" \
+							"gameui\swarm\vslidercontrol.h" \
+							"gameui\swarm\vspinnercontrol.h" \
+							"gameui\swarm\vsteamcloudconfirmation.h" \
+							"gameui\swarm\vtransitionscreen.h" \
+							"gameui\swarm\vvideo.h" \
+							"gameui\swarm\vvoteoptions.h"
+				}
+				$Folder "Win32"
+				{
+					$File	"gameui\swarm\uiavatarimage.cpp" \
+							"gameui\swarm\vaddonassociation.cpp" \
+							"gameui\swarm\vaddons.cpp" \
+							"gameui\swarm\vcloud.cpp" \
+							"gameui\swarm\vcustomcampaigns.cpp" \
+							"gameui\swarm\vdownloadcampaign.cpp" \
+							"gameui\swarm\vdownloads.cpp" \
+							"gameui\swarm\vgetlegacydata.cpp" \
+							"gameui\swarm\vjukebox.cpp" \
+							"gameui\swarm\vkeyboard.cpp" \
+							"gameui\swarm\vkeyboardmouse.cpp" \
+							"gameui\swarm\vsteamcloudconfirmation.cpp"
+					{
+						$Configuration
+						{
+							$Compiler
+							{
+								$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+							}
+						}
+					}
+				}
+				$File	"gameui\swarm\basemodframe.cpp" \
+						"gameui\swarm\basemodpanel.cpp" \
+						"gameui\swarm\gamemodes.cpp" \
+						"gameui\swarm\uigamedata.cpp" \
+						"gameui\swarm\uigamedata_invite.cpp" \
+						"gameui\swarm\uigamedata_storage.cpp" \
+						"gameui\swarm\vachievements.cpp" \
+						"gameui\swarm\vattractscreen.cpp" \
+						"gameui\swarm\vaudio.cpp" \
+						"gameui\swarm\vaudiovideo.cpp" \
+						"gameui\swarm\vcontrolleroptions.cpp" \
+						"gameui\swarm\vcontrolleroptionsbuttons.cpp" \
+						"gameui\swarm\vcontrolleroptionssticks.cpp" \
+						"gameui\swarm\vdropdownmenu.cpp" \
+						"gameui\swarm\vflyoutmenu.cpp" \
+						"gameui\swarm\vfooterpanel.cpp" \
+						"gameui\swarm\vfoundgames.cpp" \
+						"gameui\swarm\vfoundgroupgames.cpp" \
+						"gameui\swarm\vfoundpublicgames.cpp" \
+						"gameui\swarm\vgamelobby.cpp" \
+						"gameui\swarm\vgamelobbychat.cpp" \
+						"gameui\swarm\vgameoptions.cpp" \
+						"gameui\swarm\vgamesettings.cpp" \
+						"gameui\swarm\vgenericconfirmation.cpp" \
+						"gameui\swarm\vgenericpanellist.cpp" \
+						"gameui\swarm\vgenericwaitscreen.cpp" \
+						"gameui\swarm\vhybridbutton.cpp" \
+						"gameui\swarm\vingamechapterselect.cpp" \
+						"gameui\swarm\vingamedifficultyselect.cpp" \
+						"gameui\swarm\vingamekickplayerlist.cpp" \
+						"gameui\swarm\vingamemainmenu.cpp" \
+						"gameui\swarm\vleaderboard.cpp" \
+						"gameui\swarm\vloadingprogress.cpp" \
+						"gameui\swarm\vmainmenu.cpp" \
+						"gameui\swarm\vmenubackground.cpp" \
+						"gameui\swarm\vmultiplayer.cpp" \
+						"gameui\swarm\voptions.cpp" \
+						"gameui\swarm\vpasswordentry.cpp" \
+						"gameui\swarm\vquickjoin.cpp" \
+						"gameui\swarm\vquickjoingroups.cpp" \
+						"gameui\swarm\vsignindialog.cpp" \
+						"gameui\swarm\vslidercontrol.cpp" \
+						"gameui\swarm\vspinnercontrol.cpp" \
+						"gameui\swarm\vtransitionscreen.cpp" \
+						"gameui\swarm\vvideo.cpp" \
+						"gameui\swarm\vvoteoptions.cpp"
+				{
+					$Configuration
+					{
+						$Compiler
+						{
+							$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+						}
+					}
+				}
 			}
 		}
 	}

@@ -5,7 +5,7 @@
 //=============================================================================//
 
 #include "OptionsSubGame.h"
-#include "BaseModPanel.h"
+#include "BasePanel.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -28,7 +28,9 @@ COptionsSubGame::~COptionsSubGame()
 
 void COptionsSubGame::OnClose( void )
 {
+#if defined( BASEPANEL_LEGACY_SOURCE1 )
 	BasePanel()->RunCloseAnimation( "CloseOptionsSubGame" );
+#endif
 	BaseClass::OnClose();
 }
 

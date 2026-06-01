@@ -37,7 +37,7 @@
 	"7"
 	{
 		"label" "#GameUI_GameMenu_Achievements"
-		"command" "OpenAchievementsDialog"
+		"command" "OpenCSAchievementsDialog"
 	}
 	"8"
 	{

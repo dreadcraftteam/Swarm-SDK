@@ -47,7 +47,7 @@
 #endif
 
 #ifdef GAMEUI_EMBEDDED
-#include "BaseModPanel.h"
+#include "gameui/swarm/BaseModPanel.h"
 #else
 #error "GAMEUI_EMBEDDED"
 #endif

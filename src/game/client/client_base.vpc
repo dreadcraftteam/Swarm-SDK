@@ -10,7 +10,6 @@ $Macro OUTBINDIR	"$SRCDIR\..\build\$GAMENAME\bin"
 $MacroRequired "GAMENAME"
 
 $Include "$SRCDIR\vpc_scripts\source_dll_base.vpc"
-$Include "$SRCDIR\game\client\gameui_embedded.vpc"
 
 $Configuration	"Debug"
 {

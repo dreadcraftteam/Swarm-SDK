@@ -106,11 +106,8 @@
 #ifdef GAMEUI_UISYSTEM2_ENABLED
 #include "gameui.h"
 #endif
-
 #ifdef GAMEUI_EMBEDDED
-#include "BaseModPanel.h"
-#else
-#error "GAMEUI_EMBEDDED"
+#include "gameui/swarm/basemodpanel.h"
 #endif
 
 #ifdef DEMOPOLISH_ENABLED
@@ -1759,7 +1756,13 @@ void ConfigureCurrentSystemLevel()
 		nGPUMemLevel = 360;
 	}
 
+#if defined( SWARM_DLL )
+	char szModName[32] = "swarm";
+#elif defined ( HL2_EPISODIC )
+	char szModName[32] = "ep2";
+#elif defined ( SDK_DLL )
 	char szModName[32] = "mod_sdk";
+#endif
 
 	UpdateSystemLevel(nCPULevel, nGPULevel, nMemLevel, nGPUMemLevel, VGui_IsSplitScreen(), szModName);
 

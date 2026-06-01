@@ -197,13 +197,13 @@ Scheme
 
 
 		// Top-left corner of the "Half-Life 2" on the main screen
-		"Main.Title1.X"			"53"
-		"Main.Title1.Y"			"190"
+		"Main.Title1.X"		"80"
+		"Main.Title1.Y"		"100"
 		"Main.Title1.Color"	"White"
 		
 		// Top-left corner of the "subname" on the main screen
-		"Main.Title2.X"				"291"
-		"Main.Title2.Y"				"207"
+		"Main.Title2.X"		"90"
+		"Main.Title2.Y"		"150"
 		"Main.Title2.Color"	"HudGrey"
 
 		// Top-left corner of the menu on the main screen
@@ -1472,6 +1472,7 @@ Scheme
 	// specifies all the custom (non-system) font files that need to be loaded to service the above described fonts
 	CustomFontFiles
 	{
-		"1"		"resource/HALFLIFE2.vfont"
+		"1"		"resource/HALFLIFE2.ttf"
 	}
+
 }

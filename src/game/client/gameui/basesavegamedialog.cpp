@@ -12,6 +12,7 @@
 #include "vgui_controls/Label.h"
 #include "vgui_controls/ImagePanel.h"
 #include "vgui_controls/Button.h"
+#include "vgui_controls/tgaimagepanel.h"
 #include "tier1/utlbuffer.h"
 #include "tier2/resourceprecacher.h"
 #include <stdio.h>
@@ -19,7 +20,6 @@
 #include "FileSystem.h"
 
 #include "MouseMessageForwardingPanel.h"
-#include "TGAImagePanel.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -78,7 +78,7 @@ public:
 		// If a TGA file exists then it is a user created savegame
 		if ( g_pFullFileSystem->FileExists( tga ) )
 		{
-			m_pSaveGameImage->SetTGA( tga );
+			m_pSaveGameImage->SetTGAFilename( tga );
 		}
 		// If there is no TGA then it is either an autosave or the user TGA file has been deleted
 		else

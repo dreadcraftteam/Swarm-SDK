@@ -14,15 +14,15 @@
 #include "tier1/UtlVector.h"
 #include "tier1/UtlSymbol.h"
 
-#include <vgui_controls/PropertyPage.h>
+#include "vgui_controls/EditablePanel.h"
 class VControlsListPanel;
 
 //-----------------------------------------------------------------------------
 // Purpose: Keyboard Details, Part of OptionsDialog
 //-----------------------------------------------------------------------------
-class COptionsSubKeyboard : public vgui::PropertyPage
+class COptionsSubKeyboard : public vgui::EditablePanel
 {
-	DECLARE_CLASS_SIMPLE( COptionsSubKeyboard, vgui::PropertyPage );
+	DECLARE_CLASS_SIMPLE( COptionsSubKeyboard, vgui::EditablePanel );
 
 public:
 	COptionsSubKeyboard(vgui::Panel *parent);
@@ -35,6 +35,8 @@ public:
 
 	// Trap row selection message
 	MESSAGE_FUNC_INT( ItemSelected, "ItemSelected", itemID );
+
+	VControlsListPanel* GetControlsList( void ) { return m_pKeyBindList; }
 
 private:
 	void Finish( ButtonCode_t code );
@@ -53,8 +55,8 @@ private:
 	virtual void	OnCommand( const char *command );
 
 	// Tell engine to bind/unbind a key
-	void			BindKey( const char *key, const char *binding );
-	void			UnbindKey( const char *key );
+	void			BindKey( ButtonCode_t bc, const char *binding );
+	void			UnbindKey( ButtonCode_t bc );
 
 	// Save/restore/cleanup engine's current bindings ( for handling cancel button )
 	void			SaveCurrentBindings( void );
@@ -95,7 +97,9 @@ private:
 	KeyBinding m_Bindings[ BUTTON_CODE_LAST ];
 
 	// List of all the keys that need to have their binding removed
-	CUtlVector<CUtlSymbol> m_KeysToUnbind;
+	CUtlVector<ButtonCode_t> m_KeysToUnbind;
+
+	int				m_nSplitScreenUser;
 };
 
 #endif // OPTIONS_SUB_KEYBOARD_H

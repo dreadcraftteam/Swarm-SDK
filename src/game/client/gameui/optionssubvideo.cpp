@@ -8,7 +8,7 @@
 #include "OptionsSubVideo.h"
 #include "CvarSlider.h"
 #include "EngineInterface.h"
-#include "BaseModPanel.h"
+#include "BasePanel.h"
 #include "igameuifuncs.h"
 #include "modes.h"
 #include "materialsystem/materialsystem_config.h"
@@ -388,11 +388,12 @@ public:
 		{
 			m_pHDR->AddItem("#GameUI_hdr_level2", NULL);
 		}
-
+#if 0
 		if ( materials->SupportsHDRMode( HDR_TYPE_FLOAT ) )
 		{
 			m_pHDR->AddItem("#GameUI_hdr_level3", NULL);
 		}
+#endif
 
 		m_pHDR->SetEnabled( mat_dxlevel.GetInt() >= 80 );
 
@@ -1299,17 +1300,24 @@ void COptionsSubVideo::OpenAdvanced()
 	m_hOptionsSubVideoAdvancedDlg->Activate();
 }
 
+vgui::DHANDLE<class CGammaDialog> COptionsSubVideo::m_hGammaDialog;
+
+void OpenGammaDialog( VPANEL parent )
+{
+	if ( !COptionsSubVideo::m_hGammaDialog.Get() )
+	{
+		COptionsSubVideo::m_hGammaDialog = new CGammaDialog( parent );
+	}
+
+	COptionsSubVideo::m_hGammaDialog->Activate();
+}
+
 //-----------------------------------------------------------------------------
 // Purpose: Opens gamma-adjusting dialog
 //-----------------------------------------------------------------------------
 void COptionsSubVideo::OpenGammaDialog()
 {
-	if ( !m_hGammaDialog.Get() )
-	{
-		m_hGammaDialog = new CGammaDialog( GetVParent() );
-	}
-
-	m_hGammaDialog->Activate();
+	::OpenGammaDialog( GetVParent() );
 }
 
 //-----------------------------------------------------------------------------
@@ -1317,48 +1325,10 @@ void COptionsSubVideo::OpenGammaDialog()
 //-----------------------------------------------------------------------------
 void COptionsSubVideo::LaunchBenchmark()
 {
+#if defined( BASEPANEL_LEGACY_SOURCE1 )
 	BasePanel()->OnOpenBenchmarkDialog();
+#endif
 }
-
-//-----------------------------------------------------------------------------
-// Purpose: third-party audio credits dialog
-//-----------------------------------------------------------------------------
-class COptionsSubVideoThirdPartyCreditsDlg : public vgui::Frame
-{
-   DECLARE_CLASS_SIMPLE( COptionsSubVideoThirdPartyCreditsDlg, vgui::Frame );
-public:
-   COptionsSubVideoThirdPartyCreditsDlg( vgui::VPANEL hParent ) : BaseClass( NULL, NULL )
-   {
-      // parent is ignored, since we want look like we're steal focus from the parent (we'll become modal below)
-
-      SetTitle("#GameUI_ThirdPartyVideo_Title", true);
-      SetSize( 500, 200 );
-      LoadControlSettings( "resource/OptionsSubVideoThirdPartyDlg.res" );
-      MoveToCenterOfScreen();
-      SetSizeable( false );
-      SetDeleteSelfOnClose( true );
-   }
-
-   virtual void Activate()
-   {
-      BaseClass::Activate();
-
-      input()->SetAppModalSurface(GetVPanel());
-   }
-
-   void OnKeyCodeTyped(KeyCode code)
-   {
-      // force ourselves to be closed if the escape key it pressed
-      if (code == KEY_ESCAPE)
-      {
-         Close();
-      }
-      else
-      {
-         BaseClass::OnKeyCodeTyped(code);
-      }
-   }
-};
 
 
 //-----------------------------------------------------------------------------
@@ -1372,3 +1342,51 @@ void COptionsSubVideo::OpenThirdPartyVideoCreditsDialog()
    }
    m_OptionsSubVideoThirdPartyCreditsDlg->Activate();
 }
+
+
+
+COptionsSubVideoThirdPartyCreditsDlg::COptionsSubVideoThirdPartyCreditsDlg( vgui::VPANEL hParent ) : BaseClass( NULL, NULL )
+{
+	SetProportional( true );
+
+	// parent is ignored, since we want look like we're steal focus from the parent (we'll become modal below)
+#ifdef SWARM_DLL
+	SetScheme( "SourceScheme" );
+#endif
+
+	SetTitle("#GameUI_ThirdPartyVideo_Title", true);
+	SetSize( 
+		vgui::scheme()->GetProportionalScaledValueEx( GetScheme(), 500 ),
+		vgui::scheme()->GetProportionalScaledValueEx( GetScheme(), 200 ) );
+
+	MoveToCenterOfScreen();
+	SetSizeable( false );
+	SetDeleteSelfOnClose( true );
+}
+
+void COptionsSubVideoThirdPartyCreditsDlg::ApplySchemeSettings( IScheme *pScheme )
+{
+	BaseClass::ApplySchemeSettings( pScheme );
+	LoadControlSettings( "resource/OptionsSubVideoThirdPartyDlg.res" );
+}
+
+void COptionsSubVideoThirdPartyCreditsDlg::Activate()
+{
+	BaseClass::Activate();
+
+	input()->SetAppModalSurface(GetVPanel());
+}
+
+void COptionsSubVideoThirdPartyCreditsDlg::OnKeyCodeTyped(KeyCode code)
+{
+	// force ourselves to be closed if the escape key it pressed
+	if (code == KEY_ESCAPE)
+	{
+		Close();
+	}
+	else
+	{
+		BaseClass::OnKeyCodeTyped(code);
+	}
+}
+

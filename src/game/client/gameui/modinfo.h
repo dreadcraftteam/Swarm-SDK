@@ -34,14 +34,13 @@ public:
 	// data accessors
    	const wchar_t *GetGameTitle();
    	const wchar_t *GetGameTitle2();
-	const wchar_t *GetGameTitle3();	// this was used origally for the "BETA" logo for CSS
 	const char *GetGameName();
 
    	bool IsMultiplayerOnly();
    	bool IsSinglePlayerOnly();
 
 	bool HasPortals();
-	bool HasHDContent();	// indicate if we use hd models or not TODO; implement this on mod side
+
 	bool NoDifficulty();
   	bool NoModels();
   	bool NoHiModel();
@@ -49,17 +48,15 @@ public:
 	bool AdvCrosshair();
    	const char *GetFallbackDir();
 	bool UseGameLogo();
-	bool UseBots();	// this checks if we want to use css bots
-
 
 	KeyValues *GetHiddenMaps();
 
 private:
 	wchar_t m_wcsGameTitle[128];
 	wchar_t m_wcsGameTitle2[128];
-	wchar_t m_wcsGameTitle3[128];
 	KeyValues *m_pModData;
 };
+
 
 // singleton accessor
 extern CModInfo &ModInfo();

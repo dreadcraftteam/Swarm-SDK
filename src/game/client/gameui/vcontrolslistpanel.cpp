@@ -38,7 +38,7 @@ public:
 		GetSize(wide, tall);
 
 		// Draw a white rectangle around that cell
-		vgui::surface()->DrawSetColor( 255, 165, 0, 255 );
+		vgui::surface()->DrawSetColor( 0, 165, 255, 255 );
 		vgui::surface()->DrawFilledRect( x, y, x + wide, y + tall );
 	}
 

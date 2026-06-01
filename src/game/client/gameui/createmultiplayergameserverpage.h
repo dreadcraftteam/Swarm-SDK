@@ -45,6 +45,7 @@ private:
 
 	vgui::ComboBox *m_pMapList;
 	vgui::CheckButton *m_pEnableBotsCheck;
+	CCvarToggleCheckButton *m_pEnableTutorCheck;
 	KeyValues *m_pSavedData;
 
 	enum { DATA_STR_LENGTH = 64 };
