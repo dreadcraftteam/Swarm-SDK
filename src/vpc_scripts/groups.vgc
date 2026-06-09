@@ -20,5 +20,5 @@ $Group "everything"
 	"interfaces"
 	"responserules_runtime"
 	"meshutils"
-	videocfg
+	"videocfg"
 }
