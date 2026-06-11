@@ -80,12 +80,16 @@ void CSimpleBot::Precache()
 {
 	BaseClass::Precache();
 
-#if !defined( DOTA_DLL ) && !defined( TF_DLL )
-	PrecacheModel( "models/humans/group01/female_01.mdl" );
+#if defined ( HL2_DLL ) || defined ( HL2MP )
+	PrecacheModel("models/humans/group01/female_01.mdl");
 #endif
 
 #if defined( TF_DLL )
-	PrecacheModel( "models/player/engineer.mdl" );
+	PrecacheModel("models/player/engineer.mdl");
+#endif
+
+#if defined ( SWARM_DLL )
+	PrecacheModel("models/swarm/marine/marine.mdl");
 #endif
 }
 
@@ -95,12 +99,16 @@ void CSimpleBot::Spawn( void )
 {
 	BaseClass::Spawn();
 
-#if !defined( DOTA_DLL ) && !defined( TF_DLL )
+#if defined ( HL2_DLL ) || defined ( HL2MP )
 	SetModel( "models/humans/group01/female_01.mdl" );
 #endif
 
 #if defined( TF_DLL )
 	SetModel( "models/player/engineer.mdl" );
+#endif
+
+#if defined ( SWARM_DLL )
+	SetModel( "models/swarm/marine/marine.mdl" );
 #endif
 }
 

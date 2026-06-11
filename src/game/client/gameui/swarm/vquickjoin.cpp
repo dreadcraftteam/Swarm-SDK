@@ -8,8 +8,8 @@
 #include "VGenericPanelList.h"
 #include "VHybridButton.h"
 #include "VMainMenu.h"
-#include "EngineInterface.h"
-#include "gameui_util.h"
+#include "../EngineInterface.h"
+#include "../gameui_util.h"
 
 #include "tier1/KeyValues.h"
 #include "vgui/ILocalize.h"

@@ -8,7 +8,7 @@
 #include "basemodpanel.h"
 #include "VFooterPanel.h"
 #include "VFlyoutMenu.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "vgui/ISurface.h"
 #include "vgui_controls/Tooltip.h"
 #include "vgui/IVgui.h"

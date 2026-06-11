@@ -1,6 +1,0 @@
-"WorldTwoTextureBlend"
-{
-	"$basetexture" "shadertest/WorldTwoTextureBlend"
-	"$detail" "shadertest/WorldTwoTextureBlend_detail"
-	"$detailscale" 2.00
-}

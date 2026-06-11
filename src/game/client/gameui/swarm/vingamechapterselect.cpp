@@ -6,14 +6,14 @@
 
 #include "VInGameChapterSelect.h"
 #include "VFooterPanel.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VDropDownMenu.h"
 
 #include "VHybridButton.h"
 #include "VGameSettings.h"
 #include "vgui_controls/ImagePanel.h"
 #include "vgui/ILocalize.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 #include "fmtstr.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -82,7 +82,11 @@ void InGameChapterSelect::ApplySchemeSettings(vgui::IScheme *pScheme)
 
 	// Get mission and campaign info
 	KeyValues *pInfoMission = NULL;
+#ifdef SWARM_DLL
 	KeyValues *pInfoChapter = g_pMatchExtSwarm->GetMapInfo( pGameSettings, &pInfoMission );
+#else
+	KeyValues* pInfoChapter;
+#endif
 
 	// Check if this is a custom mission?
 	if ( pInfoMission && !pInfoMission->GetBool( "builtin" ) )
@@ -90,7 +94,11 @@ void InGameChapterSelect::ApplySchemeSettings(vgui::IScheme *pScheme)
 
 	if ( !pInfoMission || !pInfoChapter )
 	{
+#ifdef SWARM_DLL
 		KeyValues *pAllMissions = g_pMatchExtSwarm->GetAllMissions();
+#else 
+		KeyValues* pAllMissions;
+#endif
 		for ( pInfoMission = pAllMissions ? pAllMissions->GetFirstTrueSubKey() : NULL;
 			  pInfoMission; pInfoMission = pInfoMission->GetNextTrueSubKey() )
 		{
@@ -195,10 +203,12 @@ void InGameChapterSelect::OnCommand(const char *command)
 							{
 								pGameSettings->SetString( "game/campaign", szMissionName );
 								pGameSettings->SetInt( "game/chapter", 1 );
+#ifdef SWARM_DLL
 								if ( !g_pMatchExtSwarm->GetMapInfo( pGameSettings ) )
 								{
 									button->SetEnabled( false );
 								}
+#endif
 							}
 						}
 					}
@@ -236,10 +246,12 @@ void InGameChapterSelect::OnCommand(const char *command)
 
 			engine->ClientCmd( CFmtStr( "callvote %s %s;", szVoteCommand, m_chCampaign ) );
 		}
+#ifdef SWARM_DLL
 		else if ( KeyValues *pInfoMap = g_pMatchExtSwarm->GetMapInfo( pGameSettings ) )
 		{
 			engine->ClientCmd( CFmtStr( "callvote %s %s;", szVoteCommand, pInfoMap->GetString( "map" ) ) );
 		}
+#endif
 
 		GameUI().AllowEngineHideGameUI();
 		engine->ClientCmd( "gameui_hide" );

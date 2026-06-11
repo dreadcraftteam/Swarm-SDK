@@ -48,7 +48,7 @@ public:
 	void			CheckInterpChanges( void );
 	void			CheckForLayerPhysicsInvalidate( void );
 
-//private:
+private:
 	void CheckForLayerChanges( CStudioHdr *hdr, float currentTime );
 
 	CUtlVector < CAnimationLayer >	m_AnimOverlay;

@@ -7,7 +7,7 @@
 #include "vgui_controls/ScrollBar.h"
 
 #include "IEngineVGUI.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VGameLobby.h"
 #include "VGameLobbyChat.h"
 #include "vgui/IInput.h"

@@ -32,8 +32,8 @@ namespace BaseModUI
 		void SetConCommand( const char* conCommand );
 		void SetConCommandDefault( const char* conCommand );
 		void SetStepSize( float stepSize );
-		void SetMin( float MIN );
-		void SetMax( float MAX );
+		void SetMin( float min );
+		void SetMax( float max );
 
 		int GetTextureId();
 

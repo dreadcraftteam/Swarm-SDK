@@ -73,8 +73,6 @@ public:
 
 	// Methods of ICollideable
 	virtual IHandleEntity	*GetEntityHandle();
- 	virtual const Vector&	OBBMinsPreScaled() const { return m_vecMinsPreScaled.Get(); }
-	virtual const Vector&	OBBMaxsPreScaled() const { return m_vecMaxsPreScaled.Get(); }
  	virtual const Vector&	OBBMins( ) const;
 	virtual const Vector&	OBBMaxs( ) const;
 	virtual void			WorldSpaceTriggerBounds( Vector *pVecWorldMins, Vector *pVecWorldMaxs ) const;
@@ -104,9 +102,6 @@ public:
 
 	// Sets the collision bounds + the size (OBB)
 	void			SetCollisionBounds( const Vector& mins, const Vector &maxs );
-
-	// Rebuilds the scaled bounds from the pre-scaled bounds after a model's scale has changed
-	void			RefreshScaledCollisionBounds( void );
 
 	// Sets special trigger bounds. The bloat amount indicates how much bigger the 
 	// trigger bounds should be beyond the bounds set in SetCollisionBounds
@@ -246,8 +241,6 @@ private:
 	CBaseEntity *m_pOuter;
 
 // BEGIN PREDICTION DATA COMPACTION (these fields are together to allow for faster copying in prediction system)
-	CNetworkVector( m_vecMinsPreScaled );
-	CNetworkVector( m_vecMaxsPreScaled );
 	CNetworkVector( m_vecMins );
 	CNetworkVector( m_vecMaxs );
 	CNetworkVar( unsigned short, m_usSolidFlags );
@@ -265,8 +258,6 @@ private:
 	// SUCKY: We didn't use to have to store this previously
 	// but storing it here means that we can network it + avoid a ton of
 	// client-side mismatch problems
-	CNetworkVector( m_vecSpecifiedSurroundingMinsPreScaled );
-	CNetworkVector( m_vecSpecifiedSurroundingMaxsPreScaled );
 	CNetworkVector( m_vecSpecifiedSurroundingMins );
 	CNetworkVector( m_vecSpecifiedSurroundingMaxs );
 

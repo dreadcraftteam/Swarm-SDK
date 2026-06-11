@@ -38,6 +38,7 @@
 	#include "usermessages.h"
 	#include "tier0/icommandline.h"
 	#include "basemultiplayerplayer.h"
+	
 #ifdef NEXT_BOT
 #include "NextBotManager.h"
 #endif
@@ -291,21 +292,12 @@ CMultiplayRules::CMultiplayRules()
 	// override some values for multiplay.
 
 		// suitcharger
-#if !defined ( TF_DLL ) && !defined ( SDK_DLL )
-//=============================================================================
-// HPE_BEGIN:
-// [menglish] CS doesn't have the suitcharger either
-//=============================================================================
-#ifndef CSTRIKE_DLL
+
 		ConVarRef suitcharger( "sk_suitcharger" );
 		suitcharger.SetValue( 30 );
- #endif
-//=============================================================================
-// HPE_END
-//=============================================================================
-#endif
 
 	}
+
 
 	//=========================================================
 	//=========================================================
@@ -1376,7 +1368,7 @@ CMultiplayRules::CMultiplayRules()
 				}
 
 				pPlayer->NoteSpokeVoiceCommand( szResponse );
-
+				
 #ifdef NEXT_BOT
 				// let bots react to player's voice commands
 				CUtlVector< INextBot* > botVector;

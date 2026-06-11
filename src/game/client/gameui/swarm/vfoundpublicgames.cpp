@@ -10,7 +10,7 @@
 #endif
 #include "tier1/fmtstr.h"
 #include "vgui/ILocalize.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VHybridButton.h"
 #include "VDropDownMenu.h"
 #include "VFlyoutMenu.h"
@@ -127,7 +127,7 @@ void FoundPublicGames::UpdateTitle()
 		}
 	}
 
-	BaseClass::DrawDialogBackground( CFmtStr( "#L4D360UI_FoundPublicGames_Title_%s", gameMode ), NULL, NULL, finalString, NULL );
+	//BaseClass::DrawDialogBackground( CFmtStr( "#L4D360UI_FoundPublicGames_Title_%s", gameMode ), NULL, NULL, finalString, NULL );
 
 	m_pTitle->SetText( CFmtStr( "#L4D360UI_FoundPublicGames_Title_%s", gameMode ) );
 }
@@ -135,7 +135,7 @@ void FoundPublicGames::UpdateTitle()
 //=============================================================================
 void FoundPublicGames::PaintBackground()
 {
-	
+	/*
 	const char *gameMode = m_pDataSettings->GetString( "game/mode", "campaign" );
 
 	wchar_t finalString[256] = L"";
@@ -151,7 +151,7 @@ void FoundPublicGames::PaintBackground()
 	}
 
 	BaseClass::DrawDialogBackground( CFmtStr( "#L4D360UI_FoundPublicGames_Title_%s", gameMode ), NULL, NULL, finalString, NULL );
-	
+	*/
 }
 
 //=============================================================================
@@ -195,31 +195,35 @@ bool FoundPublicGames::ShouldShowPublicGame( KeyValues *pGameDetails )
 	DevMsg( "FoundPublicGames::ShouldShowPublicGame\n" );
 	KeyValuesDumpAsDevMsg( pGameDetails );
 
-	//IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
-	//if ( !pSource )
-	//	return false;
+#ifdef SWARM_DLL
+	IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
+#else
+	IASW_Mission_Chooser_Source* pSource;
+#endif
+	if ( !pSource )
+		return false;
 
-	//const char *szMode = pGameDetails->GetString( "game/mode", "campaign" );
-	//if ( !Q_stricmp( szMode, "campaign" ) )
-	//{
-	//	char const *szCampaign = pGameDetails->GetString( "game/campaign", NULL );
-	//	bool bCampaignInstalled = pSource->CampaignExists( szCampaign );
+	const char *szMode = pGameDetails->GetString( "game/mode", "campaign" );
+	if ( !Q_stricmp( szMode, "campaign" ) )
+	{
+		char const *szCampaign = pGameDetails->GetString( "game/campaign", NULL );
+		bool bCampaignInstalled = pSource->CampaignExists( szCampaign );
 
-	//	if ( !bCampaignInstalled &&
-	//		( !Q_stricmp( ui_public_lobby_filter_campaign.GetString(), "installedaddon" ) ||
-	//		!Q_stricmp( ui_public_lobby_filter_campaign.GetString(), "official" ) ) )
-	//		return false;
-	//}
-	//else if ( !Q_stricmp( szMode, "single_mission" ) )
-	//{
-	//	char const *szMission = pGameDetails->GetString( "game/mission", NULL );
-	//	bool bMissionInstalled = pSource->MissionExists( szMission, false );
+		if ( !bCampaignInstalled &&
+			( !Q_stricmp( ui_public_lobby_filter_campaign.GetString(), "installedaddon" ) ||
+			!Q_stricmp( ui_public_lobby_filter_campaign.GetString(), "official" ) ) )
+			return false;
+	}
+	else if ( !Q_stricmp( szMode, "single_mission" ) )
+	{
+		char const *szMission = pGameDetails->GetString( "game/mission", NULL );
+		bool bMissionInstalled = pSource->MissionExists( szMission, false );
 
-	//	if ( !bMissionInstalled &&
-	//		( !Q_stricmp( ui_public_lobby_filter_campaign.GetString(), "installedaddon" ) ||
-	//		!Q_stricmp( ui_public_lobby_filter_campaign.GetString(), "official" ) ) )
-	//		return false;
-	//}
+		if ( !bMissionInstalled &&
+			( !Q_stricmp( ui_public_lobby_filter_campaign.GetString(), "installedaddon" ) ||
+			!Q_stricmp( ui_public_lobby_filter_campaign.GetString(), "official" ) ) )
+			return false;
+	}
 	
 	// TODO:
 	//char const *szWebsite = pGameDetails->GetString( "game/missioninfo/website", "" );

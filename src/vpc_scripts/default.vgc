@@ -1,9 +1,14 @@
+//-----------------------------------------------------------------------------
+//	DEFAULT.VGC
+//
+//	Configurations for all Alien Swarm(TM) Projects
+//-----------------------------------------------------------------------------
+
 $Games
 {
-	"SDK"
+	"SWARM"
 }
 
 $Conditional	"SOURCESDK" "1"
-
 $Include		"vpc_scripts\projects.vgc"
 $Include		"vpc_scripts\groups.vgc"

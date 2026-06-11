@@ -7,7 +7,7 @@
 #include "basemodpanel.h"
 #include "basemodframe.h"
 #include "UIGameData.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VGenericConfirmation.h"
 #include "vgui/ILocalize.h"
 #include "matchmaking/imatchframework.h"

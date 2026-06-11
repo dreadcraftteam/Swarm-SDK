@@ -139,14 +139,95 @@ void WriteUsercmd( bf_write *buf, const CUserCmd *to, const CUserCmd *from )
 	WriteUserCmdDeltaInt( buf, "buttons", from->buttons, to->buttons, 32 );
 	WriteUserCmdDeltaInt( buf, "impulse", from->impulse, to->impulse, 8 );
 
+#if defined( INFESTED_DLL )
+	if ( to->crosshairtrace != from->crosshairtrace )
+	{
+		buf->WriteOneBit( 1 );
+		buf->WriteBitVec3Coord( to->crosshairtrace );
+	}
+	else
+	{
+		buf->WriteOneBit( 0 );
+	}
+
+	if ( to->weaponselect != from->weaponselect )
+	{
+		buf->WriteOneBit( 1 );
+		buf->WriteUBitLong( to->weaponselect, MAX_EDICT_BITS );		
+	}
+	else
+	{
+		buf->WriteOneBit( 0 );
+	}
+
+	if ( to->weaponsubtype != from->weaponsubtype )
+	{
+		buf->WriteOneBit( 1 );
+		buf->WriteUBitLong( to->weaponsubtype, WEAPON_SUBTYPE_BITS );
+	}
+	else
+	{
+		buf->WriteOneBit( 0 );
+	}
+#endif
+
+
+#ifdef INFESTED_DLL // asw - check weapon subtype seperately, since we use it to say which marine we're controlling
+
+	if ( to->crosshair_entity != from->crosshair_entity )
+	{
+		buf->WriteOneBit( 1 );
+		buf->WriteShort( to->crosshair_entity );
+	}
+	else
+	{
+		buf->WriteOneBit( 0 );
+	}
+
+	if ( to->forced_action != from->forced_action )
+	{
+		buf->WriteOneBit( 1 );
+		buf->WriteShort( to->forced_action );
+	}
+	else
+	{
+		buf->WriteOneBit( 0 );
+	}
+
+	if ( to->sync_kill_ent != from->sync_kill_ent )
+	{
+		buf->WriteOneBit( 1 );
+		buf->WriteShort( to->sync_kill_ent );
+	}
+	else
+	{
+		buf->WriteOneBit( 0 );
+	}
+
+	WriteUserCmdDeltaVec3Coord( buf, "skill_dest", from->skill_dest, to->skill_dest );
+
+	if ( to->skill_dest_ent != from->skill_dest_ent )
+	{
+		buf->WriteOneBit( 1 );
+		buf->WriteShort( to->skill_dest_ent );
+	}
+	else
+	{
+		buf->WriteOneBit( 0 );
+	}
+
+#else
 	if ( WriteUserCmdDeltaInt( buf, "weaponselect", from->weaponselect, to->weaponselect, MAX_EDICT_BITS ) )
 	{
 		WriteUserCmdDeltaInt( buf, "weaponsubtype", from->weaponsubtype, to->weaponsubtype, WEAPON_SUBTYPE_BITS );
 	}
+#endif
 
+#ifndef INFESTED_DLL		// alien swarm doesn't need these
 	// TODO: Can probably get away with fewer bits.
 	WriteUserCmdDeltaShort( buf, "mousedx", from->mousedx, to->mousedx );
 	WriteUserCmdDeltaShort( buf, "mousedy", from->mousedy, to->mousedy );
+#endif
 
 #if defined( HL2_CLIENT_DLL )
 	if ( to->entitygroundcontact.Count() != 0 )
@@ -174,6 +255,8 @@ void WriteUsercmd( bf_write *buf, const CUserCmd *to, const CUserCmd *from )
 	}
 #endif
 
+
+
 	if ( IsHeadTrackingEnabled() )
 	{
 		// TrackIR head angles
@@ -183,6 +266,7 @@ void WriteUsercmd( bf_write *buf, const CUserCmd *to, const CUserCmd *from )
 
 		// TrackIR head offset
 		WriteUserCmdDeltaVec3Coord( buf, "headoffset", from->headoffset, to->headoffset );
+
 		// TrackIR
 	}
 }
@@ -262,6 +346,46 @@ void ReadUsercmd( bf_read *buf, CUserCmd *move, CUserCmd *from )
 		move->impulse = buf->ReadUBitLong( 8 );
 	}
 
+#if defined( INFESTED_DLL )
+	if ( buf->ReadOneBit() )
+	{
+		buf->ReadBitVec3Coord( move->crosshairtrace );
+	}
+	if ( buf->ReadOneBit() )
+	{
+		move->weaponselect = buf->ReadUBitLong( MAX_EDICT_BITS );		
+	}
+
+	if ( buf->ReadOneBit() )
+	{
+		move->weaponsubtype = buf->ReadUBitLong( WEAPON_SUBTYPE_BITS );
+	}
+#endif
+
+#ifdef INFESTED_DLL // asw - check weapon subtype seperately, since we use it to say which marine we're controlling
+
+
+	if ( buf->ReadOneBit() )
+	{
+		move->crosshair_entity = buf->ReadShort();
+	}
+	if ( buf->ReadOneBit() )
+	{
+		move->forced_action = buf->ReadShort();
+	}
+	if ( buf->ReadOneBit() )
+	{
+		move->sync_kill_ent = buf->ReadShort();
+	}
+	if ( buf->ReadOneBit() )
+	{
+		buf->ReadBitVec3Coord(move->skill_dest);
+	}
+	if ( buf->ReadOneBit() )
+	{
+		move->skill_dest_ent = buf->ReadShort();
+	}
+#else
 	if ( buf->ReadOneBit() )
 	{
 		move->weaponselect = buf->ReadUBitLong( MAX_EDICT_BITS );
@@ -270,9 +394,11 @@ void ReadUsercmd( bf_read *buf, CUserCmd *move, CUserCmd *from )
 			move->weaponsubtype = buf->ReadUBitLong( WEAPON_SUBTYPE_BITS );
 		}
 	}
+#endif
 
 	move->random_seed = MD5_PseudoRandom( move->command_number ) & 0x7fffffff;
 
+#ifndef INFESTED_DLL		// alien swarm doesn't need these
 	if ( buf->ReadOneBit() )
 	{
 		move->mousedx = buf->ReadShort();
@@ -282,6 +408,7 @@ void ReadUsercmd( bf_read *buf, CUserCmd *move, CUserCmd *from )
 	{
 		move->mousedy = buf->ReadShort();
 	}
+#endif
 
 #if defined( HL2_DLL )
 	if ( buf->ReadOneBit() )
@@ -297,6 +424,8 @@ void ReadUsercmd( bf_read *buf, CUserCmd *move, CUserCmd *from )
 		}
 	}
 #endif
+
+
 
 	if ( IsHeadTrackingEnabled() )
 	{
@@ -323,4 +452,5 @@ void ReadUsercmd( bf_read *buf, CUserCmd *move, CUserCmd *from )
 		}
 		// TrackIR
 	}
+
 }

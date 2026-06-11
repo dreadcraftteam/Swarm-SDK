@@ -7,7 +7,7 @@
 #include "VGameOptions.h"
 #include "VSpinnerControl.h"
 #include "VFooterPanel.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 #include "vgui_controls/CheckButton.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -50,11 +50,11 @@ GenericSpinnerItem gLookSensitivityItems[] = {
 #define LOOK_SENSITIVITY_DEFAULT 3
 
 // gets a multiplier 0.5 to 2.0 based on a range and current value
-static float GetMult(const int& MIN, const int& MAX, const int& cur)
+static float GetMult(const int& min, const int& max, const int& cur)
 {
-	float half = static_cast<float>(MAX - MIN) / 2.0f;
+	float half = static_cast<float>(max - min) / 2.0f;
 	float diff = static_cast<float>(cur) - half;
-	float fMin = static_cast<float>(MIN);
+	float fMin = static_cast<float>(min);
 	float modifier = (diff - fMin) / half;
 
 	if(diff > 0.0f)

@@ -5,7 +5,7 @@
 //=====================================================================================//
 
 #include "VMainMenu.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VFooterPanel.h"
 #include "VHybridButton.h"
 #include "VFlyoutMenu.h"
@@ -18,7 +18,7 @@
 #include "vaddonassociation.h"
 
 #include "VSignInDialog.h"
-#include "VGuiSystemModuleLoader.h"
+#include "../VGuiSystemModuleLoader.h"
 #include "VAttractScreen.h"
 #include "gamemodes.h"
 
@@ -33,7 +33,7 @@
 #include "materialsystem/materialsystem_config.h"
 
 #include "ienginevgui.h"
-#include "basepanel.h"
+#include "../basepanel.h"
 #include "vgui/ISurface.h"
 #include "tier0/icommandline.h"
 #include "fmtstr.h"
@@ -59,7 +59,7 @@ static ConVar ui_play_online_browser( "ui_play_online_browser",
 #endif
 									 "Whether play online displays a browser or plain search dialog." );
 
-ConVar asw_show_all_singleplayer_maps( "asw_show_all_singleplayer_maps", "0", FCVAR_NONE | FCVAR_DEVELOPMENTONLY, "If set, offline practice option on the main menu will show all maps." );
+ConVar asw_show_all_singleplayer_maps( "asw_show_all_singleplayer_maps", "0", FCVAR_NONE, "If set, offline practice option on the main menu will show all maps." );
 
 void Demo_DisableButton( Button *pButton );
 void OpenGammaDialog( VPANEL parent );
@@ -470,7 +470,7 @@ void MainMenu::OnCommand( const char *command )
 
 			GenericConfirmation::Data_t data;
 
-			data.pWindowTitle = "#SDK_UI_Game_Title";
+			data.pWindowTitle = "#L4D360UI_MainMenu_Quit_Confirm";
 			data.pMessageText = "#L4D360UI_MainMenu_Quit_ConfirmMsg";
 
 			data.bOkButtonEnabled = true;
@@ -604,21 +604,10 @@ void MainMenu::OnCommand( const char *command )
 			CBaseModPanel::GetSingleton().OpenWindow(WT_KEYBOARDMOUSE, this, true );
 		}
 	}
-	else if( Q_stricmp( "Keyboard", command ) == 0 )
+	else if( Q_stricmp( "#L4D360UI_Controller_Edit_Keys_Buttons", command ) == 0 )
 	{
-		if ( ui_old_options_menu.GetBool() )
-		{
-			CBaseModPanel::GetSingleton().OpenKeyBindingsDialog( this );
-		}
-		else
-		{
-			// standalone keyboard/mouse dialog, PC only
-			if ( m_ActiveControl )
-			{
-				m_ActiveControl->NavigateFrom( );
-			}
-			CBaseModPanel::GetSingleton().OpenWindow(WT_KEYBOARD, this, true );
-		}
+		FlyoutMenu::CloseActiveMenu();
+		CBaseModPanel::GetSingleton().OpenKeyBindingsDialog( this );
 	}
 	else if (!Q_strcmp(command, "MultiplayerSettings"))
 	{
@@ -689,11 +678,49 @@ void MainMenu::OnCommand( const char *command )
 	}
 	else if( !Q_strcmp( command, "CreateGame" ) )
 	{
-		engine->ClientCmd("opencreatemultiplayerdialog");
-	}
-	else if( !Q_strcmp( command, "OpenCreditsPage" ) )
-	{
-		CBaseModPanel::GetSingleton().OpenWindow( WT_CREDITSPAGE, this, true );
+		KeyValues *pSettings = KeyValues::FromString(
+			"settings",
+			" system { "
+			" network LIVE "
+			" access public "
+			" } "
+			" game { "
+			" mode = "
+			" campaign = "
+			" mission = "
+			" } "
+			" options { "
+			" action create "
+			" } "
+			);
+		KeyValues::AutoDelete autodelete( pSettings );
+
+		char const *szGameMode = "campaign";
+		pSettings->SetString( "game/mode", szGameMode );
+		pSettings->SetString( "game/campaign", "jacob" );
+		pSettings->SetString( "game/mission", "asi-jac1-landingbay_01" );
+
+		if ( !CUIGameData::Get()->SignedInToLive() )
+		{
+			pSettings->SetString( "system/network", "lan" );
+			pSettings->SetString( "system/access", "public" );
+		}
+
+		if ( StringHasPrefix( szGameMode, "team" ) )
+		{
+			pSettings->SetString( "system/netflag", "teamlobby" );
+		}
+// 		else if ( !Q_stricmp( "custommatch", m_pDataSettings->GetString( "options/action", "" ) ) )
+// 		{
+// 			pSettings->SetString( "system/access", "public" );
+// 		}
+
+		// TCR: We need to respect the default difficulty
+		pSettings->SetString( "game/difficulty", GameModeGetDefaultDifficulty( szGameMode ) );
+
+		CBaseModPanel::GetSingleton().PlayUISound( UISOUND_ACCEPT );
+		CBaseModPanel::GetSingleton().CloseAllWindows();
+		CBaseModPanel::GetSingleton().OpenWindow( WT_GAMESETTINGS, NULL, true, pSettings );
 	}
 	else
 	{
@@ -1013,9 +1040,6 @@ void MainMenu::ApplySchemeSettings( IScheme *pScheme )
 	}
 #endif
 
-	SetCursor(dc_arrow);
-	SetMouseInputEnabled(true);
-
 	LoadControlSettings( pSettings );
 
 	BaseModHybridButton *button = dynamic_cast< BaseModHybridButton* >( FindChildByName( "BtnPlaySolo" ) );
@@ -1105,10 +1129,8 @@ void MainMenu::ApplySchemeSettings( IScheme *pScheme )
 			int32 availableBytes, totalBytes = 0;
 			if ( pRemoteStorage && pRemoteStorage->GetQuota( &totalBytes, &availableBytes ) )
 			{
-				DevMsg("Accessing remote storage.  totalBytes = %i\n", totalBytes);
 				if ( totalBytes > 0 )
 				{
-					DevMsg("Enabling cloud.\n");
 					bUsesCloud = true;
 				}
 			}
@@ -1173,13 +1195,6 @@ void MainMenu::ApplySchemeSettings( IScheme *pScheme )
 		Warning( "======= SIGNIN RESET SIGNIN RESET SIGNIN RESET SIGNIN RESET ==========\n" );
 	}
 #endif
-}
-
-void MainMenu::OnCursorMoved(int x, int y)
-{
-	BaseClass::OnCursorMoved(x, y);
-
-	SetCursor(dc_arrow);
 }
 
 const char *pDemoDisabledButtons[] = { "BtnVersus", "BtnSurvival", "BtnStatsAndAchievements", "BtnExtras" };
@@ -1262,21 +1277,11 @@ CON_COMMAND_F( openserverbrowser, "Opens server browser", 0 )
 			g_VModuleLoader.PostMessageToAllModules( pKV );
 		}
 
+#ifdef INFESTED_DLL
 		KeyValues *pSchemeKV = new KeyValues( "SetCustomScheme" );
-		pSchemeKV->SetString( "SchemeName", "SourceScheme" );
+		pSchemeKV->SetString( "SchemeName", "SwarmServerBrowserScheme" );
 		g_VModuleLoader.PostMessageToAllModules( pSchemeKV );
-	}
-}
 #endif
-
-#ifndef _X360
-CON_COMMAND_F( opencreatemultiplayerdialog, "Opens the create a multiplayer game dialog", 0 )
-{
-	bool isSteam = IsPC() && steamapicontext->SteamFriends() && steamapicontext->SteamUtils();
-	if ( isSteam )
-	{
-		CBaseModFrame* mainMenu = CBaseModPanel::GetSingleton().GetWindow( WT_MAINMENU );
-		CBaseModPanel::GetSingleton().OpenWindow( WT_CREATEMPGAME, mainMenu );
 	}
 }
 #endif

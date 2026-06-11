@@ -9,14 +9,14 @@
 #include "VDropDownMenu.h"
 #include "VSliderControl.h"
 #include "VHybridButton.h"
-#include "EngineInterface.h"
-#include "gameui_util.h"
+#include "../EngineInterface.h"
+#include "../gameui_util.h"
 #include "vgui/ISurface.h"
 #include "VGenericConfirmation.h"
 #include "ivoicetweak.h"
 #include "materialsystem/materialsystem_config.h"
 #include "cdll_util.h"
-#include "vgui/nb_header_footer.h"
+#include "nb_header_footer.h"
 #include "vgui_controls/ImagePanel.h"
 
 #ifdef _X360
@@ -58,6 +58,13 @@ BaseClass(parent, panelName)
 	m_pVoiceTweak = NULL;
 #endif
 
+	m_pHeaderFooter = new CNB_Header_Footer( this, "HeaderFooter" );
+	m_pHeaderFooter->SetTitle( "" );
+	m_pHeaderFooter->SetHeaderEnabled( false );
+	m_pHeaderFooter->SetFooterEnabled( true );
+	m_pHeaderFooter->SetGradientBarEnabled( true );
+	m_pHeaderFooter->SetGradientBarPos( 60, 340 );
+
 	SetDeleteSelfOnClose(true);
 
 	SetProportional( true );
@@ -83,21 +90,14 @@ BaseClass(parent, panelName)
 	m_pMicMeter2 = NULL;
 	m_pMicMeterIndicator = NULL;
 
+	m_btnCancel = NULL;
+
 	m_btn3rdPartyCredits = NULL;
 
 	m_nSelectedAudioLanguage = k_Lang_None;
 	m_nCurrentAudioLanguage = k_Lang_None;
 
 	m_nNumAudioLanguages = 0;
-
-	m_pHeaderFooter = new CNB_Header_Footer( this, "HeaderFooter" );
-	m_pHeaderFooter->SetTitle( "" );
-	m_pHeaderFooter->SetHeaderEnabled( false );
-	m_pHeaderFooter->SetFooterEnabled( true );
-	m_pHeaderFooter->SetGradientBarEnabled( true );
-	m_pHeaderFooter->SetGradientBarPos( 60, 340 );
-
-	m_btnCancel = NULL;
 }
 
 //=============================================================================
@@ -832,6 +832,18 @@ void Audio::OnCommand(const char *command)
 			}
 		}
 	}
+	else if( !Q_strcmp( command, "Jukebox" ) )
+	{
+		if ( m_pVoiceTweak && m_pMicMeter2 )
+		{
+			if ( m_pMicMeter2->IsVisible() )
+			{
+				EndTestMicrophone();
+			}
+		}
+
+		CBaseModPanel::GetSingleton().OpenWindow( WT_JUKEBOX, this, true );
+	}
 	else if( Q_stricmp( "Back", command ) == 0 )
 	{
 		OnKeyCodePressed( ButtonCodeToJoystickButtonCode( KEY_XBUTTON_B, CBaseModPanel::GetSingleton().GetLastActiveUserId() ) );
@@ -1047,7 +1059,7 @@ void Audio::CancelLanguageChangeCallback()
 
 void Audio::PaintBackground()
 {
-	BaseClass::DrawDialogBackground( "#GameUI_Audio", NULL, "#L4D360UI_AudioVideo_Desc", NULL, NULL, true );
+	//BaseClass::DrawDialogBackground( "#GameUI_Audio", NULL, "#L4D360UI_AudioVideo_Desc", NULL, NULL, true );
 }
 
 void Audio::ApplySchemeSettings( vgui::IScheme *pScheme )

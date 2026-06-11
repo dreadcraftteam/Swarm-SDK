@@ -13,9 +13,9 @@
 #include "vgui_controls/textentry.h"
 #include "vgui_controls/combobox.h"
 #include "vgui_controls/imagepanel.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 #include "vgui/ISurface.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "filesystem.h"
 #include "fmtstr.h"
 #include "cdll_util.h"
@@ -689,7 +689,7 @@ Panel* Multiplayer::NavigateBack()
 
 void Multiplayer::PaintBackground()
 {
-	BaseClass::DrawDialogBackground( "#GameUI_Multiplayer", NULL, "#L4D360UI_Multiplayer_Desc", NULL, NULL, true );
+	//BaseClass::DrawDialogBackground( "#GameUI_Multiplayer", NULL, "#L4D360UI_Multiplayer_Desc", NULL, NULL, true );
 }
 
 void Multiplayer::ApplySchemeSettings( vgui::IScheme *pScheme )

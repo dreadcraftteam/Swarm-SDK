@@ -1,17 +1,18 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2007, Valve Corporation, All rights reserved. ============//
 //
-// Purpose: Blobulator surface rendering
+// Purpose:
 //
-//========================================================================//
+// $NoKeywords: $
+//=============================================================================//
 
 #ifndef C_SURFACERENDER_H
 #define C_SURFACERENDER_H
 
-#include "cbase.h"
+#if defined( _WIN32 )
+#pragma once
+#endif
 
-#include "view.h"
-#include "view_shared.h"
-#include "iviewrender.h"
-#include "engine/ivdebugoverlay.h"
+
+
 
 #endif // C_SURFACERENDER_H

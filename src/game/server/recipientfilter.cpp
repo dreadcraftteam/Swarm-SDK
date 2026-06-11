@@ -100,9 +100,6 @@ void CRecipientFilter::AddAllPlayers( void )
 
 void CRecipientFilter::AddRecipient( CBasePlayer *player )
 {
-	if (!player)
-		return;
-
 	Assert( player );
 
 	int index = player->entindex();

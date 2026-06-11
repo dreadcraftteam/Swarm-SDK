@@ -11,7 +11,6 @@
 #include "basemodui.h"
 #include "VFlyoutMenu.h"
 
-class CNB_Header_Footer;
 
 namespace BaseModUI {
 
@@ -57,7 +56,6 @@ private:
 	DropDownMenu		*m_drpGamepadSwapSticks;
 
 	BaseModHybridButton	*m_btnCancel;
-	CNB_Header_Footer *m_pHeaderFooter;
 };
 
 };

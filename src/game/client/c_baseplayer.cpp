@@ -1830,6 +1830,8 @@ bool C_BasePlayer::ShouldDrawLocalPlayer()
 {
 	int nSlot = GetSplitScreenPlayerSlot();
 
+
+
 	ACTIVE_SPLITSCREEN_PLAYER_GUARD( nSlot );
 	return input->CAM_IsThirdPerson() || ( ToolsEnabled() && ToolFramework_IsThirdPersonCamera() );
 }

@@ -9,8 +9,8 @@
 #include "VSliderControl.h"
 #include "VDropDownMenu.h"
 #include "VFlyoutMenu.h"
-#include "EngineInterface.h"
-#include "gameui_util.h"
+#include "../EngineInterface.h"
+#include "../gameui_util.h"
 #include "vgui/ILocalize.h"
 #include "VHybridButton.h"
 

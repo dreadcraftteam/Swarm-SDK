@@ -15,11 +15,13 @@
 #include "VHybridButton.h"
 #include "VFooterPanel.h"
 #include "vgui/ISurface.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VLoadingProgress.h"
 #include "VGenericConfirmation.h"
-//#include "nb_select_mission_panel.h"
-//#include "nb_select_campaign_panel.h"
+#ifdef SWARM_DLL
+#include "nb_select_mission_panel.h"
+#include "nb_select_campaign_panel.h"
+#endif
 
 #include "vgui_controls/ImagePanel.h"
 #include "vgui_controls/Button.h"
@@ -144,9 +146,9 @@ void GameSettings::PaintBackground()
 		pSubtitle = chBufferSubTitle;
 	}
 	m_pTitle->SetText( pTitle );
-
+/*
 	BaseClass::DrawDialogBackground( pTitle, NULL, pSubtitle, NULL );
-	
+	*/
 }
 
 //=============================================================================
@@ -496,27 +498,31 @@ void GameSettings::OnCommand(const char *command)
 		pSettings->SetString( "update/game/campaign", stripped );
 
 		// set the current mission to the first real mission in the campaign
-		//IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
-		//if ( pSource )
-		//{
-		//	KeyValues *pCampaignDetails = pSource->GetCampaignDetails( szCampaignSelected );
-		//	bool bSkippedFirst = false;
-		//	for ( KeyValues *pMission = pCampaignDetails->GetFirstSubKey(); pMission; pMission = pMission->GetNextKey() )
-		//	{
-		//		if ( !Q_stricmp( pMission->GetName(), "MISSION" ) )
-		//		{
-		//			if ( !bSkippedFirst )
-		//			{
-		//				bSkippedFirst = true;
-		//			}
-		//			else
-		//			{
-		//				pSettings->SetString( "update/game/mission", pMission->GetString( "MapName", "asi-jac1-landingbay01" ) );
-		//				break;
-		//			}
-		//		}
-		//	}
-		//}
+#ifdef SWARM_DLL
+		IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
+#else
+		IASW_Mission_Chooser_Source* pSource;
+#endif
+		if ( pSource )
+		{
+			KeyValues *pCampaignDetails = pSource->GetCampaignDetails( szCampaignSelected );
+			bool bSkippedFirst = false;
+			for ( KeyValues *pMission = pCampaignDetails->GetFirstSubKey(); pMission; pMission = pMission->GetNextKey() )
+			{
+				if ( !Q_stricmp( pMission->GetName(), "MISSION" ) )
+				{
+					if ( !bSkippedFirst )
+					{
+						bSkippedFirst = true;
+					}
+					else
+					{
+						pSettings->SetString( "update/game/mission", pMission->GetString( "MapName", "asi-jac1-landingbay01" ) );
+						break;
+					}
+				}
+			}
+		}
 
 		UpdateSessionSettings( pSettings );
 		UpdateMissionImage();
@@ -955,63 +961,67 @@ void GameSettings::UpdateMissionImage()
 	if( !imgLevelImage )
 		return;
 
-//	vgui::Label *pMissionLabel = dynamic_cast< vgui::Label* >( FindChildByName( "MissionLabel" ) );
+	vgui::Label *pMissionLabel = dynamic_cast< vgui::Label* >( FindChildByName( "MissionLabel" ) );
 
 
-//	DropDownMenu *menu = dynamic_cast< DropDownMenu* >( FindChildByName( "DrpSelectMission", true ) );
+	DropDownMenu *menu = dynamic_cast< DropDownMenu* >( FindChildByName( "DrpSelectMission", true ) );
 
-	//IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
-	//if ( !pSource || !m_pSettings || !menu )
-	//	return;
+#ifdef SWARM_DLL
+	IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
+#else
+	IASW_Mission_Chooser_Source* pSource;
+#endif
+	if ( !pSource || !m_pSettings || !menu )
+		return;
 
 	const char *szGameType = m_pSettings->GetString( "game/mode", "campaign" );
 	if ( !Q_stricmp( szGameType, "campaign" ) )
 	{
-		//const char *szCampaign = m_pSettings->GetString( "game/campaign", NULL );
-		//if ( szCampaign )
-		//{
-		//	//KeyValues *pCampaignKeys = pSource->GetCampaignDetails( szCampaign );
-		//	//if ( pCampaignKeys )
-		//	//{
-		//	//	//imgLevelImage->SetImage( pCampaignKeys->GetString( "ChooseCampaignTexture" ) );
-		//	//	pMissionLabel->SetText( pCampaignKeys->GetString( "CampaignName" ) );
-		//	//	menu->SetCurrentSelection( pCampaignKeys->GetString( "CampaignName" ) );
-		//	//}
-		//}
-		//if ( m_drpStartingMission )
-		//{
-		//	m_drpStartingMission->SetVisible( true );
+		const char *szCampaign = m_pSettings->GetString( "game/campaign", NULL );
+		if ( szCampaign )
+		{
+			KeyValues *pCampaignKeys = pSource->GetCampaignDetails( szCampaign );
+			if ( pCampaignKeys )
+			{
+				//imgLevelImage->SetImage( pCampaignKeys->GetString( "ChooseCampaignTexture" ) );
+				pMissionLabel->SetText( pCampaignKeys->GetString( "CampaignName" ) );
+				menu->SetCurrentSelection( pCampaignKeys->GetString( "CampaignName" ) );
+			}
+		}
+		if ( m_drpStartingMission )
+		{
+			m_drpStartingMission->SetVisible( true );
 
-		//	const char *szMission = m_pSettings->GetString( "game/mission", NULL );
-		//	if ( szMission )
-		//	{
-		//		KeyValues *pMissionKeys = pSource->GetMissionDetails( szMission );
-		//		if ( pMissionKeys )
-		//		{
-		//			m_drpStartingMission->SetCurrentSelection( pMissionKeys->GetString( "missiontitle" ) );
-		//			imgLevelImage->SetImage( pMissionKeys->GetString( "image" ) );
-		//		}
-		//	}
-		//}
+			const char *szMission = m_pSettings->GetString( "game/mission", NULL );
+			if ( szMission )
+			{
+				KeyValues *pMissionKeys = pSource->GetMissionDetails( szMission );
+				if ( pMissionKeys )
+				{
+					m_drpStartingMission->SetCurrentSelection( pMissionKeys->GetString( "missiontitle" ) );
+					imgLevelImage->SetImage( pMissionKeys->GetString( "image" ) );
+				}
+			}
+		}
 	}
 	else if ( !Q_stricmp( szGameType, "single_mission" ) )
 	{
-		//const char *szMission = m_pSettings->GetString( "game/mission", NULL );
-		//if ( szMission )
-		//{
-		//	KeyValues *pMissionKeys = pSource->GetMissionDetails( szMission );
-		//	if ( pMissionKeys )
-		//	{
-		//		// TODO: Handle missions without an image
-		//		imgLevelImage->SetImage( pMissionKeys->GetString( "image" ) );
-		//		pMissionLabel->SetText( pMissionKeys->GetString( "missiontitle" ) );
-		//		menu->SetCurrentSelection( pMissionKeys->GetString( "missiontitle" ) );
-		//	}
-		//}
-		//if ( m_drpStartingMission )
-		//{
-		//	m_drpStartingMission->SetVisible( false );
-		//}
+		const char *szMission = m_pSettings->GetString( "game/mission", NULL );
+		if ( szMission )
+		{
+			KeyValues *pMissionKeys = pSource->GetMissionDetails( szMission );
+			if ( pMissionKeys )
+			{
+				// TODO: Handle missions without an image
+				imgLevelImage->SetImage( pMissionKeys->GetString( "image" ) );
+				pMissionLabel->SetText( pMissionKeys->GetString( "missiontitle" ) );
+				menu->SetCurrentSelection( pMissionKeys->GetString( "missiontitle" ) );
+			}
+		}
+		if ( m_drpStartingMission )
+		{
+			m_drpStartingMission->SetVisible( false );
+		}
 	}
 }
 
@@ -1103,26 +1113,28 @@ void GameSettings::ShowMissionSelect()
 	if ( m_pSettings )
 	{
 		const char *szGameType = m_pSettings->GetString( "game/mode", "campaign" );
+#ifdef SWARM_DLL
 		if ( !Q_stricmp( szGameType, "campaign" ) )
 		{
-			//CNB_Select_Campaign_Panel *pPanel = new CNB_Select_Campaign_Panel( this, "Select_Campaign_Panel" );
-			////pPanel->InitList();
-			//pPanel->MoveToFront();
+			CNB_Select_Campaign_Panel *pPanel = new CNB_Select_Campaign_Panel( this, "Select_Campaign_Panel" );
+			//pPanel->InitList();
+			pPanel->MoveToFront();
 
-			//UpdateMissionImage();
+			UpdateMissionImage();
 
-			//m_hSubScreen = pPanel;
+			m_hSubScreen = pPanel;
 		}
 		else if ( !Q_stricmp( szGameType, "single_mission" ) )
 		{
-			//CNB_Select_Mission_Panel *pPanel = new CNB_Select_Mission_Panel( this, "Select_Mission_Panel" );
-			//pPanel->InitList();
-			//pPanel->MoveToFront();
+			CNB_Select_Mission_Panel *pPanel = new CNB_Select_Mission_Panel( this, "Select_Mission_Panel" );
+			pPanel->InitList();
+			pPanel->MoveToFront();
 
-			//UpdateMissionImage();
+			UpdateMissionImage();
 
-			//m_hSubScreen = pPanel;
+			m_hSubScreen = pPanel;
 		}
+#endif
 	}	
 }
 
@@ -1136,17 +1148,19 @@ void GameSettings::ShowStartingMissionSelect()
 	if ( m_pSettings )
 	{
 		const char *szGameType = m_pSettings->GetString( "game/mode", "campaign" );
+#ifdef SWARM_DLL
 		if ( !Q_stricmp( szGameType, "campaign" ) )
 		{
-			//CNB_Select_Mission_Panel *pPanel = new CNB_Select_Mission_Panel( this, "Select_Mission_Panel" );
-			//pPanel->SelectMissionsFromCampaign( m_pSettings->GetString( "game/campaign", "jacob" ) );
-			//pPanel->InitList();
-			//pPanel->MoveToFront();
+			CNB_Select_Mission_Panel *pPanel = new CNB_Select_Mission_Panel( this, "Select_Mission_Panel" );
+			pPanel->SelectMissionsFromCampaign( m_pSettings->GetString( "game/campaign", "jacob" ) );
+			pPanel->InitList();
+			pPanel->MoveToFront();
 
-			//UpdateMissionImage();
+			UpdateMissionImage();
 
-			//m_hSubScreen = pPanel;
+			m_hSubScreen = pPanel;
 		}
+#endif
 	}	
 }
 

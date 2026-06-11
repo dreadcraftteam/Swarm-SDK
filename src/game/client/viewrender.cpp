@@ -52,10 +52,12 @@
 
 #define PARTICLE_USAGE_DEMO									// uncomment to get particle bar thing
 
-#if defined( HL2_CLIENT_DLL )
+
+
+
+#if defined( HL2_CLIENT_DLL ) || defined( INFESTED_DLL )
 #define USE_MONITORS
 #endif
-
 #include "rendertexture.h"
 #include "viewpostprocess.h"
 #include "viewdebug.h"
@@ -64,8 +66,14 @@
 #include "c_point_camera.h"
 #endif // USE_MONITORS
 
+#ifdef INFESTED_DLL
+#include "c_asw_render_targets.h"
+#include "clientmode_asw.h"
+#endif
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+
 
 static void testfreezeframe_f( void )
 {
@@ -813,12 +821,16 @@ PRECACHE_REGISTER_BEGIN( GLOBAL, PrecachePostProcessingEffects )
 	PRECACHE( MATERIAL, "dev/depth_of_field" )
 	PRECACHE( MATERIAL, "dev/blurgaussian_3x3" )
 	PRECACHE( MATERIAL, "dev/fade_blur" )
+#if defined( INFESTED_DLL )
 	PRECACHE( MATERIAL, "dev/glow_color" )
 	PRECACHE( MATERIAL, "dev/glow_downsample" )
 	PRECACHE( MATERIAL, "dev/glow_blur_x" )
 	PRECACHE( MATERIAL, "dev/glow_blur_y" )
 	PRECACHE( MATERIAL, "dev/halo_add_to_screen" )
+#endif // INFESTED_DLL
+#if defined( INFESTED_DLL )
 	PRECACHE( MATERIAL, "engine/writestencil" )
+#endif // INFSETED_DLL
 PRECACHE_REGISTER_END( )
 
 //-----------------------------------------------------------------------------
@@ -942,11 +954,15 @@ void CSimpleRenderExecutor::AddView( CRendering3dView *pView )
 	m_pMainView->SetActiveRenderer( pPrevRenderer );
 }
 
+
+#if !defined( INFESTED_DLL )
 static CViewRender g_ViewRender;
 IViewRender *GetViewRenderInstance()
 {
 	return &g_ViewRender;
 }
+#endif
+
 
 //-----------------------------------------------------------------------------
 // Constructor
@@ -3853,7 +3869,7 @@ static void DrawClippedDepthBox( IClientRenderable *pEnt, float *pClipPlane )
 		if( j == 3 ) //not enough lines to even form a triangle
 			continue;
 
-		float *pStartPoint = nullptr;
+		float *pStartPoint = 0;
 		float *pTriangleFanPoints[4]; //at most, one of our fans will have 5 points total, with the first point being stored separately as pStartPoint
 		int iTriangleFanPointCount = 1; //the switch below creates the first for sure
 		
@@ -3982,6 +3998,7 @@ static inline bool BlurTest( IClientRenderable *pRenderable, int drawFlags, bool
 
 	return false;
 }
+
 
 //-----------------------------------------------------------------------------
 // Unified bit of draw code for opaque and translucent renderables

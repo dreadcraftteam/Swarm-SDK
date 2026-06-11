@@ -100,7 +100,8 @@ CUtlVector <CMovieDisplayScreen *>	g_MovieDisplays;
 //-----------------------------------------------------------------------------
 // Constructor: 
 //-----------------------------------------------------------------------------
-CMovieDisplayScreen::CMovieDisplayScreen( vgui::Panel *parent, const char *panelName ) : BaseClass( parent, "CMovieDisplayScreen", vgui::scheme()->LoadSchemeFromFileEx( enginevgui->GetPanel( PANEL_CLIENTDLL ), "resource/movie_display_screen.res", "MovieDisplayScreen" ) ) 
+CMovieDisplayScreen::CMovieDisplayScreen( vgui::Panel *parent, const char *panelName )
+: BaseClass( parent, "CMovieDisplayScreen", vgui::scheme()->LoadSchemeFromFileEx( enginevgui->GetPanel( PANEL_CLIENTDLL ), "resource/MovieDisplayScreen.res", "MovieDisplayScreen" ) ) 
 {
 	m_pDisplayTextLabel = new vgui::Label( this, "NumberDisplay", "testing!");
 

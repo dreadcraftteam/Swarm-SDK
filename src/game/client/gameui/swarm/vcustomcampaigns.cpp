@@ -9,7 +9,7 @@
 #include "KeyValues.h"
 #include "VFooterPanel.h"
 #include "VHybridButton.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "FileSystem.h"
 #include "fmtstr.h"
 #include "vgui/ISurface.h"
@@ -224,7 +224,12 @@ void CustomCampaigns::Activate()
 	m_GplCustomCampaigns->RemoveAllPanelItems();
 
 	// Build a list of campaigns
+#ifdef SWARM_DLL
 	KeyValues *pAllMissions = g_pMatchExtSwarm->GetAllMissions();
+#else
+	KeyValues* pAllMissions;
+#endif
+
 	if ( !pAllMissions )
 		return;
 
@@ -344,7 +349,12 @@ void CustomCampaigns::Select()
 	if ( !pSelectedItem )
 		return;
 
+#ifdef SWARM_DLL
 	KeyValues *pAllMissions = g_pMatchExtSwarm->GetAllMissions();
+#else
+	KeyValues* pAllMissions;
+#endif
+
 	if ( !pAllMissions )
 		return;
 
@@ -392,7 +402,12 @@ void CustomCampaigns::OnItemSelected( const char* panelName )
 	if ( !pSelectedItem )
 		return;
 
+#ifdef SWARM_DLL
 	KeyValues *pAllMissions = g_pMatchExtSwarm->GetAllMissions();
+#else
+	KeyValues* pAllMissions;
+#endif
+
 	if ( !pAllMissions )
 		return;
 

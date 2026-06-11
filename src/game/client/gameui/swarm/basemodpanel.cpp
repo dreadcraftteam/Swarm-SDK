@@ -9,17 +9,16 @@
 #include "./GameUI/IGameUI.h"
 #include "ienginevgui.h"
 #include "engine/ienginesound.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "tier0/dbg.h"
 #include "ixboxsystem.h"
-#include "GameUI_Interface.h"
+#include "../GameUI_Interface.h"
 #include "game/client/IGameClientExports.h"
 #include "gameui/igameconsole.h"
 #include "inputsystem/iinputsystem.h"
 #include "FileSystem.h"
 #include "filesystem/IXboxInstaller.h"
 #include "tier2/renderutils.h"
-#include "vcreditspage.h"
 
 #ifdef _X360
 	#include "xbox/xbox_launch.h"
@@ -67,12 +66,12 @@
 #include "vdownloadcampaign.h"
 #include "vjukebox.h"
 #include "vleaderboard.h"
-#include "gameconsole.h"
+#include "../gameconsole.h"
 #include "vgui/ISystem.h"
 #include "vgui/ISurface.h"
 #include "vgui/ILocalize.h"
 #include "vgui_controls/AnimationController.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 #include "vguimatsurface/imatsystemsurface.h"
 #include "materialsystem/imaterialsystem.h"
 #include "materialsystem/imesh.h"
@@ -166,6 +165,7 @@ CBaseModPanel::CBaseModPanel(): BaseClass(0, "CBaseModPanel"),
 	Assert(m_CFactoryBasePanel == 0);
 	m_CFactoryBasePanel = this;
 
+	g_pVGuiLocalize->AddFile("Resource/swarm_%language%.txt");
 	g_pVGuiLocalize->AddFile( "Resource/basemodui_%language%.txt");
 
 	m_LevelLoading = false;
@@ -179,7 +179,7 @@ CBaseModPanel::CBaseModPanel(): BaseClass(0, "CBaseModPanel"),
 	// needed to allow engine to exec startup commands (background map signal is 1 frame behind) 
 	m_DelayActivation = 3;
 
-	m_UIScheme = vgui::scheme()->LoadSchemeFromFileEx( 0, "resource/SourceScheme.res", "SourceScheme" );
+	m_UIScheme = vgui::scheme()->LoadSchemeFromFileEx( 0, "resource/SwarmSchemeNew.res", "SwarmScheme" );
 	SetScheme( m_UIScheme );
 
 	// Only one user on the PC, so set it now
@@ -397,16 +397,6 @@ CBaseModFrame* CBaseModPanel::OpenWindow(const WINDOW_TYPE & wt, CBaseModFrame *
 			Assert( 0 );
 			break;
 #else
-			m_Frames[wt] = new KeyboardMouse(this, "KeyboardMouse");
-#endif
-			break;
-
-		case WT_KEYBOARD:
-#if defined( _X360 )
-			// not for xbox
-			Assert( 0 );
-			break;
-#else
 			m_Frames[wt] = new VKeyboard(this, "VKeyboard");
 #endif
 			break;
@@ -511,6 +501,16 @@ CBaseModFrame* CBaseModPanel::OpenWindow(const WINDOW_TYPE & wt, CBaseModFrame *
 #endif
 			break;
 
+		case WT_JUKEBOX:
+#if defined( _X360 )
+			// not for xbox
+			Assert( 0 );
+			break;
+#else
+			m_Frames[wt] = new VJukebox( this, "Jukebox" );
+#endif
+			break;
+
 		case WT_ADDONASSOCIATION:
 #if defined( _X360 )
 			// not for xbox
@@ -530,26 +530,6 @@ CBaseModFrame* CBaseModPanel::OpenWindow(const WINDOW_TYPE & wt, CBaseModFrame *
 			m_Frames[wt] = new GetLegacyData( this, "GetLegacyData" );
 #endif
 			break;
-
-		case WT_CREATEMPGAME:
-			{
-			CCreateMultiplayerGameDialog *mpwindow = new CCreateMultiplayerGameDialog( this );
-			mpwindow->Activate();
-			//Put this thing in the middle of the screen
-			int x, y;
-			x = GetWide()/2;
-			y = GetTall()/2;
-			x -= mpwindow->GetWide()/2;
-			y -= mpwindow->GetTall()/2;
-			mpwindow->SetPos(x,y);
-			break;
-			}
-
-		case WT_CREDITSPAGE:
-			{
-				m_Frames[wt] = new CreditsPage(this, "CreditsPage");
-				break;
-			}
 
 		default:
 			Assert( false );	// unknown window type
@@ -1245,7 +1225,9 @@ void CBaseModPanel::OnLevelLoadingStarted( char const *levelName, bool bShowProg
 			// It is critical to get map info by the actual levelname that is being loaded, because
 			// for level transitions the server is still in the old map and the game settings returned
 			// will reflect the old state of the server.
+#ifdef SWARM_DLL
 			pChapterInfo = g_pMatchExtSwarm->GetMapInfoByBspName( pGameSettings, levelName, &pMissionInfo );
+#endif
 			Q_strncpy( chGameMode, pGameSettings->GetString( "game/mode", "" ), ARRAYSIZE( chGameMode ) );
 		}
 	}
@@ -1255,7 +1237,9 @@ void CBaseModPanel::OnLevelLoadingStarted( char const *levelName, bool bShowProg
 	{
 		if ( KeyValues *pSettings = pSession->GetSessionSettings() )
 		{
+#ifdef SWARM_DLL
 			pChapterInfo = g_pMatchExtSwarm->GetMapInfo( pSettings, &pMissionInfo );
+#endif
 			Q_strncpy( chGameMode, pSettings->GetString( "game/mode", "" ), ARRAYSIZE( chGameMode ) );
 		}
 	}
@@ -1663,7 +1647,7 @@ void CBaseModPanel::OnEvent( KeyValues *pEvent )
 					}
 				}
 
-				CUIGameData::Get()->OpenWaitScreen( szWaitScreenText, flMinDisplayTime, pSettings );
+				CUIGameData::Get()->OpenWaitScreen( szWaitScreenText, flMinDisplayTime, pSettings, 7.0f );
 			}
 			else if ( !Q_stricmp( "searchresult", szProgress ) )
 			{
@@ -1847,7 +1831,7 @@ void CBaseModPanel::ApplySchemeSettings(IScheme *pScheme)
 	surface()->GetScreenSize( screenWide, screenTall );
 
 	char filename[MAX_PATH];
-	V_snprintf( filename, sizeof( filename ), "console/background01_widescreen" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
+	V_snprintf( filename, sizeof( filename ), "VGUI/swarm/loading/BGFX01" ); // TODO: engine->GetStartupImage( filename, sizeof( filename ), screenWide, screenTall );
 	m_iBackgroundImageID = surface()->CreateNewTextureID();
 	surface()->DrawSetTextureFile( m_iBackgroundImageID, filename, true, false );
 
@@ -1881,11 +1865,11 @@ void CBaseModPanel::ApplySchemeSettings(IScheme *pScheme)
 	if ( aspectRatio >= 1.6f )
 	{
 		// use the widescreen version
-		Q_snprintf( m_szFadeFilename, sizeof( m_szFadeFilename ), "materials/console/%s_widescreen.vtf", "background01" );
+		Q_snprintf( m_szFadeFilename, sizeof( m_szFadeFilename ), "materials/console/%s_widescreen.vtf", "SwarmSelectionScreen" );
 	}
 	else
 	{
-		Q_snprintf( m_szFadeFilename, sizeof( m_szFadeFilename ), "materials/console/%s_widescreen.vtf", "background01" );
+		Q_snprintf( m_szFadeFilename, sizeof( m_szFadeFilename ), "materials/console/%s_widescreen.vtf", "SwarmSelectionScreen" );
 	}
 
 	// TODO: GetBackgroundMusic
@@ -2025,9 +2009,42 @@ void CBaseModPanel::PaintBackground()
 		else
 		{
 			ActivateBackgroundEffects();
-			surface()->DrawSetColor( 255, 255, 255, 255 );
-			surface()->DrawSetTexture( m_iBackgroundImageID );
-			surface()->DrawTexturedRect( 0, 0, wide, tall );
+
+#ifdef SWARM_DLL
+			if ( ASWBackgroundMovie() )
+			{
+				ASWBackgroundMovie()->Update();
+				if ( ASWBackgroundMovie()->SetTextureMaterial() != -1 )
+				{
+					surface()->DrawSetColor( 255, 255, 255, 255 );
+					int x, y, w, h;
+					GetBounds( x, y, w, h );
+
+					// center, 16:9 aspect ratio
+					int width_at_ratio = h * (16.0f / 9.0f);
+					x = ( w * 0.5f ) - ( width_at_ratio * 0.5f );
+
+					surface()->DrawTexturedRect( x, y, x + width_at_ratio, y + h );
+
+					if ( !m_flMovieFadeInTime )
+					{
+						// do the fade a little bit after the movie starts (needs to be stable)
+						// the product overlay will fade out
+						m_flMovieFadeInTime	= Plat_FloatTime() + TRANSITION_TO_MOVIE_DELAY_TIME;
+					}
+
+					float flFadeDelta = RemapValClamped( Plat_FloatTime(), m_flMovieFadeInTime, m_flMovieFadeInTime + TRANSITION_TO_MOVIE_FADE_TIME, 1.0f, 0.0f );
+					if ( flFadeDelta > 0.0f )
+					{
+						if ( !m_pBackgroundMaterial )
+						{
+							PrepareStartupGraphic();
+						}
+						DrawStartupGraphic( flFadeDelta );
+					}
+				}
+			}
+#endif
 		}
 	}
 
@@ -2385,8 +2402,6 @@ void CBaseModPanel::OnSetFocus()
 	if ( IsPC() )
 	{
 		GameConsole().Hide();
-
-		SetCursor(dc_arrow);
 	}
 }
 

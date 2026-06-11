@@ -85,7 +85,7 @@ public:
 	void SetGamePing( Info::GAME_PING ping );
 	void SetGameDifficulty( const char* difficultyName );
 	void SetSwarmState( const char* szSwarmStateText );
-	void SetGamePlayerCount( int current, int MAX );
+	void SetGamePlayerCount( int current, int max );
 
 	void DrawListItemLabel( vgui::Label* label, bool bSmallFont, bool bEastAligned = false );
 

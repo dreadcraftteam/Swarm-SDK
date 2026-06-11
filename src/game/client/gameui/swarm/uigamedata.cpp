@@ -15,10 +15,10 @@
 #include "ienginevgui.h"
 #include "icommandline.h"
 #include "vgui/ISurface.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "tier0/dbg.h"
 #include "ixboxsystem.h"
-#include "GameUI_Interface.h"
+#include "../GameUI_Interface.h"
 #include "game/client/IGameClientExports.h"
 #include "fmtstr.h"
 #include "vstdlib/random.h"
@@ -51,7 +51,7 @@
 #include "steam/steam_api.h"
 #endif
 
-#include "gameui_util.h"
+#include "../gameui_util.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -615,7 +615,7 @@ bool CUIGameData::IsXUIOpen()
 	return m_bXUIOpen;
 }
 
-void CUIGameData::OpenWaitScreen( const char * messageText, float minDisplayTime, KeyValues *pSettings )
+void CUIGameData::OpenWaitScreen( const char * messageText, float minDisplayTime, KeyValues *pSettings, float maxDisplayTime )
 {
 	if ( UI_IsDebug() )
 	{
@@ -642,6 +642,7 @@ void CUIGameData::OpenWaitScreen( const char * messageText, float minDisplayTime
 		waitScreen->SetNavBack( backFrame );
 		waitScreen->ClearData();
 		waitScreen->AddMessageText( messageText, minDisplayTime );
+		waitScreen->SetMaxDisplayTime( maxDisplayTime );
 	}
 }
 

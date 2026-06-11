@@ -9,12 +9,11 @@
 #include "VDropDownMenu.h"
 #include "VSliderControl.h"
 #include "VHybridButton.h"
-#include "EngineInterface.h"
-#include "gameui_util.h"
+#include "../EngineInterface.h"
+#include "../gameui_util.h"
 #include "vgui/ISurface.h"
 #include "VGenericConfirmation.h"
 #include "materialsystem/materialsystem_config.h"
-#include "nb_header_footer.h"
 
 #ifdef _X360
 #include "xbox/xbox_launch.h"
@@ -53,13 +52,6 @@ BaseClass(parent, panelName)
 	m_sldGamepadVSensitivity = NULL;
 	m_drpGamepadYInvert = NULL;
 	m_drpGamepadSwapSticks = NULL;
-
-	m_pHeaderFooter = new CNB_Header_Footer( this, "HeaderFooter" );
-	m_pHeaderFooter->SetTitle( "" );
-	m_pHeaderFooter->SetHeaderEnabled( false );
-	m_pHeaderFooter->SetFooterEnabled( true );
-	m_pHeaderFooter->SetGradientBarEnabled( true );
-	m_pHeaderFooter->SetGradientBarPos( 120, 160 );
 
 	m_btnCancel = NULL;
 }
@@ -349,11 +341,10 @@ void KeyboardMouse::OnKeyCodePressed(KeyCode code)
 //=============================================================================
 void KeyboardMouse::OnCommand(const char *command)
 {
-	if( Q_stricmp( "Keyboard", command ) == 0 )
+	if( Q_stricmp( "#L4D360UI_Controller_Edit_Keys_Buttons", command ) == 0 )
 	{
-		// Navigate to Keyboard to change key bindings
-		BaseClass::NavigateBack();
-		CBaseModPanel::GetSingleton().OpenWindow(WT_KEYBOARD, this, true );
+		FlyoutMenu::CloseActiveMenu();
+		CBaseModPanel::GetSingleton().OpenKeyBindingsDialog( this );
 	}
 	else if( Q_stricmp( "MouseYInvertEnabled", command ) == 0 )
 	{

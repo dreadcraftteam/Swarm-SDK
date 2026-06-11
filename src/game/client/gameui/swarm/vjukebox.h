@@ -10,7 +10,7 @@
 #include "basemodui.h"
 #include "VGenericPanelList.h"
 #include "vgui_controls/CvarToggleCheckButton.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 
 class CNB_Button;
 class CNB_Header_Footer;

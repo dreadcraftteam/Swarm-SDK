@@ -193,7 +193,7 @@ private:
 
 	int FindSequenceFromActivity( CStudioHdr *pStudioHdr, const char *pszActivity );
 
-public:
+private:
 
 	BMPResData_t	m_BMPResData;			// Base model panel data set in the .res file.
 	QAngle			m_angPlayer;

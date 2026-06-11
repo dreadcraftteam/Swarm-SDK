@@ -7,14 +7,14 @@
 #include "cbase.h"
 #include "VFoundGames.h"
 #include "VGenericPanelList.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VFooterPanel.h"
 #include "VHybridButton.h"
 #include "VDropDownMenu.h"
 #include "VFlyoutMenu.h"
 #include "UIGameData.h"
 #include "vdownloadcampaign.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 
 #include "vgui/ISurface.h"
 #include "vgui/IBorder.h"
@@ -106,17 +106,21 @@ bool BaseModUI::FoundGameListItem::Info::IsDownloadable() const
 
 	if ( mbInGame && mpGameDetails )
 	{
-		//IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
-		//if ( pSource )
-		//{
-		//	const char *szMissionName = mpGameDetails->GetString( "game/mission", "" );
-		//	KeyValues *pMissionKeys = pSource->GetMissionDetails( szMissionName );
-		//	char const *szWebsite = mpGameDetails->GetString( "game/missioninfo/website", NULL );
-		//	if ( ( !pMissionKeys || Q_stricmp( pMissionKeys->GetString( "version", "" ),
-		//		mpGameDetails->GetString( "game/missioninfo/version", "" ) ) )
-		//		&& ( szWebsite && *szWebsite ) )
-		//		return true;
-		//}
+#ifdef SWARM_DLL
+		IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
+#else
+		IASW_Mission_Chooser_Source* pSource;
+#endif
+		if ( pSource )
+		{
+			const char *szMissionName = mpGameDetails->GetString( "game/mission", "" );
+			KeyValues *pMissionKeys = pSource->GetMissionDetails( szMissionName );
+			char const *szWebsite = mpGameDetails->GetString( "game/missioninfo/website", NULL );
+			if ( ( !pMissionKeys || Q_stricmp( pMissionKeys->GetString( "version", "" ),
+				mpGameDetails->GetString( "game/missioninfo/version", "" ) ) )
+				&& ( szWebsite && *szWebsite ) )
+				return true;
+		}
 	}
 
 	return false;
@@ -463,13 +467,13 @@ void FoundGameListItem::SetSwarmState( const char *szSwarmStateText )
 }
 
 //=============================================================================
-void FoundGameListItem::SetGamePlayerCount( int current, int MAX )
+void FoundGameListItem::SetGamePlayerCount( int current, int max )
 {
 	if( m_pLblPlayers )
 	{
 		if ( GetFullInfo().mInfoType == FGT_PUBLICGAME )
 		{
-			MAX = GetFullInfo().mpGameDetails->GetInt( "rollup/game", 0 ) +
+			max = GetFullInfo().mpGameDetails->GetInt( "rollup/game", 0 ) +
 				GetFullInfo().mpGameDetails->GetInt( "rollup/lobby", 0 );
 
 			wchar_t finalString[256] = L"";
@@ -479,13 +483,13 @@ void FoundGameListItem::SetGamePlayerCount( int current, int MAX )
 			extern ConVar ui_public_lobby_filter_status;
 			if ( !Q_stricmp( ui_public_lobby_filter_status.GetString(), "lobby" ) )
 			{
-				countText = ( MAX == 1 ) ? 
+				countText = ( max == 1 ) ? 
 					g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_LobbyCount_1" ) :
 					g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_LobbyCount" );
 			}
 			else
 			{
-				countText = ( MAX == 1 ) ?
+				countText = ( max == 1 ) ?
 					g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_GameCount_1" ) :
 					g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_GameCount" );
 			}
@@ -493,16 +497,16 @@ void FoundGameListItem::SetGamePlayerCount( int current, int MAX )
 			if( countText  )
 			{
 				wchar_t convertedString[256];
-				V_snwprintf( convertedString, ARRAYSIZE( convertedString ), L"%d", MAX );
+				V_snwprintf( convertedString, ARRAYSIZE( convertedString ), L"%d", max );
 				g_pVGuiLocalize->ConstructString( finalString, sizeof( finalString ), countText, 1, convertedString );
 			}		
 
 			m_pLblPlayers->SetText( finalString );
 		}
-		else if( current >= 0 && MAX != 0 )
+		else if( current >= 0 && max != 0 )
 		{
 			char countText[256];
-			V_snprintf( countText, 256, "%d/%d", current, MAX );
+			V_snprintf( countText, 256, "%d/%d", current, max );
 			m_pLblPlayers->SetText( countText );
 		}
 		else
@@ -1248,13 +1252,13 @@ void FoundGames::UpdateTitle()
 	if ( const char *gameMode = m_pDataSettings->GetString( "game/mode", NULL ) )
 	{
 		gameMode = NoTeamGameMode( gameMode );
-	//	m_pTitle->SetText( CFmtStr( "#L4D360UI_FoundFriendGames_Title_%s", gameMode ) );
-		BaseClass::DrawDialogBackground( CFmtStr( "#L4D360UI_FoundFriendGames_Title_%s", gameMode ), NULL, "#L4D360UI_FoundGames_Description", NULL, NULL );
+		m_pTitle->SetText( CFmtStr( "#L4D360UI_FoundFriendGames_Title_%s", gameMode ) );
+		//BaseClass::DrawDialogBackground( CFmtStr( "#L4D360UI_FoundFriendGames_Title_%s", gameMode ), NULL, "#L4D360UI_FoundGames_Description", NULL, NULL );
 	}
 	else
 	{
-	//	m_pTitle->SetText( CFmtStr( "#L4D360UI_FoundGames_AllGames" ) );
-		BaseClass::DrawDialogBackground( "#L4D360UI_FoundGames_AllGames", NULL, "#L4D360UI_FoundGames_Description", NULL, NULL );
+		m_pTitle->SetText( CFmtStr( "#L4D360UI_FoundGames_AllGames" ) );
+		//BaseClass::DrawDialogBackground( "#L4D360UI_FoundGames_AllGames", NULL, "#L4D360UI_FoundGames_Description", NULL, NULL );
 	}
 }
 
@@ -1329,7 +1333,7 @@ void FoundGames::OnThink()
 //=============================================================================
 void FoundGames::PaintBackground()
 {
-	
+	/*
 	if ( const char *gameMode = m_pDataSettings->GetString( "game/mode", NULL ) )
 	{
 		gameMode = NoTeamGameMode( gameMode );
@@ -1339,7 +1343,7 @@ void FoundGames::PaintBackground()
 	{
 		BaseClass::DrawDialogBackground( "#L4D360UI_FoundGames_AllGames", NULL, "#L4D360UI_FoundGames_Description", NULL, NULL );
 	}
-	
+	*/
 }
 
 //=============================================================================
@@ -1885,7 +1889,7 @@ void FoundGames::OnItemSelected( const char* panelName )
 	
 	const char* chapterName = "#L4D360UI_LevelName_Unknown";
 	
-//	char chDifficultyBuffer[64] = {0};
+	char chDifficultyBuffer[64] = {0};
 	const char* currentDifficulty = "#L4D360UI_Unknown";
 	
 	const char* currentSurvivorAccess = "#L4D360UI_Unknown";
@@ -2022,149 +2026,153 @@ void FoundGames::OnItemSelected( const char* panelName )
 		}
 		else if( fi.mbInGame )
 		{
-			//chapterName = "";
-			//IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
-			//const char *szDetailsMissionName = fi.mpGameDetails->GetString( "game/mission", "" );
-			//KeyValues *pMissionKeys = NULL;
-			//if ( pSource && szDetailsMissionName && szDetailsMissionName[0] )
-			//{
-			//	pMissionKeys = pSource->GetMissionDetails( szDetailsMissionName );
-			//}
+			chapterName = "";
+#ifdef SWARM_DLL
+			IASW_Mission_Chooser_Source *pSource = missionchooser ? missionchooser->LocalMissionSource() : NULL;
+#else
+			IASW_Mission_Chooser_Source* pSource;
+#endif
+			const char *szDetailsMissionName = fi.mpGameDetails->GetString( "game/mission", "" );
+			KeyValues *pMissionKeys = NULL;
+			if ( pSource && szDetailsMissionName && szDetailsMissionName[0] )
+			{
+				pMissionKeys = pSource->GetMissionDetails( szDetailsMissionName );
+			}
 
-			//if ( pMissionKeys )
-			//{
-			//	if ( pMissionKeys->GetString( "image", NULL ) )
-			//	{
-			//		chapterImage = pMissionKeys->GetString( "image" );
-			//	}
-			//	campaignName = pMissionKeys->GetString( "displaytitle" );
-			//	szDownloadAuthor = pMissionKeys->GetString( "author", szDownloadAuthor );
-			//	szDownloadWebsite = pMissionKeys->GetString( "website", szDownloadWebsite );
-			//}
-			//else
-			//{
-			//	campaignName = fi.mpGameDetails->GetString( "game/missioninfo/displaytitle", "#L4D360UI_CampaignName_Unknown" );
-			//	bDownloadableCampaign = true;
-			//}
+			if ( pMissionKeys )
+			{
+				if ( pMissionKeys->GetString( "image", NULL ) )
+				{
+					chapterImage = pMissionKeys->GetString( "image" );
+				}
+				campaignName = pMissionKeys->GetString( "displaytitle" );
+				szDownloadAuthor = pMissionKeys->GetString( "author", szDownloadAuthor );
+				szDownloadWebsite = pMissionKeys->GetString( "website", szDownloadWebsite );
+			}
+			else
+			{
+				campaignName = fi.mpGameDetails->GetString( "game/missioninfo/displaytitle", "#L4D360UI_CampaignName_Unknown" );
+				bDownloadableCampaign = true;
+			}
 
-			//campaignName = fi.mpGameDetails->GetString( "game/missioninfo/displaytitle", campaignName );
-			//szDownloadAuthor = fi.mpGameDetails->GetString( "game/missioninfo/author", szDownloadAuthor );
-			//szDownloadWebsite = fi.mpGameDetails->GetString( "game/missioninfo/website", szDownloadWebsite );
-			//bBuiltIn = fi.mpGameDetails->GetInt( "game/missioninfo/builtin", 0 );
+			campaignName = fi.mpGameDetails->GetString( "game/missioninfo/displaytitle", campaignName );
+			szDownloadAuthor = fi.mpGameDetails->GetString( "game/missioninfo/author", szDownloadAuthor );
+			szDownloadWebsite = fi.mpGameDetails->GetString( "game/missioninfo/website", szDownloadWebsite );
+			bBuiltIn = fi.mpGameDetails->GetInt( "game/missioninfo/builtin", 0 );
 
-			//if ( bBuiltIn )
-			//	szDownloadWebsite = "";	// no website access for builtin campaigns
+			if ( bBuiltIn )
+				szDownloadWebsite = "";	// no website access for builtin campaigns
 
-			//char const *szGameMode = fi.mpGameDetails->GetString( "game/mode", "" );
-			//if( !GameModeHasDifficulty( szGameMode ) )
-			//{
-			//	Q_snprintf( chDifficultyBuffer, sizeof( chDifficultyBuffer ), "#L4D360UI_Mode_%s", szGameMode );
-			//	currentDifficulty = chDifficultyBuffer;
-			//}
-			//else
-			//{
-			//	currentDifficulty = fi.mpGameDetails->GetString( "game/difficulty", "normal" );
-			//	Q_snprintf( chDifficultyBuffer, sizeof( chDifficultyBuffer ), "#L4D360UI_Difficulty_%s_%s", currentDifficulty, szGameMode );
-			//	currentDifficulty = chDifficultyBuffer;
-			//}
+			char const *szGameMode = fi.mpGameDetails->GetString( "game/mode", "" );
+			if( !GameModeHasDifficulty( szGameMode ) )
+			{
+				Q_snprintf( chDifficultyBuffer, sizeof( chDifficultyBuffer ), "#L4D360UI_Mode_%s", szGameMode );
+				currentDifficulty = chDifficultyBuffer;
+			}
+			else
+			{
+				currentDifficulty = fi.mpGameDetails->GetString( "game/difficulty", "normal" );
+				Q_snprintf( chDifficultyBuffer, sizeof( chDifficultyBuffer ), "#L4D360UI_Difficulty_%s_%s", currentDifficulty, szGameMode );
+				currentDifficulty = chDifficultyBuffer;
+			}
 
-			//char const *szAccess = fi.mpGameDetails->GetString( "system/access", "public" );
+			char const *szAccess = fi.mpGameDetails->GetString( "system/access", "public" );
 
-			//if ( !Q_stricmp( "private", szAccess ) )
-			//	currentSurvivorAccess = "#L4D360UI_Access_Invite";
-			//else if ( !Q_stricmp( "friends", szAccess ) )
-			//	currentSurvivorAccess = "#L4D360UI_Access_Friends";
-			//else
-			//	currentSurvivorAccess = "#L4D360UI_Access_Public";
+			if ( !Q_stricmp( "private", szAccess ) )
+				currentSurvivorAccess = "#L4D360UI_Access_Invite";
+			else if ( !Q_stricmp( "friends", szAccess ) )
+				currentSurvivorAccess = "#L4D360UI_Access_Friends";
+			else
+				currentSurvivorAccess = "#L4D360UI_Access_Public";
 
-			//int numSlots = fi.mpGameDetails->GetInt( "members/numSlots", 0 );
-			//int numPlayers = fi.mpGameDetails->GetInt( "members/numPlayers", 0 );
-			//if ( !numSlots )
-			//	Q_snprintf( playerCountText, stringSize, "1" );
-			//else
-			//	Q_snprintf( playerCountText, stringSize, "%d/%d", numPlayers, numSlots );
+			int numSlots = fi.mpGameDetails->GetInt( "members/numSlots", 0 );
+			int numPlayers = fi.mpGameDetails->GetInt( "members/numPlayers", 0 );
+			if ( !numSlots )
+				Q_snprintf( playerCountText, stringSize, "1" );
+			else
+				Q_snprintf( playerCountText, stringSize, "%d/%d", numPlayers, numSlots );
 
-			//if ( !Q_stricmp( "offline", fi.mpGameDetails->GetString( "system/network" ) ) )
-			//{
-			//	playerCountText[0] = 0;
-			//	currentSurvivorAccess = ( numPlayers > 1 ) ? "#L4D360UI_Mode_offline_SS" : "#L4D360UI_Mode_offline_SP";
-			//}
+			if ( !Q_stricmp( "offline", fi.mpGameDetails->GetString( "system/network" ) ) )
+			{
+				playerCountText[0] = 0;
+				currentSurvivorAccess = ( numPlayers > 1 ) ? "#L4D360UI_Mode_offline_SS" : "#L4D360UI_Mode_offline_SP";
+			}
 
-			//if ( lblGameStatus && ( fi.mInfoType == FoundGameListItem::FGT_PUBLICGAME ) )
-			//{
-			//	int numLobbies = fi.mpGameDetails->GetInt( "rollup/lobby", 0 );
-			//	int numGames = fi.mpGameDetails->GetInt( "rollup/game", 0 );
+			if ( lblGameStatus && ( fi.mInfoType == FoundGameListItem::FGT_PUBLICGAME ) )
+			{
+				int numLobbies = fi.mpGameDetails->GetInt( "rollup/lobby", 0 );
+				int numGames = fi.mpGameDetails->GetInt( "rollup/game", 0 );
 
-			//	wchar_t finalString[256] = L"";
-			//	wchar_t lobbyString[256] = L"";
-			//	wchar_t gamesString[256] = L"";
-			//	wchar_t numInLobbies[13], numInGame[13];
-			//	V_snwprintf( numInLobbies, ARRAYSIZE( numInLobbies ), L"%d", numLobbies );
-			//	V_snwprintf( numInGame, ARRAYSIZE( numInGame ), L"%d", numGames );
+				wchar_t finalString[256] = L"";
+				wchar_t lobbyString[256] = L"";
+				wchar_t gamesString[256] = L"";
+				wchar_t numInLobbies[13], numInGame[13];
+				V_snwprintf( numInLobbies, ARRAYSIZE( numInLobbies ), L"%d", numLobbies );
+				V_snwprintf( numInGame, ARRAYSIZE( numInGame ), L"%d", numGames );
 
-			//	// Lobbies
-			//	const wchar_t *countText = NULL;
-			//	countText = ( numLobbies == 1 ) ?	
-			//		g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_LobbyCount_1" ) :
-			//		g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_LobbyCount" );
-			//	if ( countText )
-			//	{
-			//		g_pVGuiLocalize->ConstructString( lobbyString, sizeof( lobbyString ), countText, 1, numInLobbies );
-			//	}
+				// Lobbies
+				const wchar_t *countText = NULL;
+				countText = ( numLobbies == 1 ) ?	
+					g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_LobbyCount_1" ) :
+					g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_LobbyCount" );
+				if ( countText )
+				{
+					g_pVGuiLocalize->ConstructString( lobbyString, sizeof( lobbyString ), countText, 1, numInLobbies );
+				}
 
-			//	// Games in Progress
-			//	countText = ( numGames == 1 ) ?
-			//		g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_GameCountInProgress_1" ) :
-			//		g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_GameCountInProgress" );
-			//	if ( countText )
-			//	{
-			//		g_pVGuiLocalize->ConstructString( gamesString, sizeof( gamesString ), countText, 1, numInGame );
-			//	}
+				// Games in Progress
+				countText = ( numGames == 1 ) ?
+					g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_GameCountInProgress_1" ) :
+					g_pVGuiLocalize->Find( "#L4D360UI_FoundGames_GameCountInProgress" );
+				if ( countText )
+				{
+					g_pVGuiLocalize->ConstructString( gamesString, sizeof( gamesString ), countText, 1, numInGame );
+				}
 
-			//	if ( IsX360() )
-			//	{
-			//		// Split games and lobbies into two lines
-			//		lblGameStatus->SetText( lobbyString );
-			//		if ( lblGameStatus2 )
-			//		{
-			//			lblGameStatus2->SetText( gamesString );
-			//		}
-			//	}
-			//	else
-			//	{
-			//		// merge games and lobbies
-			//		const wchar_t *statusText =	g_pVGuiLocalize->Find( "#L4D360UI_FoundPublicGames_Status" );
-			//		if ( statusText )
-			//		{
-			//			g_pVGuiLocalize->ConstructString( finalString, sizeof( finalString ), statusText, 2, lobbyString, gamesString );
-			//		}
-			//		lblGameStatus->SetText( finalString );
-			//	}
+				if ( IsX360() )
+				{
+					// Split games and lobbies into two lines
+					lblGameStatus->SetText( lobbyString );
+					if ( lblGameStatus2 )
+					{
+						lblGameStatus2->SetText( gamesString );
+					}
+				}
+				else
+				{
+					// merge games and lobbies
+					const wchar_t *statusText =	g_pVGuiLocalize->Find( "#L4D360UI_FoundPublicGames_Status" );
+					if ( statusText )
+					{
+						g_pVGuiLocalize->ConstructString( finalString, sizeof( finalString ), statusText, 2, lobbyString, gamesString );
+					}
+					lblGameStatus->SetText( finalString );
+				}
 
-			//	if ( numLobbies + numGames == 0 )
-			//	{
-			//		lblGameStatus->SetText( "#L4D360UI_FoundPublicGames_Status_None" );
+				if ( numLobbies + numGames == 0 )
+				{
+					lblGameStatus->SetText( "#L4D360UI_FoundPublicGames_Status_None" );
 
-			//		if ( lblGameStatus2 )
-			//		{
-			//			lblGameStatus2->SetText( "" );
-			//		}
-			//	}
-			//}
-			//else if( lblGameStatus )
-			//{
-			//	char const *szNetwork = fi.mpGameDetails->GetString( "system/network", "LIVE" );
-			//	
-			//	char const *szGameState = fi.mpGameDetails->GetString( "game/state", "lobby" );
-			//	if ( !szGameState || !*szGameState )
-			//		szGameState = "game";
+					if ( lblGameStatus2 )
+					{
+						lblGameStatus2->SetText( "" );
+					}
+				}
+			}
+			else if( lblGameStatus )
+			{
+				char const *szNetwork = fi.mpGameDetails->GetString( "system/network", "LIVE" );
+				
+				char const *szGameState = fi.mpGameDetails->GetString( "game/state", "lobby" );
+				if ( !szGameState || !*szGameState )
+					szGameState = "game";
 
-			//	char chStatusTextBuffer[128];
-			//	Q_snprintf( chStatusTextBuffer, sizeof( chStatusTextBuffer ), "#L4D360UI_FoundGames_%sIn%s",
-			//		( !Q_stricmp( szNetwork, "lan" ) ) ? "Syslink" : "XboxLive",
-			//		szGameState );
-			//	lblGameStatus->SetText( chStatusTextBuffer );
-			//}
+				char chStatusTextBuffer[128];
+				Q_snprintf( chStatusTextBuffer, sizeof( chStatusTextBuffer ), "#L4D360UI_FoundGames_%sIn%s",
+					( !Q_stricmp( szNetwork, "lan" ) ) ? "Syslink" : "XboxLive",
+					szGameState );
+				lblGameStatus->SetText( chStatusTextBuffer );
+			}
 		}
 		
 		if ( !fi.mbInGame || ( eDetails == DETAILS_PRESENCE ) )

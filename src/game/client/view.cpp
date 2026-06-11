@@ -41,20 +41,27 @@
 #include "ScreenSpaceEffects.h"
 #include "vgui_int.h"
 #include "engine/sndinfo.h"
-
 #ifdef GAMEUI_UISYSTEM2_ENABLED
 #include "gameui.h"
 #endif
-
 #ifdef GAMEUI_EMBEDDED
-#include "gameui/swarm/BaseModPanel.h"
+
+#if defined( SWARM_DLL )
+#include "gameui/swarm/basemodpanel.h"
 #else
 #error "GAMEUI_EMBEDDED"
 #endif
+#endif
+#ifdef INFESTED_DLL
+#include "c_asw_marine.h"
+#endif
 
-#if defined( HL2_CLIENT_DLL )
+#if defined( HL2_CLIENT_DLL ) || defined( INFESTED_DLL )
 #define USE_MONITORS
 #endif
+
+
+
 	
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1058,6 +1065,14 @@ static void GetPos( const CCommand &args, Vector &vecOrigin, QAngle &angles )
 	vecOrigin = MainViewOrigin(nSlot);
 	angles = MainViewAngles(nSlot);
 
+#ifdef INFESTED_DLL
+	C_ASW_Marine *pMarine = C_ASW_Marine::GetLocalMarine();
+	if ( pMarine )
+	{
+		vecOrigin = pMarine->GetAbsOrigin();
+		angles = pMarine->GetAbsAngles();
+	}
+#endif
 	if ( ( args.ArgC() == 2 && atoi( args[1] ) == 2 ) || FStrEq( args[0], "getpos_exact" ) )
 	{
 		C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();

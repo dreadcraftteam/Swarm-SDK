@@ -9,8 +9,8 @@
 #include "VDropDownMenu.h"
 #include "VSliderControl.h"
 #include "VHybridButton.h"
-#include "EngineInterface.h"
-#include "gameui_util.h"
+#include "../EngineInterface.h"
+#include "../gameui_util.h"
 #include "vgui/ISurface.h"
 #include "VGenericConfirmation.h"
 #include "materialsystem/materialsystem_config.h"
@@ -37,14 +37,14 @@ BaseClass(parent, panelName)
 	SetUpperGarnishEnabled(true);
 	SetLowerGarnishEnabled(true);
 
-	m_drpCloud = NULL;
-
 	m_pHeaderFooter = new CNB_Header_Footer( this, "HeaderFooter" );
 	m_pHeaderFooter->SetTitle( "" );
 	m_pHeaderFooter->SetHeaderEnabled( false );
 	m_pHeaderFooter->SetFooterEnabled( true );
 	m_pHeaderFooter->SetGradientBarEnabled( true );
 	m_pHeaderFooter->SetGradientBarPos( 120, 160 );
+
+	m_drpCloud = NULL;
 
 	m_btnCancel = NULL;
 }
@@ -200,7 +200,7 @@ Panel* Cloud::NavigateBack()
 
 void Cloud::PaintBackground()
 {
-	BaseClass::DrawDialogBackground( "#L4D360UI_Cloud_Title", NULL, "#L4D360UI_Cloud_Subtitle", NULL, NULL, true );
+	//BaseClass::DrawDialogBackground( "#L4D360UI_Cloud_Title", NULL, "#L4D360UI_Cloud_Subtitle", NULL, NULL, true );
 }
 
 void Cloud::ApplySchemeSettings( vgui::IScheme *pScheme )

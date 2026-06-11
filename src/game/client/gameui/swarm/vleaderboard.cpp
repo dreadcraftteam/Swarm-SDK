@@ -6,10 +6,10 @@
 
 #include "vleaderboard.h"
 #include "VGenericPanelList.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VFooterPanel.h"
 #include "UIGameData.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 
 #include "vgui/ISurface.h"
 #include "vgui/IBorder.h"
@@ -672,10 +672,18 @@ void Leaderboard::Activate()
 	m_Mode = LEADERBOARD_FRIENDS;
 
 	KeyValues *pInfoMission = NULL;
+#ifdef SWARM_DLL
 	KeyValues *pInfoMap = g_pMatchExtSwarm->GetMapInfo( m_pDataSettings, &pInfoMission );
-	
+#else
+	KeyValues* pInfoMap;
+#endif
+
 	char const *szGameMode = m_pDataSettings->GetString( "game/mode", "survival" );
+#ifdef SWARM_DLL
 	KeyValues *pAllMissions = g_pMatchExtSwarm->GetAllMissions();
+#else
+	KeyValues* pAllMissions;
+#endif
 	pInfoMission = pAllMissions ? pAllMissions->GetFirstTrueSubKey() : NULL;
 
 	while ( !pInfoMap && pInfoMission )
@@ -736,6 +744,7 @@ void Leaderboard::ApplySchemeSettings( IScheme *pScheme )
 int Leaderboard::GetCurrentChapterContext( void )
 {
 	KeyValues *pMissionInfo = NULL;
+#ifdef SWARM_DLL
 	if ( KeyValues *pMapInfo = g_pMatchExtSwarm->GetMapInfo( m_pDataSettings, &pMissionInfo ) )
 	{
 		if ( IsX360() )
@@ -750,6 +759,7 @@ int Leaderboard::GetCurrentChapterContext( void )
 			return CRC32_ProcessSingleBuffer( szStringVal, strlen( szStringVal ) );
 		}
 	}
+#endif
 	return 0;
 }
 
@@ -806,7 +816,11 @@ void Leaderboard::OnMissionChapterChanged()
 	InitializeDropDownControls();
 
 	KeyValues *pInfoMission = NULL;
+#ifdef SWARM_DLL
 	KeyValues *pInfoMap = g_pMatchExtSwarm->GetMapInfo( m_pDataSettings, &pInfoMission );
+#else
+	KeyValues* pInfoMap;
+#endif
 
 	const char *pszChapter = pInfoMap ? pInfoMap->GetString( "displayname" ) : NULL;
 
@@ -1605,7 +1619,11 @@ void Leaderboard::GetLeaderboardName( int iMapContext, char *pszBuf, int iBufLen
 	// name = "<mapname>_<gamemode>"
 
 	KeyValues *pInfoMission = NULL;
+#ifdef SWARM_DLL
 	KeyValues *pInfoMap = g_pMatchExtSwarm->GetMapInfo( m_pDataSettings, &pInfoMission );
+#else
+	KeyValues* pInfoMap;
+#endif
 
 	if ( pInfoMap )
 	{
@@ -1889,15 +1907,15 @@ bool Leaderboard::HandleQuery_StatsGlobalPage( void )
 				}
 			}
 
-			// fixup MIN / MAX pages loaded
-			// assume we're only throwing away the MIN or the MAX page
+			// fixup min / max pages loaded
+			// assume we're only throwing away the min or the max page
 			if ( iPageToDiscard == m_iMinPageLoaded )
 			{
-				m_iMinPageLoaded = MIN( m_iMinPageLoaded + 1, m_iMaxPageLoaded );
+				m_iMinPageLoaded = min( m_iMinPageLoaded + 1, m_iMaxPageLoaded );
 			}
 			else if ( iPageToDiscard == m_iMaxPageLoaded )
 			{
-				m_iMaxPageLoaded = MAX( m_iMaxPageLoaded - 1, m_iMinPageLoaded );
+				m_iMaxPageLoaded = max( m_iMaxPageLoaded - 1, m_iMinPageLoaded );
 			}
 		}
 
@@ -2506,11 +2524,21 @@ void Leaderboard::CmdJumpToMe()
 void Leaderboard::CmdLeaderboardHelper( int nOffset )
 {
 	KeyValues *pMissionInfo = NULL;
+#ifdef SWARM_DLL
 	KeyValues *pMapInfo = g_pMatchExtSwarm->GetMapInfo( m_pDataSettings, &pMissionInfo );
+#else
+	KeyValues* pMapInfo;
+#endif 
+
 	if ( !pMapInfo )
 		return;
 
+#ifdef SWARM_DLL
 	KeyValues *pAllMissions = g_pMatchExtSwarm->GetAllMissions();
+#else
+	KeyValues* pAllMissions;
+#endif
+
 	if ( !pAllMissions )
 		return;
 

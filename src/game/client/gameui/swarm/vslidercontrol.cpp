@@ -4,7 +4,7 @@
 #include "vgui_controls/ProgressBar.h"
 #include "tier1/KeyValues.h"
 #include "IGameUIFuncs.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 #include "vgui/IInput.h"
 #include "VFlyoutMenu.h"
 
@@ -207,15 +207,15 @@ void SliderControl::SetStepSize( float stepSize )
 	m_stepSize = stepSize;
 }
 
-void SliderControl::SetMin( float MIN )
+void SliderControl::SetMin( float min )
 {
-	m_min = MIN;
+	m_min = min;
 	SetCurrentValue( GetCurrentValue(), true ); //make sure that the current value doesn't go out of bounds
 }
 
-void SliderControl::SetMax( float MAX )
+void SliderControl::SetMax( float max )
 {
-	m_max = MAX;
+	m_max = max;
 	SetCurrentValue( GetCurrentValue(), true ); //make sure that the current value doesn't go out of bounds
 }
 

@@ -4,22 +4,21 @@
 //
 //=====================================================================================//
 
-#include "cbase.h"
 #include "vkeyboard.h"
 #include "VFooterPanel.h"
 #include "VDropDownMenu.h"
 #include "VSliderControl.h"
 #include "VHybridButton.h"
-#include "EngineInterface.h"
-#include "gameui_util.h"
+#include "../EngineInterface.h"
+#include "../gameui_util.h"
 #include "vgui/ISurface.h"
 #include "VGenericConfirmation.h"
 #include "materialsystem/materialsystem_config.h"
 #include "ConfigManager.h"
 #include "cdll_util.h"
 #include "nb_header_footer.h"
-#include "optionssubkeyboard.h"
-#include "vcontrolslistpanel.h"
+#include "../optionssubkeyboard.h"
+#include "../vcontrolslistpanel.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -138,18 +137,10 @@ void VKeyboard::OnCommand(const char *command)
 	{
 		m_pOptionsSubKeyboard->OnApplyChanges();
 		OnKeyCodePressed( KEY_XBUTTON_B );
-
-		// Navigate back to KeyboardMouse where the user came from
-		BaseClass::NavigateBack();
-		CBaseModPanel::GetSingleton().OpenWindow(WT_KEYBOARD, this, true );
 	}
 	else if( Q_stricmp( "Cancel", command ) == 0 )
 	{
 		OnKeyCodePressed( KEY_XBUTTON_B );
-
-		// Navigate back to KeyboardMouse where the user came from
-		BaseClass::NavigateBack();
-		CBaseModPanel::GetSingleton().OpenWindow(WT_KEYBOARDMOUSE, this, true );
 	}
 	else
 	{
@@ -178,7 +169,7 @@ Panel* VKeyboard::NavigateBack()
 
 void VKeyboard::PaintBackground()
 {
-	BaseClass::DrawDialogBackground( "#GameUI_Keyboard", NULL, "#GameUI_Console_UserSettings", NULL, NULL, true );
+	//BaseClass::DrawDialogBackground( "#L4D360UI_Cloud_Title", NULL, "#L4D360UI_Cloud_Subtitle", NULL, NULL, true );
 }
 
 void VKeyboard::ApplySchemeSettings( vgui::IScheme *pScheme )

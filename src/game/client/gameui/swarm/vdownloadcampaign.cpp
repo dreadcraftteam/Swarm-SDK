@@ -6,7 +6,7 @@
 
 #include "VDownloadCampaign.h"
 
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 
 #include "ConfigManager.h"
 

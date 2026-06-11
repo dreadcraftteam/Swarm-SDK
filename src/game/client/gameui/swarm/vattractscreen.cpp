@@ -6,14 +6,14 @@
 
 #include "VAttractScreen.h"
 #include "VSignInDialog.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "inputsystem/iinputsystem.h"
 #include "vgui_controls/Label.h"
 #include "vgui_controls/imagepanel.h"
 #include "VGenericConfirmation.h"
 #include "VFooterPanel.h"
 #include "vgui/ISurface.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 #include "tier0/icommandline.h"
 #ifdef _X360
 #include "xbox/xbox_launch.h"
@@ -1306,8 +1306,8 @@ void CAttractScreen::StartGame( int idxUser1 /* = -1 */, int idxUser2 /* = -1 */
 	else
 	{
 		// Second user's guest status should be remembered earlier if this is the case
-		XBX_SetUserId( 0, MIN( idxUser1, idxUser2 ) );
-		XBX_SetUserId( 1, MAX( idxUser1, idxUser2 ) );
+		XBX_SetUserId( 0, min( idxUser1, idxUser2 ) );
+		XBX_SetUserId( 1, max( idxUser1, idxUser2 ) );
 
 		int iSecondaryUserSlot = (idxUser2 < idxUser1) ? 0 : 1;
 		XBX_SetUserIsGuest( iSecondaryUserSlot, s_bSecondaryUserIsGuest );

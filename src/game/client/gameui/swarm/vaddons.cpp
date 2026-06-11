@@ -14,7 +14,7 @@
 #include "VGenericPanelList.h"
 #include "KeyValues.h"
 #include "VFooterPanel.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "FileSystem.h"
 #include "fmtstr.h"
 #include "vgui/ISurface.h"
@@ -441,7 +441,7 @@ void Addons::ApplySchemeSettings(vgui::IScheme *pScheme)
 //=============================================================================
 void Addons::PaintBackground()
 {
-	BaseClass::DrawDialogBackground( "#L4D360UI_My_Addons", NULL, "#L4D360UI_My_Addons_Desc", NULL );
+	//BaseClass::DrawDialogBackground( "#L4D360UI_My_Addons", NULL, "#L4D360UI_My_Addons_Desc", NULL );
 }
 
 //=============================================================================

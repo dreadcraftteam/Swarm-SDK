@@ -6,11 +6,11 @@
 
 #include "VInGameDifficultySelect.h"
 #include "VFooterPanel.h"
-#include "EngineInterface.h"
-#include "gameui_util.h"
+#include "../EngineInterface.h"
+#include "../gameui_util.h"
 #include "VHybridButton.h"
 #include "vgui/ILocalize.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

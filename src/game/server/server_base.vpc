@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------
 
 $Macro OUTBINNAME	"server"
-$Macro OUTBINDIR	"$SRCDIR\..\build\$GAMENAME\bin"
+$Macro OUTBINDIR	"$SRCDIR\..\game\$GAMENAME\bin"
 
 $MacroRequired "GAMENAME"
 
@@ -33,8 +33,8 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\shared;$SRCDIR\utils\common;$SRCDIR\game\shared\econ;$SRCDIR\game\server\NextBot"
-		$PreprocessorDefinitions		"$BASE;GAME_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;sprintf=use_Q_snprintf_instead_of_sprintf;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead"
+		$AdditionalIncludeDirectories	"$BASE;.\;$SRCDIR\game\shared;.\NavMesh;$SRCDIR\utils\common;$SRCDIR\game\shared\econ;$SRCDIR\game\server\NextBot"
+		$PreprocessorDefinitions		"$BASE;GAME_DLL;VECTOR;VERSION_SAFE_STEAM_API_INTERFACES;PROTECTED_THINGS_ENABLE;USE_NAV_MESH;NEXT_BOT;sprintf=use_Q_snprintf_instead_of_sprintf;strncpy=use_Q_strncpy_instead;_snprintf=use_Q_snprintf_instead"
 		$PreprocessorDefinitions		"$BASE;fopen=dont_use_fopen"
 		$Create/UsePrecompiledHeader	"Use Precompiled Header (/Yu)"
 		$Create/UsePCHThroughFile		"cbase.h"
@@ -47,9 +47,100 @@ $Configuration
 }
 
 $Project
-{
+{	
 	$Folder	"Source Files"
 	{
+		$Folder	"NavMesh"
+		{
+			$File	"NavMesh\nav.h"
+			$File	"NavMesh\nav_area.cpp"
+			$File	"NavMesh\nav_area.h"
+			$File	"NavMesh\nav_colors.cpp"
+			$File	"NavMesh\nav_colors.h"
+			$File	"NavMesh\nav_edit.cpp"
+			$File	"NavMesh\nav_entities.cpp"
+			$File	"NavMesh\nav_entities.h"
+			$File	"NavMesh\nav_file.cpp"
+			$File	"NavMesh\nav_generate.cpp"
+			$File	"NavMesh\nav_ladder.cpp"
+			$File	"NavMesh\nav_ladder.h"
+			$File	"NavMesh\nav_merge.cpp"
+			$File	"NavMesh\nav_mesh.cpp"
+			$File	"NavMesh\nav_mesh.h"
+			$File	"NavMesh\nav_mesh_factory.cpp"
+			$File	"NavMesh\nav_node.cpp"
+			$File	"NavMesh\nav_node.h"
+			$File	"NavMesh\nav_pathfind.h"
+			$File	"NavMesh\nav_simplify.cpp"
+		}
+		
+		$Folder "NextBot"
+		{
+			$File	"NextBot\NextBot.cpp"
+			$File	"NextBot\NextBot.h"
+			$File	"NextBot\NextBotBehavior.h"
+			$File	"NextBot\NextBotManager.cpp"
+			$File	"NextBot\NextBotManager.h"
+			$File	"NextBot\NextBotUtil.h"
+			$File	"NextBot\NextBotKnownEntity.h"
+			$File	"NextBot\NextBotGroundLocomotion.cpp"
+			$File	"NextBot\NextBotGroundLocomotion.h"
+			$File	"NextBot\simple_bot.cpp"
+			$File	"NextBot\simple_bot.h"
+				
+			$Folder "NextBotInterfaces"
+			{
+				$File	"NextBot\NextBotBodyInterface.cpp"
+				$File	"NextBot\NextBotBodyInterface.h"
+				$File	"NextBot\NextBotComponentInterface.cpp"
+				$File	"NextBot\NextBotComponentInterface.h"
+				$File	"NextBot\NextBotEventResponderInterface.h"
+				$File	"NextBot\NextBotHearingInterface.h"
+				$File	"NextBot\NextBotIntentionInterface.cpp"
+				$File	"NextBot\NextBotIntentionInterface.h"
+				$File	"NextBot\NextBotInterface.cpp"
+				$File	"NextBot\NextBotInterface.h"
+				$File	"NextBot\NextBotLocomotionInterface.cpp"
+				$File	"NextBot\NextBotLocomotionInterface.h"
+				$File	"NextBot\NextBotVisionInterface.cpp"
+				$File	"NextBot\NextBotVisionInterface.h"
+				$File	"NextBot\NextBotContextualQueryInterface.h"
+			}
+
+			$Folder "NextBotPath"
+			{
+				$File	"NextBot\Path\NextBotChasePath.cpp"
+				$File	"NextBot\Path\NextBotChasePath.h"
+				$File	"NextBot\Path\NextBotRetreatPath.h"
+				$File	"NextBot\Path\NextBotPath.cpp"
+				$File	"NextBot\Path\NextBotPath.h"
+				$File	"NextBot\Path\NextBotPathFollow.cpp"
+				$File	"NextBot\Path\NextBotPathFollow.h"
+			}
+				
+			$Folder "NextBotPlayer"
+			{
+				$File	"NextBot\Player\NextBotPlayerBody.cpp"
+				$File	"NextBot\Player\NextBotPlayerBody.h"
+				$File	"NextBot\Player\NextBotPlayerLocomotion.cpp"
+				$File	"NextBot\Player\NextBotPlayerLocomotion.h"
+				$File	"NextBot\Player\NextBotPlayer.cpp"
+				$File	"NextBot\Player\NextBotPlayer.h"
+			}
+
+			$Folder "NextBotCommonBehaviors"
+			{
+				$File	"NextBot\Behavior\BehaviorBackUp.h"
+				$File	"NextBot\Behavior\BehaviorMoveTo.h"
+			}
+
+			$Folder "NextBotNavMeshEntities"
+			{
+				$File	"NextBot\NavMeshEntities\func_nav_prerequisite.cpp"
+				$File	"NextBot\NavMeshEntities\func_nav_prerequisite.h"
+			}
+		}
+	
 		$File	"ai_addon.cpp"
 		$File	"ai_addon.h"
 		$File	"ai_agent.cpp"
@@ -754,7 +845,7 @@ $Project
 			}
 		}
 
-		$Folder	"temporary entities"
+		$Folder	"Temporary Entities"
 		{
 			$File	"basetempentity.cpp"
 			$File	"event_tempentity_tester.cpp"
@@ -797,6 +888,7 @@ $Project
 			$File	"te_explosion.cpp"
 			$File	"te_fizz.cpp"
 			$File	"te_footprintdecal.cpp"
+			$File	"hl2\te_gaussexplosion.cpp"
 			$File	"te_glassshatter.cpp"
 			$File	"te_glowsprite.cpp"
 			$File	"te_impact.cpp"
@@ -890,6 +982,7 @@ $Project
 		$File	"globals.h"
 		$File	"$SRCDIR\public\globalvars_base.h"
 		$File	"$SRCDIR\game\shared\groundlink.h"
+		$File	"$SRCDIR\game\shared\hl2\hl2_vehicle_radar.h"
 		$File	"$SRCDIR\public\iachievementmgr.h"
 		$File	"$SRCDIR\public\appframework\IAppSystem.h"
 		$File	"$SRCDIR\public\icliententity.h"

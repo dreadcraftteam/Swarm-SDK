@@ -97,7 +97,6 @@ bool ResetVideoConfigToDefaults( KeyValues *pConfigKeys = NULL );
 bool UpdateVideoConfigConVars( KeyValues *pConfigKeys = NULL );
 
 bool ReadCurrentVideoConfig( KeyValues *pConfigKeys, bool bDefault = false );
-bool UpdateCurrentVideoConfig( int nWidth, int nHeight, int nAspectRatioMode, bool bFullscreen, bool bNoWindowBorder );
 void UpdateSystemLevel( int nCPULevel, int nGPULevel, int nMemLevel, int nGPUMemLevel, bool bVGUIIsSplitscreen, const char *pModName );
 
 #endif // VIDEOCFG_H

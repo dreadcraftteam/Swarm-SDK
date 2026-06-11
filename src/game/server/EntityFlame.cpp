@@ -12,7 +12,11 @@
 #include "cbase.h"
 #include "EntityFlame.h"
 #include "ai_basenpc.h"
+#ifdef INFESTED_DLL
+#include "asw_fire.h"
+#else
 #include "fire.h"
+#endif
 #include "shareddefs.h"
 #include "ai_link.h"
 #include "ai_node.h"
@@ -43,8 +47,9 @@ IMPLEMENT_SERVERCLASS_ST( CEntityFlame, DT_EntityFlame )
 	SendPropBool( SENDINFO( m_bCheapEffect ) ),
 END_SEND_TABLE()
 
+#ifndef INFESTED_DLL
 LINK_ENTITY_TO_CLASS( entityflame, CEntityFlame );
-
+#endif
 PRECACHE_REGISTER(entityflame);
 
 

@@ -76,11 +76,11 @@ public:
 	virtual void Destroy( const char *pClassName, IServerNetworkable *pNetworkable );
 	virtual const char *GetCannonicalName( const char *pClassName );
 	void ReportEntitySizes();
-	IEntityFactory *FindFactory( const char *pClassName );
-	virtual const EntityFactoryDict_t &GetFactoryDictionary() { return m_Factories; }
 
+private:
+	IEntityFactory *FindFactory( const char *pClassName );
 public:
-	EntityFactoryDict_t m_Factories;
+	CUtlDict< IEntityFactory *, unsigned short > m_Factories;
 };
 
 //-----------------------------------------------------------------------------

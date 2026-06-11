@@ -1,6 +1,0 @@
-"LightmappedGeneric"
-{
-	"$basetexture" "shadertest/LightmappedGeneric"
-	"$envmap" "shadertest/shadertest_env"
-	"$detail" "shadertest/shadertestdetail"
-}

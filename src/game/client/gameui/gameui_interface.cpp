@@ -60,7 +60,7 @@
 #include "steam/steam_api.h"
 #include "protocol.h"
 
-#if defined( SWARM_DLL )
+#if defined( SWARM_DLL ) || defined ( HL2_CLIENT_DLL )
 
 #include "swarm/basemodpanel.h"
 #include "swarm/basemodui.h"

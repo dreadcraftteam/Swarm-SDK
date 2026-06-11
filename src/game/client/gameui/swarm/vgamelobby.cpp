@@ -9,9 +9,9 @@
 #include "VGenericConfirmation.h"
 #include "VGenericPanelList.h"
 #include "VFooterPanel.h"
-#include "gameui_util.h"
+#include "../gameui_util.h"
 #include "GameUI/IGameUI.h"
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VHybridButton.h"
 #include "VGameSettings.h"
 

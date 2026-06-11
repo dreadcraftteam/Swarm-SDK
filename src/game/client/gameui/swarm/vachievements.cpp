@@ -4,7 +4,7 @@
 //
 //=====================================================================================//
 
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 #include "VGenericPanelList.h"
 #include "IAchievementMgr.h"
 #include "KeyValues.h"
@@ -70,8 +70,6 @@ AchievementListItem::AchievementListItem( IAchievement *pAchievement ) : BaseCla
 	SetAchievementGoal( pAchievement->GetGoal() );
 	SetGamerScore( pAchievement->GetPointValue() );
 	SetAchievementProgress( pAchievement->GetGoal() );	
-
-	SetCursor(dc_arrow);
 }
 
 //=============================================================================
@@ -761,9 +759,8 @@ void Achievements::ToggleDisplayType( bool bDisplayType )
 //=============================================================================
 void Achievements::ApplySchemeSettings(vgui::IScheme *pScheme)
 {
-	BaseClass::ApplySchemeSettings( pScheme );
+	BaseClass::ApplySchemeSettings(pScheme);
 
-	// required for new style
 	SetPaintBackgroundEnabled( true );
 	SetupAsDialogStyle();
 
@@ -795,9 +792,68 @@ void Achievements::NavigateFrom()
 }
 #endif // _X360
 
-
 //=============================================================================
 void Achievements::PaintBackground()
 {
-	BaseClass::DrawDialogBackground( "#L4D360UI_My_Achievements", NULL, "#L4D360UI_My_Achievements_Desc", NULL, NULL, true );
+	if ( IsPC() )
+	{
+		//BaseClass::DrawDialogBackground( "#L4D360UI_My_Achievements", NULL, "#L4D360UI_My_Achievements_Desc", NULL );
+
+		int wide, tall;
+		GetSize( wide, tall );
+
+		vgui::surface()->DrawSetColor( Color( 0, 0, 0, 192 ) );
+		vgui::surface()->DrawFilledRect( 0, 0, wide, tall * 0.5f );
+
+		vgui::surface()->DrawSetColor( Color( 0, 0, 0, 250 ) );
+		vgui::surface()->DrawFilledRect( 0, tall * 0.5f, wide, tall );
+
+		int y = YRES( 75 );
+		tall = YRES( 330 );
+		int iHalfWide = wide * 0.5f;
+
+		float flAlpha = 200.0f / 255.0f;
+
+		// fill bar background
+		vgui::surface()->DrawSetColor( Color( 0, 0, 0, 255 * flAlpha ) );
+		vgui::surface()->DrawFilledRect( 0, y, wide, y + tall );
+
+		vgui::surface()->DrawSetColor( Color( 53, 86, 117, 255 * flAlpha ) );
+		//vgui::surface()->DrawFilledRect( 0, YRES( 4 ), wide, tall - YRES( 4 ) );
+
+		int nBarPosY = y + YRES( 4 );
+		int nBarHeight = tall - YRES( 8 );
+		vgui::surface()->DrawFilledRectFade( iHalfWide, nBarPosY, wide, nBarPosY + nBarHeight, 255, 0, true );
+		vgui::surface()->DrawFilledRectFade( 0, nBarPosY, iHalfWide, nBarPosY + nBarHeight, 0, 255, true );
+/*
+		nBarPosY = y + tall - YRES( 2 );
+		vgui::surface()->DrawFilledRectFade( iHalfWide, nBarPosY, wide, nBarPosY + nBarHeight, 255, 0, true );
+		vgui::surface()->DrawFilledRectFade( 0, nBarPosY, iHalfWide, nBarPosY + nBarHeight, 0, 255, true );
+*/
+		
+		// draw highlights
+		nBarHeight = YRES( 2 );
+		nBarPosY = y;
+		vgui::surface()->DrawSetColor( Color( 97, 210, 255, 255 * flAlpha ) );
+		vgui::surface()->DrawFilledRectFade( iHalfWide, nBarPosY, wide, nBarPosY + nBarHeight, 255, 0, true );
+		vgui::surface()->DrawFilledRectFade( 0, nBarPosY, iHalfWide, nBarPosY + nBarHeight, 0, 255, true );
+
+		nBarPosY = y + tall - YRES( 2 );
+		vgui::surface()->DrawFilledRectFade( iHalfWide, nBarPosY, wide, nBarPosY + nBarHeight, 255, 0, true );
+		vgui::surface()->DrawFilledRectFade( 0, nBarPosY, iHalfWide, nBarPosY + nBarHeight, 0, 255, true );
+	}
+	else
+	{
+		if ( V_wcslen( m_wAchievementsTitle ) > 0 )
+		{
+			BaseClass::DrawDialogBackground( NULL, m_wAchievementsTitle, NULL, m_wAchievementsProgress );
+		}
+		else
+		{
+			BaseClass::DrawDialogBackground( "#L4D360UI_My_Achievements", NULL, NULL, m_wAchievementsProgress );
+		}
+	}
 }
+
+
+

@@ -10,7 +10,7 @@
 #include "VAddonAssociation.h"
 #include "VGenericConfirmation.h"
 
-#include "EngineInterface.h"
+#include "../EngineInterface.h"
 
 #include "ConfigManager.h"
 
