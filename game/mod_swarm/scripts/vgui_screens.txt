@@ -1,0 +1,20 @@
+"VGUI_Screens"
+{
+	"slideshow_display_screen"
+	{
+		"type"		"slideshow_display_screen"
+		"pixelswide"	256
+		"pixelshigh"	128
+		"acceptsinput"  0
+		"resfile"	"scripts/screens/slideshow_display_screen.res"
+	}
+	
+	"movie_display_screen"
+	{
+		"type"			"movie_display_screen"
+		"pixelswide"	256
+		"pixelshigh"	128
+		"acceptsinput"  0
+		"resfile"		"scripts/screens/moviedisplayscreen.res"
+	}
+}
