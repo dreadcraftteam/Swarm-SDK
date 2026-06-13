@@ -14,13 +14,13 @@
 #include "c_asw_campaign_save.h"
 #include "nb_header_footer.h"
 #include "nb_button.h"
-#include "gameui/swarm/vdropdownmenu.h"
+#include "gameui/mod/vdropdownmenu.h"
 #include "c_asw_player.h"
 #include "c_asw_game_resource.h"
 #include "asw_input.h"
 #include "nb_island.h"
-#include "gameui/swarm/basemodpanel.h"
-#include "gameui/swarm/VFooterPanel.h"
+#include "gameui/mod/basemodpanel.h"
+#include "gameui/mod/VFooterPanel.h"
 
 using namespace vgui;
 

@@ -30,7 +30,7 @@
 #include "nb_commander_list.h"
 #include "nb_campaign_mission_details.h"
 #include "asw_briefing.h"
-#include "gameui/swarm/uigamedata.h"
+#include "gameui/mod/uigamedata.h"
 #include "nb_vote_panel.h"
 #include <vgui/IVgui.h>
 

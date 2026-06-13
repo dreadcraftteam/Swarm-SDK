@@ -16,9 +16,9 @@
 #include "nb_main_panel.h"
 #include "vgui_avatarimage.h"
 #include "voice_status.h"
-#include "gameui/swarm/vflyoutmenu.h"
-#include "gameui/swarm/vdropdownmenu.h"
-#include "gameui/swarm/vhybridbutton.h"
+#include "gameui/mod/vflyoutmenu.h"
+#include "gameui/mod/vdropdownmenu.h"
+#include "gameui/mod/vhybridbutton.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"

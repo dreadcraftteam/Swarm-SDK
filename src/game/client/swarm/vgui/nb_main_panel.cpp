@@ -24,7 +24,7 @@
 #include "nb_header_footer.h"
 #include "nb_select_mission_panel.h"
 #include "nb_button.h"
-#include "gameui/swarm/uigamedata.h"
+#include "gameui/mod/uigamedata.h"
 #include "c_asw_game_resource.h"
 #include "vgui_bitmapbutton.h"
 #include "clientmode_asw.h"

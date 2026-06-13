@@ -106,13 +106,9 @@
 #ifdef GAMEUI_UISYSTEM2_ENABLED
 #include "gameui.h"
 #endif
-#ifdef GAMEUI_EMBEDDED
 
-#if defined( SWARM_DLL )
-#include "gameui/swarm/basemodpanel.h"
-#else
-#error "GAMEUI_EMBEDDED"
-#endif
+#ifdef GAMEUI_EMBEDDED
+#include "gameui/mod/basemodpanel.h"
 #endif
 
 #ifdef DEMOPOLISH_ENABLED
@@ -124,8 +120,6 @@
 #include "../../engine/iblackbox.h"
 #include "c_rumble.h"
 #include "viewpostprocess.h"
-
-
 
 #ifdef INFESTED_PARTICLES
 #include "c_asw_generic_emitter.h"
@@ -192,7 +186,6 @@ IViewRender *GetViewRenderInstance();
 static CSteamAPIContext g_SteamAPIContext;
 CSteamAPIContext *steamapicontext = &g_SteamAPIContext;
 
-
 bool g_bEngineIsHLTV = false;
 
 static bool g_bRequestCacheUsedMaterials = false;
@@ -236,6 +229,7 @@ INetworkStringTable *g_pStringTableInfoPanel = NULL;
 INetworkStringTable *g_pStringTableClientSideChoreoScenes = NULL;
 
 static CGlobalVarsBase dummyvars( true );
+
 // So stuff that might reference gpGlobals during DLL initialization won't have a NULL pointer.
 // Once the engine calls Init on this DLL, this pointer gets assigned to the shared data in the engine
 CGlobalVarsBase *gpGlobals = &dummyvars;
@@ -1762,11 +1756,7 @@ void ConfigureCurrentSystemLevel()
 	}
 
 #if defined( SWARM_DLL )
-	char szModName[32] = "swarm";
-#elif defined ( HL2_EPISODIC )
-	char szModName[32] = "ep2";
-#elif defined ( SDK_CLIENT_DLL )
-	char szModName[32] = "sdk";
+	char szModName[32] = "mod_swarm";
 #endif
 
 	UpdateSystemLevel( nCPULevel, nGPULevel, nMemLevel, nGPUMemLevel, VGui_IsSplitScreen(), szModName );

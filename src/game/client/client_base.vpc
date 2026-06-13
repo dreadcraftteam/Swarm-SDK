@@ -197,77 +197,77 @@ $Project
 			{
 				$Folder "Headers"
 				{
-					$File	"gameui\swarm\basemodframe.h" \
-							"gameui\swarm\basemodpanel.h" \
-							"gameui\swarm\basemodui.h" \
-							"gameui\swarm\gamemodes.h" \
-							"gameui\swarm\uiavatarimage.h" \
-							"gameui\swarm\uigamedata.h" \
-							"gameui\swarm\vachievements.h" \
-							"gameui\swarm\vaddonassociation.h" \
-							"gameui\swarm\vaddons.h" \
-							"gameui\swarm\vattractscreen.h" \
-							"gameui\swarm\vaudio.h" \
-							"gameui\swarm\vaudiovideo.h" \
-							"gameui\swarm\vcloud.h" \
-							"gameui\swarm\vcontrolleroptions.h" \
-							"gameui\swarm\vcontrolleroptionsbuttons.h" \
-							"gameui\swarm\vcontrolleroptionssticks.h" \
-							"gameui\swarm\vcustomcampaigns.h" \
-							"gameui\swarm\vdownloadcampaign.h" \
-							"gameui\swarm\vdownloads.h" \
-							"gameui\swarm\vdropdownmenu.h" \
-							"gameui\swarm\vflyoutmenu.h" \
-							"gameui\swarm\vfooterpanel.h" \
-							"gameui\swarm\vfoundgames.h" \
-							"gameui\swarm\vfoundgroupgames.h" \
-							"gameui\swarm\vfoundpublicgames.h" \
-							"gameui\swarm\vgamelobby.h" \
-							"gameui\swarm\vgamelobbychat.h" \
-							"gameui\swarm\vgameoptions.h" \
-							"gameui\swarm\vgamesettings.h" \
-							"gameui\swarm\vgenericconfirmation.h" \
-							"gameui\swarm\vgenericpanellist.h" \
-							"gameui\swarm\vgenericwaitscreen.h" \
-							"gameui\swarm\vgetlegacydata.h" \
-							"gameui\swarm\vhybridbutton.h" \
-							"gameui\swarm\vingamechapterselect.h" \
-							"gameui\swarm\vingamedifficultyselect.h" \
-							"gameui\swarm\vingamekickplayerlist.h" \
-							"gameui\swarm\vingamemainmenu.h" \
-							"gameui\swarm\vjukebox.h" \
-							"gameui\swarm\vkeyboard.h" \
-							"gameui\swarm\vkeyboardmouse.h" \
-							"gameui\swarm\vleaderboard.h" \
-							"gameui\swarm\vloadingprogress.h" \
-							"gameui\swarm\vmainmenu.h" \
-							"gameui\swarm\vmultiplayer.h" \
-							"gameui\swarm\voptions.h" \
-							"gameui\swarm\vpasswordentry.h" \
-							"gameui\swarm\vquickjoin.h" \
-							"gameui\swarm\vquickjoingroups.h" \
-							"gameui\swarm\vsignindialog.h" \
-							"gameui\swarm\vslidercontrol.h" \
-							"gameui\swarm\vspinnercontrol.h" \
-							"gameui\swarm\vsteamcloudconfirmation.h" \
-							"gameui\swarm\vtransitionscreen.h" \
-							"gameui\swarm\vvideo.h" \
-							"gameui\swarm\vvoteoptions.h"
+					$File	"gameui\mod\basemodframe.h" \
+							"gameui\mod\basemodpanel.h" \
+							"gameui\mod\basemodui.h" \
+							"gameui\mod\gamemodes.h" \
+							"gameui\mod\uiavatarimage.h" \
+							"gameui\mod\uigamedata.h" \
+							"gameui\mod\vachievements.h" \
+							"gameui\mod\vaddonassociation.h" \
+							"gameui\mod\vaddons.h" \
+							"gameui\mod\vattractscreen.h" \
+							"gameui\mod\vaudio.h" \
+							"gameui\mod\vaudiovideo.h" \
+							"gameui\mod\vcloud.h" \
+							"gameui\mod\vcontrolleroptions.h" \
+							"gameui\mod\vcontrolleroptionsbuttons.h" \
+							"gameui\mod\vcontrolleroptionssticks.h" \
+							"gameui\mod\vcustomcampaigns.h" \
+							"gameui\mod\vdownloadcampaign.h" \
+							"gameui\mod\vdownloads.h" \
+							"gameui\mod\vdropdownmenu.h" \
+							"gameui\mod\vflyoutmenu.h" \
+							"gameui\mod\vfooterpanel.h" \
+							"gameui\mod\vfoundgames.h" \
+							"gameui\mod\vfoundgroupgames.h" \
+							"gameui\mod\vfoundpublicgames.h" \
+							"gameui\mod\vgamelobby.h" \
+							"gameui\mod\vgamelobbychat.h" \
+							"gameui\mod\vgameoptions.h" \
+							"gameui\mod\vgamesettings.h" \
+							"gameui\mod\vgenericconfirmation.h" \
+							"gameui\mod\vgenericpanellist.h" \
+							"gameui\mod\vgenericwaitscreen.h" \
+							"gameui\mod\vgetlegacydata.h" \
+							"gameui\mod\vhybridbutton.h" \
+							"gameui\mod\vingamechapterselect.h" \
+							"gameui\mod\vingamedifficultyselect.h" \
+							"gameui\mod\vingamekickplayerlist.h" \
+							"gameui\mod\vingamemainmenu.h" \
+							"gameui\mod\vjukebox.h" \
+							"gameui\mod\vkeyboard.h" \
+							"gameui\mod\vkeyboardmouse.h" \
+							"gameui\mod\vleaderboard.h" \
+							"gameui\mod\vloadingprogress.h" \
+							"gameui\mod\vmainmenu.h" \
+							"gameui\mod\vmultiplayer.h" \
+							"gameui\mod\voptions.h" \
+							"gameui\mod\vpasswordentry.h" \
+							"gameui\mod\vquickjoin.h" \
+							"gameui\mod\vquickjoingroups.h" \
+							"gameui\mod\vsignindialog.h" \
+							"gameui\mod\vslidercontrol.h" \
+							"gameui\mod\vspinnercontrol.h" \
+							"gameui\mod\vsteamcloudconfirmation.h" \
+							"gameui\mod\vtransitionscreen.h" \
+							"gameui\mod\vvideo.h" \
+							"gameui\mod\vvoteoptions.h"
 					}
 					$Folder "Win32"
 					{
-					$File	"gameui\swarm\uiavatarimage.cpp" \
-							"gameui\swarm\vaddonassociation.cpp" \
-							"gameui\swarm\vaddons.cpp" \
-							"gameui\swarm\vcloud.cpp" \
-							"gameui\swarm\vcustomcampaigns.cpp" \
-							"gameui\swarm\vdownloadcampaign.cpp" \
-							"gameui\swarm\vdownloads.cpp" \
-							"gameui\swarm\vgetlegacydata.cpp" \
-							"gameui\swarm\vjukebox.cpp" \
-							"gameui\swarm\vkeyboard.cpp" \
-							"gameui\swarm\vkeyboardmouse.cpp" \
-							"gameui\swarm\vsteamcloudconfirmation.cpp"
+					$File	"gameui\mod\uiavatarimage.cpp" \
+							"gameui\mod\vaddonassociation.cpp" \
+							"gameui\mod\vaddons.cpp" \
+							"gameui\mod\vcloud.cpp" \
+							"gameui\mod\vcustomcampaigns.cpp" \
+							"gameui\mod\vdownloadcampaign.cpp" \
+							"gameui\mod\vdownloads.cpp" \
+							"gameui\mod\vgetlegacydata.cpp" \
+							"gameui\mod\vjukebox.cpp" \
+							"gameui\mod\vkeyboard.cpp" \
+							"gameui\mod\vkeyboardmouse.cpp" \
+							"gameui\mod\vsteamcloudconfirmation.cpp"
 					{
 					
 							$Configuration
@@ -279,52 +279,52 @@ $Project
 							}
 						}
 					}
-					$File	"gameui\swarm\basemodframe.cpp" \
-							"gameui\swarm\basemodpanel.cpp" \
-							"gameui\swarm\gamemodes.cpp" \
-							"gameui\swarm\uigamedata.cpp" \
-							"gameui\swarm\uigamedata_invite.cpp" \
-							"gameui\swarm\uigamedata_storage.cpp" \
-							"gameui\swarm\vachievements.cpp" \
-							"gameui\swarm\vattractscreen.cpp" \
-							"gameui\swarm\vaudio.cpp" \
-							"gameui\swarm\vaudiovideo.cpp" \
-							"gameui\swarm\vcontrolleroptions.cpp" \
-							"gameui\swarm\vcontrolleroptionsbuttons.cpp" \
-							"gameui\swarm\vcontrolleroptionssticks.cpp" \
-							"gameui\swarm\vdropdownmenu.cpp" \
-							"gameui\swarm\vflyoutmenu.cpp" \
-							"gameui\swarm\vfooterpanel.cpp" \
-							"gameui\swarm\vfoundgames.cpp" \
-							"gameui\swarm\vfoundgroupgames.cpp" \
-							"gameui\swarm\vfoundpublicgames.cpp" \
-							"gameui\swarm\vgamelobby.cpp" \
-							"gameui\swarm\vgamelobbychat.cpp" \
-							"gameui\swarm\vgameoptions.cpp" \
-							"gameui\swarm\vgamesettings.cpp" \
-							"gameui\swarm\vgenericconfirmation.cpp" \
-							"gameui\swarm\vgenericpanellist.cpp" \
-							"gameui\swarm\vgenericwaitscreen.cpp" \
-							"gameui\swarm\vhybridbutton.cpp" \
-							"gameui\swarm\vingamechapterselect.cpp" \
-							"gameui\swarm\vingamedifficultyselect.cpp" \
-							"gameui\swarm\vingamekickplayerlist.cpp" \
-							"gameui\swarm\vingamemainmenu.cpp" \
-							"gameui\swarm\vleaderboard.cpp" \
-							"gameui\swarm\vloadingprogress.cpp" \
-							"gameui\swarm\vmainmenu.cpp" \
-							"gameui\swarm\vmenubackground.cpp" \
-							"gameui\swarm\vmultiplayer.cpp" \
-							"gameui\swarm\voptions.cpp" \
-							"gameui\swarm\vpasswordentry.cpp" \
-							"gameui\swarm\vquickjoin.cpp" \
-							"gameui\swarm\vquickjoingroups.cpp" \
-							"gameui\swarm\vsignindialog.cpp" \
-							"gameui\swarm\vslidercontrol.cpp" \
-							"gameui\swarm\vspinnercontrol.cpp" \
-							"gameui\swarm\vtransitionscreen.cpp" \
-							"gameui\swarm\vvideo.cpp" \
-							"gameui\swarm\vvoteoptions.cpp"
+					$File	"gameui\mod\basemodframe.cpp" \
+							"gameui\mod\basemodpanel.cpp" \
+							"gameui\mod\gamemodes.cpp" \
+							"gameui\mod\uigamedata.cpp" \
+							"gameui\mod\uigamedata_invite.cpp" \
+							"gameui\mod\uigamedata_storage.cpp" \
+							"gameui\mod\vachievements.cpp" \
+							"gameui\mod\vattractscreen.cpp" \
+							"gameui\mod\vaudio.cpp" \
+							"gameui\mod\vaudiovideo.cpp" \
+							"gameui\mod\vcontrolleroptions.cpp" \
+							"gameui\mod\vcontrolleroptionsbuttons.cpp" \
+							"gameui\mod\vcontrolleroptionssticks.cpp" \
+							"gameui\mod\vdropdownmenu.cpp" \
+							"gameui\mod\vflyoutmenu.cpp" \
+							"gameui\mod\vfooterpanel.cpp" \
+							"gameui\mod\vfoundgames.cpp" \
+							"gameui\mod\vfoundgroupgames.cpp" \
+							"gameui\mod\vfoundpublicgames.cpp" \
+							"gameui\mod\vgamelobby.cpp" \
+							"gameui\mod\vgamelobbychat.cpp" \
+							"gameui\mod\vgameoptions.cpp" \
+							"gameui\mod\vgamesettings.cpp" \
+							"gameui\mod\vgenericconfirmation.cpp" \
+							"gameui\mod\vgenericpanellist.cpp" \
+							"gameui\mod\vgenericwaitscreen.cpp" \
+							"gameui\mod\vhybridbutton.cpp" \
+							"gameui\mod\vingamechapterselect.cpp" \
+							"gameui\mod\vingamedifficultyselect.cpp" \
+							"gameui\mod\vingamekickplayerlist.cpp" \
+							"gameui\mod\vingamemainmenu.cpp" \
+							"gameui\mod\vleaderboard.cpp" \
+							"gameui\mod\vloadingprogress.cpp" \
+							"gameui\mod\vmainmenu.cpp" \
+							"gameui\mod\vmenubackground.cpp" \
+							"gameui\mod\vmultiplayer.cpp" \
+							"gameui\mod\voptions.cpp" \
+							"gameui\mod\vpasswordentry.cpp" \
+							"gameui\mod\vquickjoin.cpp" \
+							"gameui\mod\vquickjoingroups.cpp" \
+							"gameui\mod\vsignindialog.cpp" \
+							"gameui\mod\vslidercontrol.cpp" \
+							"gameui\mod\vspinnercontrol.cpp" \
+							"gameui\mod\vtransitionscreen.cpp" \
+							"gameui\mod\vvideo.cpp" \
+							"gameui\mod\vvoteoptions.cpp"
 					{
 						$Configuration
 						{
