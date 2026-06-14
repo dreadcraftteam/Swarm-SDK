@@ -16,6 +16,7 @@
 #include "avi/ibik.h"
 #include "ixboxsystem.h"
 #include "matchmaking/imatchframework.h"
+#include "../CreateMultiplayerGameDialog.h"
 
 class COptionsDialog;
 
@@ -49,6 +50,7 @@ namespace BaseModUI
 		WT_INGAMEKICKPLAYERLIST,
 		WT_VOTEOPTIONS,
 		WT_KEYBOARDMOUSE,
+		WT_KEYBOARD,
 		WT_LOADINGPROGRESSBKGND,
 		WT_LOADINGPROGRESS,
 		WT_MAINMENU,
@@ -72,6 +74,7 @@ namespace BaseModUI
 		WT_LEADERBOARD,
 		WT_ADDONASSOCIATION,
 		WT_GETLEGACYDATA,
+		WT_CREATEMPGAME,
 		WT_JUKEBOX,
 		WT_WINDOW_COUNT // WT_WINDOW_COUNT must be last in the list!
 	};

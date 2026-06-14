@@ -29,7 +29,11 @@ public:
 		m_Objects.RemoveAll();
 	}
 
+#ifdef SWARM_DLL
 	int	GetObjectCount() { return m_Objects.Size(); }
+#elif SDK_DLL
+	int	GetObjectCount() { return m_Objects.Count(); }
+#endif
 
 	C_BaseEntity *GetObject( int index )
 	{

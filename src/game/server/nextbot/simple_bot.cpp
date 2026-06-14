@@ -81,15 +81,19 @@ void CSimpleBot::Precache()
 	BaseClass::Precache();
 
 #if defined ( HL2_DLL ) || defined ( HL2MP )
-	PrecacheModel("models/humans/group01/female_01.mdl");
+	PrecacheModel( "models/humans/group01/female_01.mdl" );
 #endif
 
 #if defined( TF_DLL )
-	PrecacheModel("models/player/engineer.mdl");
+	PrecacheModel( "models/player/engineer.mdl" );
 #endif
 
 #if defined ( SWARM_DLL )
-	PrecacheModel("models/swarm/marine/marine.mdl");
+	PrecacheModel( "models/swarm/marine/marine.mdl" );
+#endif
+
+#if defined ( SDK_DLL )
+	PrecacheModel( "models/player/blue_player.mdl" );
 #endif
 }
 
@@ -109,6 +113,10 @@ void CSimpleBot::Spawn( void )
 
 #if defined ( SWARM_DLL )
 	SetModel( "models/swarm/marine/marine.mdl" );
+#endif
+
+#if defined ( SDK_DLL )
+	SetModel( "models/player/blue_player.mdl" );
 #endif
 }
 

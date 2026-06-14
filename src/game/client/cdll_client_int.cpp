@@ -1757,6 +1757,8 @@ void ConfigureCurrentSystemLevel()
 
 #if defined( SWARM_DLL )
 	char szModName[32] = "mod_swarm";
+#elif defined ( SDK_DLL )
+	char szModName[32] = "mod_sdk";
 #endif
 
 	UpdateSystemLevel( nCPULevel, nGPULevel, nMemLevel, nGPUMemLevel, VGui_IsSplitScreen(), szModName );

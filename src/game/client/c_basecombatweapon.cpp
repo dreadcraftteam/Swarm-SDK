@@ -21,6 +21,19 @@
 #include "tier0/memdbgon.h"
 
 //-----------------------------------------------------------------------------
+// Purpose: Gets the local client's active weapon, if any.
+//-----------------------------------------------------------------------------
+C_BaseCombatWeapon* GetActiveWeapon(void)
+{
+	C_BasePlayer* player = C_BasePlayer::GetLocalPlayer();
+
+	if (!player)
+		return NULL;
+
+	return player->GetActiveWeapon();
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void C_BaseCombatWeapon::SetDormant( bool bDormant )
