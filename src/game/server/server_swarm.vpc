@@ -14,7 +14,7 @@ $Configuration
 	$Compiler
 	{
 		$AdditionalIncludeDirectories	"$BASE;.\hl2;$SRCDIR\game\shared\hl2;.\swarm;$SRCDIR\game\shared\multiplayer;$SRCDIR\game\shared\swarm"
-		$PreprocessorDefinitions		"$BASE;INFESTED_DLL;SWARM_DLL;"
+		$PreprocessorDefinitions		"$BASE;INFESTED_DLL;SWARM_DLL;NEXT_BOT"
 	}
 }
 

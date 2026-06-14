@@ -2010,11 +2010,10 @@ void CBaseModPanel::PaintBackground()
 		{
 			ActivateBackgroundEffects();
 
-#ifdef SWARM_DLL
-			if ( ASWBackgroundMovie() )
+			if (BackgroundMovie() )
 			{
-				ASWBackgroundMovie()->Update();
-				if ( ASWBackgroundMovie()->SetTextureMaterial() != -1 )
+				BackgroundMovie()->Update();
+				if (BackgroundMovie()->SetTextureMaterial() != -1 )
 				{
 					surface()->DrawSetColor( 255, 255, 255, 255 );
 					int x, y, w, h;
@@ -2044,7 +2043,6 @@ void CBaseModPanel::PaintBackground()
 					}
 				}
 			}
-#endif
 		}
 	}
 

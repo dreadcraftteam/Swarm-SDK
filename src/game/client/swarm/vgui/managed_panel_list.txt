@@ -52,8 +52,8 @@
 	{
 		"Name"		"NB_Horiz_List"
 		"ParentClass"		"vgui::EditablePanel"
-		"SourceFile"		"swarm/vgui/nb_horiz_list.cpp"
-		"HeaderFile"		"swarm/vgui/nb_horiz_list.h"
+		"SourceFile"		"vgui/nb_horiz_list.cpp"
+		"HeaderFile"		"vgui/nb_horiz_list.h"
 		"ResFile"		"resource/ui/nb_horiz_list.res"
 	}
 	"ManagedPanel"
@@ -124,8 +124,8 @@
 	{
 		"Name"		"NB_Header_Footer"
 		"ParentClass"		"vgui::EditablePanel"
-		"SourceFile"		"swarm/vgui/nb_header_footer.cpp"
-		"HeaderFile"		"swarm/vgui/nb_header_footer.h"
+		"SourceFile"		"vgui/nb_header_footer.cpp"
+		"HeaderFile"		"vgui/nb_header_footer.h"
 		"ResFile"		"resource/ui/nb_header_footer.res"
 	}
 	"ManagedPanel"
@@ -180,8 +180,8 @@
 	{
 		"Name"		"NB_Button"
 		"ParentClass"		"vgui::Button"
-		"SourceFile"		"swarm/vgui/nb_button.cpp"
-		"HeaderFile"		"swarm/vgui/nb_button.h"
+		"SourceFile"		"vgui/nb_button.cpp"
+		"HeaderFile"		"vgui/nb_button.h"
 		"ResFile"		"resource/ui/nb_button.res"
 	}
 	"ManagedPanel"

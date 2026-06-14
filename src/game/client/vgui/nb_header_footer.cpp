@@ -13,18 +13,18 @@
 
 using namespace vgui;
 
-CASW_Background_Movie *g_pBackgroundMovie = NULL;
+C_Background_Movie* g_pBackgroundMovie = NULL;
 
-CASW_Background_Movie* ASWBackgroundMovie()
+C_Background_Movie* BackgroundMovie()
 {
 	if ( !g_pBackgroundMovie )
 	{
-		g_pBackgroundMovie = new CASW_Background_Movie();
+		g_pBackgroundMovie = new C_Background_Movie();
 	}
 	return g_pBackgroundMovie;
 }
 
-CASW_Background_Movie::CASW_Background_Movie()
+C_Background_Movie::C_Background_Movie()
 {
 #ifdef ASW_BINK_MOVIES
 	m_nBIKMaterial = BIKMATERIAL_INVALID;
@@ -36,12 +36,12 @@ CASW_Background_Movie::CASW_Background_Movie()
 	m_nLastGameState = -1;
 }
 
-CASW_Background_Movie::~CASW_Background_Movie()
+C_Background_Movie::~C_Background_Movie()
 {
 
 }
 
-void CASW_Background_Movie::SetCurrentMovie( const char *szFilename )
+void C_Background_Movie::SetCurrentMovie( const char *szFilename )
 {
 	if ( Q_strcmp( m_szCurrentMovie, szFilename ) )
 	{
@@ -80,7 +80,7 @@ void CASW_Background_Movie::SetCurrentMovie( const char *szFilename )
 	}
 }
 
-void CASW_Background_Movie::ClearCurrentMovie()
+void C_Background_Movie::ClearCurrentMovie()
 {
 #ifdef ASW_BINK_MOVIES
 	if ( m_nBIKMaterial != BIKMATERIAL_INVALID )
@@ -101,7 +101,7 @@ void CASW_Background_Movie::ClearCurrentMovie()
 #endif
 }
 
-int CASW_Background_Movie::SetTextureMaterial()
+int C_Background_Movie::SetTextureMaterial()
 {
 #ifdef ASW_BINK_MOVIES
 	if ( m_nBIKMaterial == BIKMATERIAL_INVALID )
@@ -124,7 +124,7 @@ int CASW_Background_Movie::SetTextureMaterial()
 	return m_nTextureID;
 }
 
-void CASW_Background_Movie::Update()
+void C_Background_Movie::Update()
 {
 	if ( engine->IsConnected() && ASWGameRules() )
 	{
@@ -385,10 +385,10 @@ void CNB_Header_Footer::PaintBackground()
 {
 	BaseClass::PaintBackground();
 
-	if ( m_bMovieEnabled && ASWBackgroundMovie() )
+	if ( m_bMovieEnabled && BackgroundMovie() )
 	{
-		ASWBackgroundMovie()->Update();
-		if ( ASWBackgroundMovie()->SetTextureMaterial() != -1 )
+		BackgroundMovie()->Update();
+		if ( BackgroundMovie()->SetTextureMaterial() != -1 )
 		{
 			surface()->DrawSetColor( 255, 255, 255, 255 );
 

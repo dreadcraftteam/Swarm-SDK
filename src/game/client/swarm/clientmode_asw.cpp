@@ -508,11 +508,13 @@ void ClientModeASW::Init()
 
 void ClientModeASW::Shutdown()
 {
-	if ( ASWBackgroundMovie() )
+	if ( BackgroundMovie() )
 	{
-		ASWBackgroundMovie()->ClearCurrentMovie();
+		BackgroundMovie()->ClearCurrentMovie();
 	}
+
 	DestroyASWLoadingPanel();
+	
 	if (g_hLogoPanel.Get())
 	{
 		delete g_hLogoPanel.Get();
