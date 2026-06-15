@@ -60,8 +60,4 @@ struct studiohdr_t;
 #include "npcevent.h"
 #include "debugoverlay_shared.h"
 
-#ifdef SDK_DLL
-#include "sdk_shareddefs.h"
-#endif
-
 #endif // CBASE_H

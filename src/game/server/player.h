@@ -1166,11 +1166,8 @@ protected:
 	// Accessors for gamemovement
 	bool IsDucked( void ) const { return m_Local.m_bDucked; }
 	bool IsDucking( void ) const { return m_Local.m_bDucking; }
-
-public:
 	float GetStepSize( void ) const { return m_Local.m_flStepSize; }
 
-protected:
 	CNetworkVar( float,  m_flLaggedMovementValue );
 
 	// These are generated while running usercmds, then given to UpdateVPhysicsPosition after running all queued commands.
@@ -1195,10 +1192,7 @@ protected:
 	// Texture names and surface data, used by CGameMovement
 	int				m_surfaceProps;
 	surfacedata_t*	m_pSurfaceData;
-public:
 	float			m_surfaceFriction;
-
-protected:
 	char			m_chTextureType;
 	char			m_chPreviousTextureType;	// Separate from m_chTextureType. This is cleared if the player's not on the ground.
 

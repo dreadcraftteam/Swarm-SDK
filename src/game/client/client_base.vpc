@@ -404,6 +404,7 @@ $Project
 		$File	"vscript_client.nut"
 		$File	"$SRCDIR\game\shared\vscript_shared.cpp"
 		$File	"$SRCDIR\game\shared\vscript_shared.h"
+
 		$File	"hl2\C_Func_Monitor.cpp"
 		$File	"geiger.cpp"
 		$File	"history_resource.cpp"

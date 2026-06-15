@@ -29,40 +29,39 @@ public:
 	void Reset();
 
 #ifdef CLIENT_DLL
-	void SetOwner(C_BaseAnimatingOverlay* pOverlay);
-	C_BaseAnimatingOverlay* GetOwner() const;
+	void SetOwner( C_BaseAnimatingOverlay *pOverlay );
+	C_BaseAnimatingOverlay *GetOwner() const;
 #endif
 
-	void SetOrder(int order);
-	bool IsActive(void);
-	float GetFadeout(float flCurTime);
+	void SetOrder( int order );
+	bool IsActive( void );
+	float GetFadeout( float flCurTime );
 
-	//void SetOrder(int nOrder);
-	void SetSequence(int nSequence);
-	void SetCycle(float flCycle);
-	void SetPrevCycle(float flCycle);
-	void SetPlaybackRate(float flPlaybackRate);
-	void SetWeight(float flWeight);
+	void SetSequence( int nSequence );
+	void SetCycle( float flCycle );
+	void SetPrevCycle( float flCycle );
+	void SetPlaybackRate( float flPlaybackRate );
+	void SetWeight( float flWeight );
 
 	int   GetOrder() const;
-	int   GetSequence() const;
-	float GetCycle() const;
-	float GetPrevCycle() const;
-	float GetPlaybackRate() const;
-	float GetWeight() const;
+	int   GetSequence( ) const;
+	float GetCycle( ) const;
+	float GetPrevCycle( ) const;
+	float GetPlaybackRate( ) const;
+	float GetWeight( ) const;
 
 #ifdef CLIENT_DLL
 	// If the weights, cycle or sequence #s changed due to interpolation then 
 	//  we'll need to recompute the bbox
 	int GetInvalidatePhysicsBits() const;
-	void SetInvalidatePhysicsBits(int iBit) { m_nInvalidatePhysicsBits = iBit; }
+	void SetInvalidatePhysicsBits( int iBit ) { m_nInvalidatePhysicsBits = iBit; }
 #endif
 
 public:
 	float	m_flLayerAnimtime;
 	float	m_flLayerFadeOuttime;
 
-	//private:
+private:
 	int		m_nOrder;
 	CRangeCheckedVar<int, -1, 65535, 0>		m_nSequence;
 	CRangeCheckedVar<float, -2, 2, 0>		m_flPrevCycle;
@@ -73,21 +72,21 @@ public:
 	CRangeCheckedVar<float, -2, 2, 0>		m_flCycle;
 
 #ifdef CLIENT_DLL
-	C_BaseAnimatingOverlay* m_pOwner;
+	C_BaseAnimatingOverlay	*m_pOwner;
 	int					m_nInvalidatePhysicsBits;
 #endif
 
 	friend class C_BaseAnimatingOverlay;
-	friend C_AnimationLayer LoopingLerp(float flPercent, C_AnimationLayer& from, C_AnimationLayer& to);
-	friend C_AnimationLayer Lerp(float flPercent, const C_AnimationLayer& from, const C_AnimationLayer& to);
-	friend C_AnimationLayer LoopingLerp_Hermite(const C_AnimationLayer& current, float flPercent, C_AnimationLayer& prev, C_AnimationLayer& from, C_AnimationLayer& to);
-	friend C_AnimationLayer Lerp_Hermite(const C_AnimationLayer& current, float flPercent, const C_AnimationLayer& prev, const C_AnimationLayer& from, const C_AnimationLayer& to);
-	friend void Lerp_Clamp(C_AnimationLayer& val);
-	friend int CheckForSequenceBoxChanges(const C_AnimationLayer& newLayer, const C_AnimationLayer& oldLayer);
+	friend C_AnimationLayer LoopingLerp( float flPercent, C_AnimationLayer& from, C_AnimationLayer& to );
+	friend C_AnimationLayer Lerp( float flPercent, const C_AnimationLayer& from, const C_AnimationLayer& to );
+	friend C_AnimationLayer LoopingLerp_Hermite( const C_AnimationLayer& current, float flPercent, C_AnimationLayer& prev, C_AnimationLayer& from, C_AnimationLayer& to );
+	friend C_AnimationLayer Lerp_Hermite( const C_AnimationLayer& current, float flPercent, const C_AnimationLayer& prev, const C_AnimationLayer& from, const C_AnimationLayer& to );
+	friend void Lerp_Clamp( C_AnimationLayer &val );
+	friend int CheckForSequenceBoxChanges( const C_AnimationLayer& newLayer, const C_AnimationLayer& oldLayer );
 };
 
 #ifdef CLIENT_DLL
-#define CAnimationLayer C_AnimationLayer
+	#define CAnimationLayer C_AnimationLayer
 #endif
 
 
@@ -101,59 +100,56 @@ inline C_AnimationLayer::C_AnimationLayer()
 	Reset();
 }
 
-#ifndef CLIENT_DLL
-FORCEINLINE void C_AnimationLayer::SetOrder(int nOrder)
-{
-	m_nOrder = nOrder;
-}
+#ifdef GAME_DLL
 
-FORCEINLINE void C_AnimationLayer::SetSequence(int nSequence)
+inline void C_AnimationLayer::SetSequence( int nSequence )
 {
 	m_nSequence = nSequence;
 }
 
-FORCEINLINE void C_AnimationLayer::SetCycle(float flCycle)
+inline void C_AnimationLayer::SetCycle( float flCycle )
 {
 	m_flCycle = flCycle;
 }
 
-FORCEINLINE void C_AnimationLayer::SetWeight(float flWeight)
+inline void C_AnimationLayer::SetWeight( float flWeight )
 {
 	m_flWeight = flWeight;
 }
-#endif
 
-FORCEINLINE void C_AnimationLayer::SetPrevCycle(float flPrevCycle)
+#endif // GAME_DLL
+
+FORCEINLINE void C_AnimationLayer::SetPrevCycle( float flPrevCycle )
 {
 	m_flPrevCycle = flPrevCycle;
 }
 
-FORCEINLINE void C_AnimationLayer::SetPlaybackRate(float flPlaybackRate)
+FORCEINLINE void C_AnimationLayer::SetPlaybackRate( float flPlaybackRate )
 {
 	m_flPlaybackRate = flPlaybackRate;
 }
 
-FORCEINLINE int	C_AnimationLayer::GetSequence() const
+FORCEINLINE int	C_AnimationLayer::GetSequence( ) const
 {
 	return m_nSequence;
 }
 
-FORCEINLINE float C_AnimationLayer::GetCycle() const
+FORCEINLINE float C_AnimationLayer::GetCycle( ) const
 {
 	return m_flCycle;
 }
 
-FORCEINLINE float C_AnimationLayer::GetPrevCycle() const
+FORCEINLINE float C_AnimationLayer::GetPrevCycle( ) const
 {
 	return m_flPrevCycle;
 }
 
-FORCEINLINE float C_AnimationLayer::GetPlaybackRate() const
+FORCEINLINE float C_AnimationLayer::GetPlaybackRate( ) const
 {
 	return m_flPlaybackRate;
 }
 
-FORCEINLINE float C_AnimationLayer::GetWeight() const
+FORCEINLINE float C_AnimationLayer::GetWeight( ) const
 {
 	return m_flWeight;
 }
@@ -163,11 +159,11 @@ FORCEINLINE int C_AnimationLayer::GetOrder() const
 	return m_nOrder;
 }
 
-inline float C_AnimationLayer::GetFadeout(float flCurTime)
+inline float C_AnimationLayer::GetFadeout( float flCurTime )
 {
 	float s;
 
-	if (m_flLayerFadeOuttime <= 0.0f)
+    if (m_flLayerFadeOuttime <= 0.0f)
 	{
 		s = 0;
 	}
@@ -180,7 +176,7 @@ inline float C_AnimationLayer::GetFadeout(float flCurTime)
 			// do a nice spline curve
 			s = 3 * s * s - 2 * s * s * s;
 		}
-		else if (s > 1.0f)
+		else if ( s > 1.0f )
 		{
 			// Shouldn't happen, but maybe curtime is behind animtime?
 			s = 1.0f;
@@ -196,69 +192,69 @@ FORCEINLINE int C_AnimationLayer::GetInvalidatePhysicsBits() const
 }
 #endif
 
-inline C_AnimationLayer LoopingLerp(float flPercent, C_AnimationLayer& from, C_AnimationLayer& to)
+inline C_AnimationLayer LoopingLerp( float flPercent, C_AnimationLayer& from, C_AnimationLayer& to )
 {
 #ifdef CLIENT_DLL
-	Assert(from.GetOwner() == to.GetOwner());
+	Assert( from.GetOwner() == to.GetOwner() );
 #endif
 
 	C_AnimationLayer output;
 
 	output.m_nSequence = to.m_nSequence;
-	output.m_flCycle = LoopingLerp(flPercent, (float)from.m_flCycle, (float)to.m_flCycle);
+	output.m_flCycle = LoopingLerp( flPercent, (float)from.m_flCycle, (float)to.m_flCycle );
 	output.m_flPrevCycle = to.m_flPrevCycle;
-	output.m_flWeight = Lerp(flPercent, from.m_flWeight, to.m_flWeight);
+	output.m_flWeight = Lerp( flPercent, from.m_flWeight, to.m_flWeight );
 	output.m_nOrder = to.m_nOrder;
 
 	output.m_flLayerAnimtime = to.m_flLayerAnimtime;
 	output.m_flLayerFadeOuttime = to.m_flLayerFadeOuttime;
 #ifdef CLIENT_DLL
-	output.SetOwner(to.GetOwner());
+	output.SetOwner( to.GetOwner() );
 #endif
 	return output;
 }
 
-inline C_AnimationLayer Lerp(float flPercent, const C_AnimationLayer& from, const C_AnimationLayer& to)
+inline C_AnimationLayer Lerp( float flPercent, const C_AnimationLayer& from, const C_AnimationLayer& to )
 {
 #ifdef CLIENT_DLL
-	Assert(from.GetOwner() == to.GetOwner());
+	Assert( from.GetOwner() == to.GetOwner() );
 #endif
 
 	C_AnimationLayer output;
 
 	output.m_nSequence = to.m_nSequence;
-	output.m_flCycle = Lerp(flPercent, from.m_flCycle, to.m_flCycle);
+	output.m_flCycle = Lerp( flPercent, from.m_flCycle, to.m_flCycle );
 	output.m_flPrevCycle = to.m_flPrevCycle;
-	output.m_flWeight = Lerp(flPercent, from.m_flWeight, to.m_flWeight);
+	output.m_flWeight = Lerp( flPercent, from.m_flWeight, to.m_flWeight );
 	output.m_nOrder = to.m_nOrder;
 
 	output.m_flLayerAnimtime = to.m_flLayerAnimtime;
 	output.m_flLayerFadeOuttime = to.m_flLayerFadeOuttime;
 #ifdef CLIENT_DLL
-	output.SetOwner(to.GetOwner());
+	output.SetOwner( to.GetOwner() );
 #endif
 	return output;
 }
 
-inline int CheckForSequenceBoxChanges(const C_AnimationLayer& newLayer, const C_AnimationLayer& oldLayer)
+inline int CheckForSequenceBoxChanges( const C_AnimationLayer& newLayer, const C_AnimationLayer& oldLayer )
 {
 	int nChangeFlags = 0;
 
-	bool bOldIsZero = (oldLayer.GetWeight() == 0.0f);
-	bool bNewIsZero = (newLayer.GetWeight() == 0.0f);
+	bool bOldIsZero = ( oldLayer.GetWeight() == 0.0f );
+	bool bNewIsZero = ( newLayer.GetWeight() == 0.0f );
 
-	if ((newLayer.GetSequence() != oldLayer.GetSequence()) ||
-		(bNewIsZero != bOldIsZero))
+	if ( ( newLayer.GetSequence() != oldLayer.GetSequence() ) ||
+		 ( bNewIsZero != bOldIsZero ) ) 
 	{
 		nChangeFlags |= SEQUENCE_CHANGED | BOUNDS_CHANGED;
 	}
 
-	if (newLayer.GetCycle() != oldLayer.GetCycle())
+	if ( newLayer.GetCycle() != oldLayer.GetCycle() )
 	{
 		nChangeFlags |= ANIMATION_CHANGED;
 	}
 
-	if (newLayer.GetOrder() != oldLayer.GetOrder())
+	if ( newLayer.GetOrder() != oldLayer.GetOrder() )
 	{
 		nChangeFlags |= BOUNDS_CHANGED;
 	}
@@ -266,65 +262,65 @@ inline int CheckForSequenceBoxChanges(const C_AnimationLayer& newLayer, const C_
 	return nChangeFlags;
 }
 
-inline C_AnimationLayer LoopingLerp_Hermite(const C_AnimationLayer& current, float flPercent, C_AnimationLayer& prev, C_AnimationLayer& from, C_AnimationLayer& to)
+inline C_AnimationLayer LoopingLerp_Hermite( const C_AnimationLayer& current, float flPercent, C_AnimationLayer& prev, C_AnimationLayer& from, C_AnimationLayer& to )
 {
 #ifdef CLIENT_DLL
-	Assert(prev.GetOwner() == from.GetOwner());
-	Assert(from.GetOwner() == to.GetOwner());
+	Assert( prev.GetOwner() == from.GetOwner() );
+	Assert( from.GetOwner() == to.GetOwner() );
 #endif
 
 	C_AnimationLayer output;
 
 	output.m_nSequence = to.m_nSequence;
-	output.m_flCycle = LoopingLerp_Hermite((float)current.m_flCycle, flPercent, (float)prev.m_flCycle, (float)from.m_flCycle, (float)to.m_flCycle);
+	output.m_flCycle = LoopingLerp_Hermite( (float)current.m_flCycle, flPercent, (float)prev.m_flCycle, (float)from.m_flCycle, (float)to.m_flCycle );
 	output.m_flPrevCycle = to.m_flPrevCycle;
-	output.m_flWeight = Lerp(flPercent, from.m_flWeight, to.m_flWeight);
+	output.m_flWeight = Lerp( flPercent, from.m_flWeight, to.m_flWeight );
 	output.m_nOrder = to.m_nOrder;
 
 	output.m_flLayerAnimtime = to.m_flLayerAnimtime;
 	output.m_flLayerFadeOuttime = to.m_flLayerFadeOuttime;
 
 #ifdef CLIENT_DLL
-	output.SetOwner(to.GetOwner());
-	output.m_nInvalidatePhysicsBits = CheckForSequenceBoxChanges(output, current);
+	output.SetOwner( to.GetOwner() );
+	output.m_nInvalidatePhysicsBits = CheckForSequenceBoxChanges( output, current );
 #endif
 	return output;
 }
 
 // YWB:  Specialization for interpolating euler angles via quaternions...
-inline C_AnimationLayer Lerp_Hermite(const C_AnimationLayer& current, float flPercent, const C_AnimationLayer& prev, const C_AnimationLayer& from, const C_AnimationLayer& to)
+inline C_AnimationLayer Lerp_Hermite( const C_AnimationLayer& current, float flPercent, const C_AnimationLayer& prev, const C_AnimationLayer& from, const C_AnimationLayer& to )
 {
 #ifdef CLIENT_DLL
-	Assert(prev.GetOwner() == from.GetOwner());
-	Assert(from.GetOwner() == to.GetOwner());
+	Assert( prev.GetOwner() == from.GetOwner() );
+	Assert( from.GetOwner() == to.GetOwner() );
 #endif
 
 	C_AnimationLayer output;
 
 	output.m_nSequence = to.m_nSequence;
-	output.m_flCycle = Lerp_Hermite((float)current.m_flCycle, flPercent, (float)prev.m_flCycle, (float)from.m_flCycle, (float)to.m_flCycle);
+	output.m_flCycle = Lerp_Hermite( (float)current.m_flCycle, flPercent, (float)prev.m_flCycle, (float)from.m_flCycle, (float)to.m_flCycle );
 	output.m_flPrevCycle = to.m_flPrevCycle;
-	output.m_flWeight = Lerp(flPercent, from.m_flWeight, to.m_flWeight);
+	output.m_flWeight = Lerp( flPercent, from.m_flWeight, to.m_flWeight );
 	output.m_nOrder = to.m_nOrder;
 
 	output.m_flLayerAnimtime = to.m_flLayerAnimtime;
 	output.m_flLayerFadeOuttime = to.m_flLayerFadeOuttime;
 #ifdef CLIENT_DLL
-	output.SetOwner(to.GetOwner());
-	output.m_nInvalidatePhysicsBits = CheckForSequenceBoxChanges(output, current);
+	output.SetOwner( to.GetOwner() );
+ 	output.m_nInvalidatePhysicsBits = CheckForSequenceBoxChanges( output, current );
 #endif
 	return output;
 }
 
-inline void Lerp_Clamp(C_AnimationLayer& val)
+inline void Lerp_Clamp( C_AnimationLayer &val )
 {
-	Lerp_Clamp(val.m_nSequence);
-	Lerp_Clamp(val.m_flCycle);
-	Lerp_Clamp(val.m_flPrevCycle);
-	Lerp_Clamp(val.m_flWeight);
-	Lerp_Clamp(val.m_nOrder);
-	Lerp_Clamp(val.m_flLayerAnimtime);
-	Lerp_Clamp(val.m_flLayerFadeOuttime);
+	Lerp_Clamp( val.m_nSequence );
+	Lerp_Clamp( val.m_flCycle );
+	Lerp_Clamp( val.m_flPrevCycle );
+	Lerp_Clamp( val.m_flWeight );
+	Lerp_Clamp( val.m_nOrder );
+	Lerp_Clamp( val.m_flLayerAnimtime );
+	Lerp_Clamp( val.m_flLayerFadeOuttime );
 }
 
 #endif // ANIMATIONLAYER_H

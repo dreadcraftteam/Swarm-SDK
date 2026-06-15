@@ -141,7 +141,6 @@ $Project
 			}
 		}
 	
-		$File	"hl2\Func_Monitor.cpp"
 		$File	"ai_addon.cpp"
 		$File	"ai_addon.h"
 		$File	"ai_agent.cpp"

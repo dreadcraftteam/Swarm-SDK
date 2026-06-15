@@ -156,9 +156,6 @@ public:
 	void ResetObserverMode();
 	bool IsBot( void ) const { return false; }
 
-	// ADAPT
-	surfacedata_t* GetSurfaceData(void) { return m_pSurfaceData; }
-
 	// Eye position..
 	virtual Vector		 EyePosition();
 	virtual const QAngle &EyeAngles();		// Direction of eyes
@@ -477,7 +474,7 @@ public:
 private:
 	float					m_flWaterJumpTime;  // used to be called teleport_time
 	float					m_flSwimSoundTime;
-public:
+protected:
 	float					m_flStepSoundTime;
 	float					m_surfaceFriction;
 private:
@@ -638,7 +635,6 @@ private:
 	friend class CASW_MarineGameMovement;
 	friend class CPaintGameMovement;
 	
-public:
 	// Accessors for gamemovement
 	float GetStepSize( void ) const { return m_Local.m_flStepSize; }
 

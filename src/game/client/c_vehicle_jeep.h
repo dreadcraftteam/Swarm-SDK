@@ -18,10 +18,6 @@
 // memdbgon must be the last include file in a .cpp file!!!
 //#include "tier0/memdbgon.h"
 
-extern ConVar r_JeepViewBlendTo;
-extern ConVar r_JeepViewBlendToScale;
-extern ConVar r_JeepViewBlendToTime;
-
 //=============================================================================
 //
 // Client-side Jeep Class
@@ -66,7 +62,5 @@ private:
 	CHeadlightEffect *m_pHeadlight;
 	bool		m_bHeadlightIsOn;
 };
-
-void WheelDustCallback(const CEffectData& data);
 
 #endif C_VEHICLE_JEEP_H

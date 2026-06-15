@@ -4,18 +4,9 @@
 #include "vgui_controls/ImagePanel.h"
 #include <vgui/ISurface.h>
 #include "vgui_hudvideo.h"
-
-#ifdef SWARM_DLL
 #include "asw_video.h"
-#endif
-
 #include "VGUIMatSurface/IMatSystemSurface.h"
-
-#ifdef SWARM_DLL
 #include "asw_gamerules.h"
-#elif SDK_DLL
-#include "sdk_gamerules.h"
-#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -135,11 +126,9 @@ int C_Background_Movie::SetTextureMaterial()
 
 void C_Background_Movie::Update()
 {
-#ifdef SWARM_DLL
 	if ( engine->IsConnected() && ASWGameRules() )
 	{
 		int nGameState = ASWGameRules()->GetGameState();
-
 		if ( nGameState >= ASW_GS_DEBRIEF && ASWGameRules()->GetMissionSuccess() )
 		{
 			nGameState += 10;
@@ -194,13 +183,6 @@ void C_Background_Movie::Update()
 			m_nLastGameState = nGameState;
 		}
 	}
-#else
-#ifdef ASW_BINK_MOVIES
-	SetCurrentMovie("media/BG_02.bik");
-#else
-	SetCurrentMovie("media/test.avi");
-#endif
-#endif
 
 #ifdef ASW_BINK_MOVIES
 	if ( m_nBIKMaterial == BIKMATERIAL_INVALID )
@@ -225,6 +207,9 @@ void C_Background_Movie::Update()
 	int nFramesPassed = flTimePassed / flTimePerFrame;
 	nFramesPassed = nFramesPassed % nFrames;
 	avi->SetFrame( m_nAVIMaterial, nFramesPassed );
+
+// 	float flMaxU, flMaxV;
+// 	g_pAVI->GetTexCoordRange( m_nAVIMaterial, &flMaxU, &flMaxV );
 #endif
 }
 
@@ -267,6 +252,10 @@ void CNB_Header_Footer::ApplySchemeSettings( vgui::IScheme *pScheme )
 	BaseClass::ApplySchemeSettings( pScheme );
 	
 	LoadControlSettings( "resource/ui/nb_header_footer.res" );
+
+	// TODO: Different image in widescreen to avoid stretching
+	// this image is no longer used
+	//m_pBackgroundImage->SetImage( "lobby/swarm_background01" );
 
 	switch( m_nTitleStyle )
 	{

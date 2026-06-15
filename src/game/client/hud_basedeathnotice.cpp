@@ -18,7 +18,7 @@
 #include "clientmode_shared.h"
 #include "c_baseplayer.h"
 #include "c_team.h"
-#include "shareddefs.h"
+#include "tf_shareddefs.h"
 
 #include "hud_basedeathnotice.h"
 
@@ -59,10 +59,10 @@ void CHudBaseDeathNotice::ApplySchemeSettings( IScheme *scheme )
 void CHudBaseDeathNotice::Init( void )
 {
 	ListenForGameEvent( "player_death" );
-	//ListenForGameEvent( "object_destroyed" );	
-	//ListenForGameEvent( "teamplay_point_captured" );
-	//ListenForGameEvent( "teamplay_capture_blocked" );
-	//ListenForGameEvent( "teamplay_flag_event" );
+	ListenForGameEvent( "object_destroyed" );	
+	ListenForGameEvent( "teamplay_point_captured" );
+	ListenForGameEvent( "teamplay_capture_blocked" );
+	ListenForGameEvent( "teamplay_flag_event" );
 }
 
 //-----------------------------------------------------------------------------
@@ -84,7 +84,7 @@ bool CHudBaseDeathNotice::ShouldDraw( void )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-Color CHudBaseDeathNotice::GetTeamColor( int iTeamNumber, bool localplayerinvolved )
+Color CHudBaseDeathNotice::GetTeamColor( int iTeamNumber )
 {
 	// By default, return the standard team color.  Subclasses may override this.
 	return g_PR->GetTeamColor( iTeamNumber );
@@ -165,11 +165,8 @@ void CHudBaseDeathNotice::Paint()
 			
 		if ( killer[0] )
 		{
-			//Draw drop shadow
-			//DrawText( x+1, yText+1, m_hTextFont, Color(0,0,0,255), killer );
-
 			// Draw killer's name
-			DrawText( x, yText, m_hTextFont, GetTeamColor( msg.Killer.iTeam, msg.bLocalPlayerInvolved ), killer );
+			DrawText( x, yText, m_hTextFont, GetTeamColor( msg.Killer.iTeam ), killer );
 			x += iKillerTextWide;
 		}
 
@@ -189,18 +186,12 @@ void CHudBaseDeathNotice::Paint()
 				iVictimTextOffset -= iDeathInfoTextWide;
 			}
 
-			//Draw Drop shadow
-			//DrawText( (x + iDeathInfoOffset)+1, yText+1, m_hTextFont, Color(0,0,0,255), msg.wzInfoText );
-
-			DrawText( x + iDeathInfoOffset, yText, m_hTextFont, GetTeamColor( msg.Victim.iTeam, msg.bLocalPlayerInvolved ), msg.wzInfoText );
+			DrawText( x + iDeathInfoOffset, yText, m_hTextFont, Color(255,255,255,255), msg.wzInfoText );
 			x += iDeathInfoTextWide;
 		}
 
-		//Draw a drop shadow
-		//DrawText( (x + iVictimTextOffset)+1, yText+1, m_hTextFont, Color(0,0,0,255), victim );
-
 		// Draw victims name
-		DrawText( x + iVictimTextOffset, yText, m_hTextFont, GetTeamColor( msg.Victim.iTeam, msg.bLocalPlayerInvolved ), victim );
+		DrawText( x + iVictimTextOffset, yText, m_hTextFont, GetTeamColor( msg.Victim.iTeam ), victim );
 		x += iVictimTextWide;
 	}
 }
@@ -282,28 +273,8 @@ void CHudBaseDeathNotice::FireGameEvent( IGameEvent *event )
 
 	if ( bPlayerDeath || bObjectDeath )
 	{
-		int t_userID = event->GetInt( "userid" );
-		int t_Attacker = event->GetInt( "attacker" );
-		int victim = 0;//engine->GetPlayerForUserID( t_userID );
-		int killer = 0;//engine->GetPlayerForUserID( t_Attacker );
-
-		for (int i = 1; i<=gpGlobals->maxClients; i++ )
-		{
-			C_BasePlayer *pPlayer = UTIL_PlayerByIndex( i );
-
-			if ( !pPlayer )
-				continue;
-
-			if ( pPlayer->GetUserID() == t_userID )
-			{
-				victim = i;
-			}
-			if ( pPlayer->GetUserID() == t_Attacker )
-			{
-				killer = i;
-			}
-		}
-
+		int victim = engine->GetPlayerForUserID( event->GetInt( "userid" ) );
+		int killer = engine->GetPlayerForUserID( event->GetInt( "attacker" ) );
 		const char *killedwith = event->GetString( "weapon" );
 		const char *killedwithweaponlog = event->GetString( "weapon_logclassname" );
 
@@ -390,9 +361,6 @@ void CHudBaseDeathNotice::FireGameEvent( IGameEvent *event )
 		Msg( "%s\n", sDeathMsg );
 
 	} 
-//DaFox; SDK Fix
-//Tony; this is tf2 specific, it should be moved to hud_tfdeathnotice!!
-#if defined ( TF_DLL )
 	else if ( FStrEq( "teamplay_point_captured", pszEventName ) )
 	{
 		GetLocalizedControlPointName( event, m_DeathNotices[iMsg].Victim.szName, ARRAYSIZE( m_DeathNotices[iMsg].Victim.szName ) );
@@ -494,7 +462,6 @@ void CHudBaseDeathNotice::FireGameEvent( IGameEvent *event )
 		if ( iLocalPlayerIndex == iPlayerIndex )
 			m_DeathNotices[iMsg].bLocalPlayerInvolved = true;
 	}
-#endif
 
 	OnGameEvent( event, m_DeathNotices[iMsg] );
 
@@ -511,12 +478,7 @@ void CHudBaseDeathNotice::FireGameEvent( IGameEvent *event )
 		if ( !m_DeathNotices[iMsg].iconDeath )
 		{
 			// Can't find it, so use the default skull & crossbones icon
-			//DaFox; SDK Fix
-#if defined ( TF_DLL )
 			m_DeathNotices[iMsg].iconDeath = GetIcon( "d_skull_tf", m_DeathNotices[iMsg].bLocalPlayerInvolved );
-#else
-			m_DeathNotices[iMsg].iconDeath = GetIcon( "d_skull", m_DeathNotices[iMsg].bLocalPlayerInvolved );
-#endif
 		}
 	}
 }

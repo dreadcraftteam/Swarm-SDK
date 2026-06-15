@@ -3,11 +3,8 @@
 #include "vgui_controls/ImagePanel.h"
 #include "vgui_controls/ScrollBar.h"
 #include "vgui_bitmapbutton.h"
-
-#ifdef SWARM_DLL
 #include "nb_select_weapon_entry.h"
 #include "asw_input.h"
-#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -182,9 +179,7 @@ void CNB_Horiz_List::OnThink()
 	else
 	{
 		int nMouseX, nMouseY;
-#ifdef SWARM_DLL
 		ASWInput()->GetFullscreenMousePos( &nMouseX, &nMouseY );
-#endif
 		ScreenToLocal( nMouseX, nMouseY );
 
 		float fVelocityMax = 1200.0f;
@@ -345,13 +340,11 @@ void CNB_Horiz_List::SetHighlight( int nEntryIndex )
 
 	if ( m_nHighlightedEntry != -1 && m_Entries[ m_nHighlightedEntry ].Get() != m_Entries[ nEntryIndex ].Get() )
 	{
-#ifdef SWARM_DLL
 		CNB_Select_Weapon_Entry *pWeaponEntry = dynamic_cast<CNB_Select_Weapon_Entry*>( m_Entries[ m_nHighlightedEntry ].Get() );
 		if ( pWeaponEntry )
 		{
 			pWeaponEntry->m_pWeaponImage->NavigateFrom();
 		}
-#endif
 	}
 
 	m_nHighlightedEntry = nEntryIndex;
@@ -370,9 +363,7 @@ bool CNB_Horiz_List::ChangeScrollValue( int nChange )
 bool CNB_Horiz_List::MouseOverScrollbar( void ) const
 {
 	int nMouseX, nMouseY;
-#ifdef SWARM_DLL
 	ASWInput()->GetFullscreenMousePos( &nMouseX, &nMouseY );
-#endif
 	m_pHorizScrollBar->ScreenToLocal( nMouseX, nMouseY );
 
 	return ( nMouseX > 0 && nMouseX < m_pHorizScrollBar->GetWide() && nMouseY > 0 && nMouseY < m_pHorizScrollBar->GetTall() );
@@ -406,13 +397,11 @@ void CNB_Horiz_List::OnSliderMoved( int position )
 		{
 			SetHighlight( nClosestEntry );
 
-#ifdef SWARM_DLL
 			CNB_Select_Weapon_Entry *pWeaponEntry = dynamic_cast<CNB_Select_Weapon_Entry*>( hClosestPanel.Get() );
 			if ( pWeaponEntry && pWeaponEntry->m_bCanEquip )
 			{
 				pWeaponEntry->m_pWeaponImage->NavigateTo();
 			}
-#endif
 		}
 	}
 

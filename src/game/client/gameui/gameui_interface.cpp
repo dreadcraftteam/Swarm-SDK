@@ -60,6 +60,7 @@
 #include "steam/steam_api.h"
 #include "protocol.h"
 
+#if defined( SWARM_DLL )
 #include "mod/basemodpanel.h"
 #include "mod/basemodui.h"
 
@@ -67,6 +68,13 @@ typedef BaseModUI::CBaseModPanel UI_BASEMOD_PANEL_CLASS;
 inline UI_BASEMOD_PANEL_CLASS & GetUiBaseModPanelClass() { return UI_BASEMOD_PANEL_CLASS::GetSingleton(); }
 inline UI_BASEMOD_PANEL_CLASS & ConstructUiBaseModPanelClass() { return * new UI_BASEMOD_PANEL_CLASS(); }
 class IMatchExtSwarm *g_pMatchExtSwarm = NULL;
+#else
+#include "BasePanel.h"
+
+typedef CBasePanel UI_BASEMOD_PANEL_CLASS;
+inline UI_BASEMOD_PANEL_CLASS & GetUiBaseModPanelClass() { return *BasePanel(); }
+inline UI_BASEMOD_PANEL_CLASS & ConstructUiBaseModPanelClass() { return *BasePanelSingleton(); }
+#endif
 
 #ifdef _X360
 #include "xbox/xbox_win32stubs.h"
