@@ -32,11 +32,6 @@
 ConVar vm_debug( "vm_debug", "0", FCVAR_CHEAT );
 ConVar vm_draw_always( "vm_draw_always", "0" );
 
-//Tony; modified so that the sdk view models are right handed out of the box.
-#if defined( CSTRIKE_DLL ) || defined( SDK_DLL )
-	ConVar cl_righthand( "cl_righthand", "1", FCVAR_ARCHIVE, "Use right-handed view models." );
-#endif
-
 void PostToolMessage( HTOOLHANDLE hEntity, KeyValues *msg );
 extern float g_flMuzzleFlashScale;
 
@@ -206,27 +201,9 @@ bool C_BaseViewModel::Interpolate( float currentTime )
 
 inline bool C_BaseViewModel::ShouldFlipViewModel()
 {
-//Tony; changed for SDK so that the CSS models can be flipped out of the box.
-#if defined( CSTRIKE_DLL ) || defined ( SDK_DLL )
-	//Tony; move this up here.
-	if (!cl_righthand.GetBool())
-		return false;
-
-	// If cl_righthand is set, then we want them all right-handed.
-	CBaseCombatWeapon *pWeapon = m_hWeapon.Get();
-	if ( pWeapon )
-	{
-		const FileWeaponInfo_t *pInfo = &pWeapon->GetWpnData();
-		//Tony; if they're already built right handed (default) then we can get out.
-		if (pInfo->m_bBuiltRightHanded)
-			return false;
-
-		return pInfo->m_bAllowFlipping;
-	}
-#endif
-
 	return false;
 }
+
 
 void C_BaseViewModel::ApplyBoneMatrixTransform( matrix3x4_t& transform )
 {

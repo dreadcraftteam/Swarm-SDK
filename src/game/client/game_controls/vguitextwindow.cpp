@@ -148,7 +148,6 @@ void CTextWindow::Reset( void )
 		SetAlpha( 255 );
 	}
 
-	m_nContentType = TYPE_TEXT;
 	UpdateContents();
 }
 
@@ -304,7 +303,6 @@ void CTextWindow::OnCommand( const char *command)
 		}
 		
 		m_pViewPort->ShowPanel( this, false );
-		engine->ClientCmd("joingame");
 	}
 
 	BaseClass::OnCommand(command);
@@ -312,7 +310,7 @@ void CTextWindow::OnCommand( const char *command)
 
 void CTextWindow::SetData(KeyValues *data)
 {
-	if ( IsVisible() == false )
+	if ( IsVisible() == true )
 		return;
 
 	SetData( data->GetInt( "type" ), data->GetString( "title"), data->GetString( "msg" ), data->GetString( "cmd" ) );
@@ -339,7 +337,7 @@ void CTextWindow::SetData( int type, const char *title, const char *message, con
 
 void CTextWindow::UpdateContents( void )
 {
-	//SetTitle( m_szTitle, false );
+	SetTitle( m_szTitle, false );
 
 	if ( m_pTitleLabel )
 	{

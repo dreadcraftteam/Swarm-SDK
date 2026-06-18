@@ -35,6 +35,7 @@
 #include "tier1/functors.h"
 
 #include "vstdlib/vstdlib.h"
+#include <algorithm>
 
 #ifndef JOBTHREAD_H
 #define JOBTHREAD_H

@@ -156,9 +156,9 @@ bool VScriptRunScript( const char *pszScriptName, HSCRIPT hScope, bool bWarnMiss
 }
 
 #ifdef CLIENT_DLL
-CON_COMMAND( script_client, "Run the text as a script (client)" )
+CON_COMMAND( script_client, "Run the text as a script" )
 #else
-CON_COMMAND( script, "Run the text as a script (server)" )
+CON_COMMAND( script, "Run the text as a script" )
 #endif
 {
 	if ( !*args[1] )

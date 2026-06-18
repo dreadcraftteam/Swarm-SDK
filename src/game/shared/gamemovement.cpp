@@ -2452,7 +2452,13 @@ void CGameMovement::FullNoClipMove( float factor, float maxacceleration )
 	float wishspeed;
 	float maxspeed = sv_maxspeed.GetFloat() * factor;
 
+#ifdef INFESTED_DLL		// ignore roll component for Alien Swarm, this is used for vertical aiming
+	QAngle vecViewAngles = mv->m_vecViewAngles;
+	vecViewAngles[ROLL] = 0;
+	AngleVectors (vecViewAngles, &forward, &right, &up);  // Determine movement angles
+#else
 	AngleVectors (mv->m_vecViewAngles, &forward, &right, &up);  // Determine movement angles
+#endif
 
 	if ( mv->m_nButtons & IN_SPEED )
 	{
@@ -3873,9 +3879,9 @@ static inline void DoTrace( ITraceListData *pTraceListData, const Ray_t &ray, ui
 // move the player down to the new floor and get stuck on a leaning wall that
 // the original trace hit first.
 //-----------------------------------------------------------------------------
-void TracePlayerBBoxForGround( const Vector& start, const Vector& end, const Vector& minsSrc,
-							  const Vector& maxsSrc, IHandleEntity *player, unsigned int fMask,
-							  int collisionGroup, trace_t& pm )
+void TracePlayerBBoxForGround( ITraceListData *pTraceListData, const Vector& start, const Vector& end, const Vector& minsSrc,
+							  const Vector& maxsSrc, unsigned int fMask,
+							  ITraceFilter *filter, trace_t& pm, float minGroundNormalZ, bool overwriteEndpos, int *pCounter )
 {
 	VPROF( "TracePlayerBBoxForGround" );
 
@@ -3889,11 +3895,14 @@ void TracePlayerBBoxForGround( const Vector& start, const Vector& end, const Vec
 	mins = minsSrc;
 	maxs.Init( MIN( 0, maxsSrc.x ), MIN( 0, maxsSrc.y ), maxsSrc.z );
 	ray.Init( start, end, mins, maxs );
-	UTIL_TraceRay( ray, fMask, player, collisionGroup, &pm );
-	if ( pm.m_pEnt && pm.plane.normal[2] >= 0.7)
+	DoTrace( pTraceListData, ray, fMask, filter, &pm, pCounter );
+	if ( pm.m_pEnt && pm.plane.normal[2] >= minGroundNormalZ)
 	{
-		pm.fraction = fraction;
-		pm.endpos = endpos;
+		if ( overwriteEndpos )
+		{
+			pm.fraction = fraction;
+			pm.endpos = endpos;
+		}
 		return;
 	}
 
@@ -3901,11 +3910,14 @@ void TracePlayerBBoxForGround( const Vector& start, const Vector& end, const Vec
 	mins.Init( MAX( 0, minsSrc.x ), MAX( 0, minsSrc.y ), minsSrc.z );
 	maxs = maxsSrc;
 	ray.Init( start, end, mins, maxs );
-	UTIL_TraceRay( ray, fMask, player, collisionGroup, &pm );
-	if ( pm.m_pEnt && pm.plane.normal[2] >= 0.7)
+	DoTrace( pTraceListData, ray, fMask, filter, &pm, pCounter );
+	if ( pm.m_pEnt && pm.plane.normal[2] >= minGroundNormalZ)
 	{
-		pm.fraction = fraction;
-		pm.endpos = endpos;
+		if ( overwriteEndpos )
+		{
+			pm.fraction = fraction;
+			pm.endpos = endpos;
+		}
 		return;
 	}
 
@@ -3913,11 +3925,14 @@ void TracePlayerBBoxForGround( const Vector& start, const Vector& end, const Vec
 	mins.Init( minsSrc.x, MAX( 0, minsSrc.y ), minsSrc.z );
 	maxs.Init( MIN( 0, maxsSrc.x ), maxsSrc.y, maxsSrc.z );
 	ray.Init( start, end, mins, maxs );
-	UTIL_TraceRay( ray, fMask, player, collisionGroup, &pm );
+	DoTrace( pTraceListData, ray, fMask, filter, &pm, pCounter );
 	if ( pm.m_pEnt && pm.plane.normal[2] >= 0.7)
 	{
-		pm.fraction = fraction;
-		pm.endpos = endpos;
+		if ( overwriteEndpos )
+		{
+			pm.fraction = fraction;
+			pm.endpos = endpos;
+		}
 		return;
 	}
 
@@ -3925,16 +3940,22 @@ void TracePlayerBBoxForGround( const Vector& start, const Vector& end, const Vec
 	mins.Init( MAX( 0, minsSrc.x ), minsSrc.y, minsSrc.z );
 	maxs.Init( maxsSrc.x, MIN( 0, maxsSrc.y ), maxsSrc.z );
 	ray.Init( start, end, mins, maxs );
-	UTIL_TraceRay( ray, fMask, player, collisionGroup, &pm );
-	if ( pm.m_pEnt && pm.plane.normal[2] >= 0.7)
+	DoTrace( pTraceListData, ray, fMask, filter, &pm, pCounter );
+	if ( pm.m_pEnt && pm.plane.normal[2] >= minGroundNormalZ)
 	{
-		pm.fraction = fraction;
-		pm.endpos = endpos;
+		if ( overwriteEndpos )
+		{
+			pm.fraction = fraction;
+			pm.endpos = endpos;
+		}
 		return;
 	}
 
-	pm.fraction = fraction;
-	pm.endpos = endpos;
+	if ( overwriteEndpos )
+	{
+		pm.fraction = fraction;
+		pm.endpos = endpos;
+	}
 }
 
 
@@ -4029,8 +4050,11 @@ void CGameMovement::CategorizePosition( void )
 		if ( !pm.m_pEnt || ( pm.plane.normal[2] < flStandableZ ) )
 		{
 			// Test four sub-boxes, to see if any of them would have found shallower slope we could actually stand on
-			TracePlayerBBoxForGround( bumpOrigin, point, GetPlayerMins(), GetPlayerMaxs(), mv->m_nPlayerHandle.Get(), MASK_PLAYERSOLID, COLLISION_GROUP_PLAYER_MOVEMENT, pm );
-			if ( !pm.m_pEnt || pm.plane.normal[2] < 0.7 )
+			ITraceFilter *pFilter = LockTraceFilter( COLLISION_GROUP_PLAYER_MOVEMENT );
+			TracePlayerBBoxForGround( m_pTraceListData, bumpOrigin, point, GetPlayerMins(), 
+				GetPlayerMaxs(), PlayerSolidMask(), pFilter, pm, flStandableZ, true, &m_nTraceCount );
+			UnlockTraceFilter( pFilter );
+			if ( !pm.m_pEnt || ( pm.plane.normal[2] < flStandableZ ) )
 			{
 				SetGroundEntity( NULL );
 				// probably want to add a check for a +z velocity too!
@@ -4039,6 +4063,7 @@ void CGameMovement::CategorizePosition( void )
 				{
 					player->m_surfaceFriction = 0.25f;
 				}
+				bMoveToEndPos = false;
 			}
 			else
 			{
@@ -4726,7 +4751,13 @@ void CGameMovement::PlayerMove( void )
 
 	ReduceTimers();
 
+#ifdef INFESTED_DLL		// ignore roll component for Alien Swarm, this is used for vertical aiming
+	QAngle vecViewAngles = mv->m_vecViewAngles;
+	vecViewAngles[ROLL] = 0;
+	AngleVectors (vecViewAngles, &m_vecForward, &m_vecRight, &m_vecUp);  // Determine movement angles
+#else
 	AngleVectors (mv->m_vecViewAngles, &m_vecForward, &m_vecRight, &m_vecUp );  // Determine movement angles
+#endif
 
 	// Always try and unstick us unless we are using a couple of the movement modes
 	MoveType_t moveType = player->GetMoveType();

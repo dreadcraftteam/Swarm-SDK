@@ -16,8 +16,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
 
-#ifndef MAX
-#define MAX(a,b)            (((a) > (b)) ? (a) : (b))
+#ifndef max
+#define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
 
 using namespace vgui;
@@ -71,8 +71,8 @@ void CTextEntryBox::PerformLayout()
 	int entryW, entryH;
 	m_pMessageLabel->GetSize( labelW, labelH );
 
-	entryW = MAX(120, wide - borderW - borderW - borderW - labelW);
-	entryH = MAX(24, labelH);
+	entryW = max(120, wide - borderW - borderW - borderW - labelW);
+	entryH = max(24, labelH);
 	m_pEntry->SetSize( entryW, entryH );
 
 	int boxWidth, boxTall;

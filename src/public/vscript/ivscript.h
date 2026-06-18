@@ -154,11 +154,6 @@ public:
 DECLARE_POINTER_HANDLE( HSCRIPT );
 #define INVALID_HSCRIPT ((HSCRIPT)-1)
 
-inline bool IsValid( HSCRIPT hScript )
-{
-	return ( hScript != NULL && hScript != INVALID_HSCRIPT );
-}
-
 //-----------------------------------------------------------------------------
 // 
 //-----------------------------------------------------------------------------

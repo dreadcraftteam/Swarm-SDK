@@ -29,7 +29,7 @@ public:
 		m_Objects.RemoveAll();
 	}
 
-	int	GetObjectCount() { return m_Objects.Count(); }
+	int	GetObjectCount() { return m_Objects.Size(); }
 
 	C_BaseEntity *GetObject( int index )
 	{

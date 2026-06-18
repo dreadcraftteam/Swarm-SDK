@@ -30,8 +30,15 @@
 #include "fmtstr.h"
 #include "videocfg/videocfg.h"
 
+
+
 #ifdef HL2_DLL
 #include "weapon_physcannon.h"
+#endif
+
+#ifdef INFESTED_DLL
+#include "asw_player.h"
+#include "asw_marine.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -381,6 +388,52 @@ void ClientPrecache( void )
 	// Game Instructor lessons - don't want people making simple scripted wall hacks
 	engine->ForceExactFile( "scripts/instructor_lessons.txt" );
 	engine->ForceExactFile( "scripts/mod_lessons.txt" );
+
+	// weapon scripts
+	engine->ForceExactFile( "scripts/asw_weapon_ammo_bag.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_ammo_satchel.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_autogun.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_blink.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_buff_grenade.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_chainsaw.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_electrified_armor.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_fire_extinguisher.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_fist.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_flamer.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_flares.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_flashlight.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_freeze_grenades.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_grenades.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_grenade_launcher.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_heal_grenade.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_heal_gun.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_hornet_barrage.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_jump_jet.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_laser_mines.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_medical_satchel.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_medkit.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_mines.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_minigun.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_mining_laser.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_night_vision.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_normal_armor.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_pdw.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_pistol.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_prifle.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_railgun.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_rifle.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_sentry.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_sentry_cannon.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_sentry_flamer.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_sentry_freeze.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_shotgun.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_smart_bomb.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_sniper_rifle.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_stim.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_tesla_gun.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_tesla_trap.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_vindicator.txt" );
+	engine->ForceExactFile( "scripts/asw_weapon_welder.txt" );
 }
 
 CON_COMMAND_F( cast_ray, "Tests collision detection", FCVAR_CHEAT )
@@ -854,152 +907,36 @@ CON_COMMAND( say_team, "Display player message to team" )
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-struct ClassNamePrefix_t
+CON_COMMAND( give, "Give item to player.\n\tArguments: <item_name>" )
 {
-	ClassNamePrefix_t(const char *pszPrefix, bool bKeepPrefix) : m_pszPrefix(pszPrefix), m_bKeepPrefix(bKeepPrefix)
+	CBasePlayer *pPlayer = ToBasePlayer( UTIL_GetCommandClient() ); 
+	if ( pPlayer 
+		&& (gpGlobals->maxClients == 1 || sv_cheats->GetBool()) 
+		&& args.ArgC() >= 2 )
 	{
-		m_nLength = strlen(pszPrefix);
-	}
+		char item_to_give[ 256 ];
+		Q_strncpy( item_to_give, args[1], sizeof( item_to_give ) );
+		Q_strlower( item_to_give );
 
-	const char *m_pszPrefix;
-	size_t m_nLength;
-	bool m_bKeepPrefix;
-};
-
-
-// Add class name prefixes to show in the "give" command autocomplete here
-static ClassNamePrefix_t s_pEntityPrefixes[] =
-{
-	//ClassNamePrefix_t("ammo_", true),
-	ClassNamePrefix_t("item_", false),
-	ClassNamePrefix_t("weapon_", false),
-};
-
-
-static int StringSortFunc(const void *p1, const void *p2)
-{
-	const char *psz1 = (const char *)p1;
-	const char *psz2 = (const char *)p2;
-
-	return V_stricmp(psz1, psz2);
-}
-
-
-int GiveAutocomplete(const char *partial, char commands[COMMAND_COMPLETION_MAXITEMS][COMMAND_COMPLETION_ITEM_LENGTH])
-{
-	// Find the first space in our input
-	const char *firstSpace = V_strstr(partial, " ");
-	if (!firstSpace)
-		return 0;
-
-	int commandLength = firstSpace - partial;
-
-	// Extract the command name from the input
-	char commandName[COMMAND_COMPLETION_ITEM_LENGTH];
-	V_StrSlice(partial, 0, commandLength, commandName, sizeof(commandName));
-
-	// Calculate the length of the command string (minus the command name)
-	partial += commandLength + 1;
-	int partialLength = V_strlen(partial);
-
-	// Grab the factory dictionary
-	if (!EntityFactoryDictionary())
-		return 0;
-
-	const EntityFactoryDict_t &factoryDict = EntityFactoryDictionary()->GetFactoryDictionary();
-	int numMatches = 0;
-
-	// Iterate through all entity factories
-	for (int i = factoryDict.First(); i != factoryDict.InvalidIndex() && numMatches < COMMAND_COMPLETION_MAXITEMS; i = factoryDict.Next(i))
-	{
-		const char *pszClassName = factoryDict.GetElementName(i);
-
-		// See if this entity classname has a prefix that we show in the
-		// autocomplete
-		// TODO: optimise by caching all autocompletable classnames into a hash
-		// table on first run
-		int j;
-		const ClassNamePrefix_t *pPrefix = NULL;
-
-		for (j = 0; j < ARRAYSIZE(s_pEntityPrefixes); ++j)
+		// Dirty hack to avoid suit playing it's pickup sound
+		if ( !Q_stricmp( item_to_give, "item_suit" ) )
 		{
-			pPrefix = &s_pEntityPrefixes[j];
-
-			if (Q_strncmp(pszClassName, pPrefix->m_pszPrefix, pPrefix->m_nLength))
-				continue;
-
-			break;
+			pPlayer->EquipSuit( false );
+			return;
 		}
 
-		// If this entity factory had no prefixes, we could not find the prefix, skip this entity
-		if (j == ARRAYSIZE(s_pEntityPrefixes))
-			continue;
-
-		// Skip past the prefix if it shouldn't be kept
-		if (!pPrefix->m_bKeepPrefix)
-			pszClassName += pPrefix->m_nLength;
-
-		// Does this entity match our partial completion?
-		if (Q_strnicmp(pszClassName, partial, partialLength))
-			continue;
-
-		Q_snprintf(commands[numMatches++], COMMAND_COMPLETION_ITEM_LENGTH, "%s %s", commandName, pszClassName);
+		string_t iszItem = AllocPooledString( item_to_give );	// Make a copy of the classname
+		pPlayer->GiveNamedItem( STRING(iszItem) );
 	}
-
-	// Sort the commands alphabetically
-	qsort(commands, numMatches, COMMAND_COMPLETION_ITEM_LENGTH, StringSortFunc);
-
-	return numMatches;
 }
 
-CON_COMMAND_F_COMPLETION( give, "Give item to player. Syntax: <item name>", FCVAR_CHEAT, GiveAutocomplete )
-{
-	CBasePlayer *pPlayer = UTIL_GetCommandClient();
-	if (!pPlayer)
-		return;
-
-	if (args.ArgC() != 2)
-		return;
-
-	char pszClassName[64];
-	Q_strncpy(pszClassName, args.Arg(1), sizeof(pszClassName));
-
-	for (int i = 0; i < ARRAYSIZE(s_pEntityPrefixes) && !CanCreateEntityClass(pszClassName); ++i)
-	{
-		// If we keep the prefix in the autocomplete, there's no point
-		// checking this prefix
-		if (s_pEntityPrefixes[i].m_bKeepPrefix)
-			continue;
-
-		Q_snprintf(pszClassName, sizeof(pszClassName), "%s%s", s_pEntityPrefixes[i].m_pszPrefix, args.Arg(1));
-	}
-
-	// If this is class name does not have an entity factory, complain to the
-	// client
-	if (!CanCreateEntityClass(pszClassName))
-	{
-		ClientPrint(pPlayer, HUD_PRINTCONSOLE, UTIL_VarArgs("give: Unknown entity \"%s\"\n", args.Arg(1)));
-		return;
-	}
-
-	// Dirty hack to avoid suit playing its pickup sound
-	if (FStrEq(pszClassName, "item_suit"))
-	{
-		pPlayer->EquipSuit(false);
-		return;
-	}
-
-	pPlayer->GiveNamedItem(pszClassName);
-}
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 void CC_Player_SetModel( const CCommand &args )
 {
-#ifndef SDK_DLL
 	if ( gpGlobals->deathmatch )
 		return;
-#endif
 
 	CBasePlayer *pPlayer = ToBasePlayer( UTIL_GetCommandClient() );
 	if ( pPlayer && args.ArgC() == 2)
@@ -1123,6 +1060,7 @@ void CC_Player_PhysSwap( void )
 	}
 }
 static ConCommand physswap("phys_swap", CC_Player_PhysSwap, "Automatically swaps the current weapon for the physcannon and back again." );
+#endif
 
 //-----------------------------------------------------------------------------
 // Purpose: Quickly switch to the bug bait, or back to previous item
@@ -1154,7 +1092,6 @@ void CC_Player_BugBaitSwap( void )
 	}
 }
 static ConCommand bugswap("bug_swap", CC_Player_BugBaitSwap, "Automatically swaps the current weapon for the bug bait and back again.", FCVAR_CHEAT );
-#endif
 
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -1360,10 +1297,8 @@ void CC_God_f (void)
 	if ( !pPlayer )
 		return;
 
-#ifndef SDK_DLL
 	if ( gpGlobals->deathmatch )
 		return;
-#endif
 
 	pPlayer->ToggleFlag( FL_GODMODE );
 	if (!(pPlayer->GetFlags() & FL_GODMODE ) )
@@ -1459,6 +1394,12 @@ CON_COMMAND_F( setpos, "Move player to specified origin (must have sv_cheats).",
 	}
 
 	CBaseEntity *pTeleportEnt = pPlayer;
+#ifdef INFESTED_DLL
+	CASW_Player *pASWPlayer = ToASW_Player( pPlayer );
+	pTeleportEnt = pASWPlayer->GetMarine();
+	if ( !pTeleportEnt )
+		return;
+#endif
 
 	Vector oldorigin = pTeleportEnt->GetAbsOrigin();
 
@@ -1624,10 +1565,8 @@ void CC_Notarget_f (void)
 	if ( !pPlayer )
 		return;
 
-#ifndef SDK_DLL
 	if ( gpGlobals->deathmatch )
 		return;
-#endif
 
 	pPlayer->ToggleFlag( FL_NOTARGET );
 	if ( !(pPlayer->GetFlags() & FL_NOTARGET ) )

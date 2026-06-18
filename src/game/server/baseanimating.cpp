@@ -22,13 +22,17 @@
 #include "tier0/vprof.h"
 #include "EntityFlame.h"
 #include "EntityDissolve.h"
+#if defined( INFESTED_DLL )
 #include "EntityFreezing.h"
+#endif
 #include "ai_basenpc.h"
 #include "physics_prop_ragdoll.h"
 #include "datacache/idatacache.h"
 #include "smoke_trail.h"
 #include "collisionutils.h"
 #include "toolframework/itoolframework.h"
+
+
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -3754,6 +3758,7 @@ void CBaseAnimating::InputBecomeRagdoll( inputdata_t &inputdata )
 
 void CBaseAnimating::Thaw( float flThawAmount )
 {
+#if defined( INFESTED_DLL )
 	if ( m_flFrozen <= 0.0f )
 		return;
 
@@ -3826,6 +3831,7 @@ void CBaseAnimating::Thaw( float flThawAmount )
 			RemoveFlag( FL_FREEZING );
 		}
 	}
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -3848,6 +3854,7 @@ void CBaseAnimating::ToggleFreeze()
 //-----------------------------------------------------------------------------
 void CBaseAnimating::Freeze( float flFreezeAmount, CBaseEntity *pFreezer, Ray_t *pFreezeRay ) 
 {
+#if defined( INFESTED_DLL )
 	if ( flFreezeAmount < 0 )
 	{
 		// This is a debugging freeze
@@ -3954,6 +3961,7 @@ void CBaseAnimating::Freeze( float flFreezeAmount, CBaseEntity *pFreezer, Ray_t 
 	}
 
 	pFreezing->SetFrozen( m_flFrozen );
+#endif
 }
 
 

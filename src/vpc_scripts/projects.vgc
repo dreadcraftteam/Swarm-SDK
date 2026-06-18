@@ -1,6 +1,17 @@
+//-----------------------------------------------------------------------------
+//	PROJECTS.VGC
+//
+//	Project Configurations for all Alien Swarm(TM) Projects
+//-----------------------------------------------------------------------------
+
 $Project "client"
 {
-	"game\client\client_sdk.vpc" [$SDK]
+	"game\client\client_swarm.vpc" [$SWARM]
+}
+
+$Project "missionchooser"
+{
+	"game\missionchooser\missionchooser_swarm.vpc"	[$SWARM]
 }
 
 $Project "fgdlib"
@@ -10,7 +21,7 @@ $Project "fgdlib"
 
 $Project "server"
 {
-	"game\server\server_sdk.vpc" [$SDK]
+	"game\server\server_swarm.vpc" [$SWARM]
 }
 
 $Project "shaderlib"
@@ -18,9 +29,9 @@ $Project "shaderlib"
 	"materialsystem\shaderlib\shaderlib.vpc"
 }
 
-$Project "game_shader"
+$Project "game_shader_dx9"
 {
-	"materialsystem\stdshaders\game_shader_dx9_sdk.vpc" [$SDK]
+	"materialsystem\stdshaders\game_shader_dx9_swarm.vpc" [$SWARM]
 }
 
 $Project "interfaces"

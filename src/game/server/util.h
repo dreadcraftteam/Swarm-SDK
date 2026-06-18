@@ -59,9 +59,8 @@ T *_CreateEntityTemplate( T *newEnt, const char *className )
 }
 
 #include "tier0/memdbgoff.h"
-#include "utldict.h"
 
-typedef CUtlDict<IEntityFactory*, unsigned short> EntityFactoryDict_t;
+
 
 // This is the glue that hooks .MAP entity class names to our CPP classes
 abstract_class IEntityFactoryDictionary
@@ -72,7 +71,6 @@ public:
 	virtual void Destroy( const char *pClassName, IServerNetworkable *pNetworkable ) = 0;
 	virtual IEntityFactory *FindFactory( const char *pClassName ) = 0;
 	virtual const char *GetCannonicalName( const char *pClassName ) = 0;
-	virtual const EntityFactoryDict_t &GetFactoryDictionary() = 0;
 };
 
 IEntityFactoryDictionary *EntityFactoryDictionary();

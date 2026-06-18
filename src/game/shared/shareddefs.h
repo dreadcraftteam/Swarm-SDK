@@ -88,15 +88,6 @@ public:
 #define VEC_OBS_HULL_MIN	g_pGameRules->GetViewVectors()->m_vObsHullMin
 #define VEC_OBS_HULL_MAX	g_pGameRules->GetViewVectors()->m_vObsHullMax
 
-// If the player (enemy bots) are scaled, adjust the hull
-#define VEC_VIEW_SCALED( player )				( g_pGameRules->GetViewVectors()->m_vView * player->GetModelScale() )
-#define VEC_HULL_MIN_SCALED( player )			( g_pGameRules->GetViewVectors()->m_vHullMin * player->GetModelScale() )
-#define VEC_HULL_MAX_SCALED( player )			( g_pGameRules->GetViewVectors()->m_vHullMax * player->GetModelScale() )
-
-#define VEC_DUCK_HULL_MIN_SCALED( player )		( g_pGameRules->GetViewVectors()->m_vDuckHullMin * player->GetModelScale() )
-#define VEC_DUCK_HULL_MAX_SCALED( player )		( g_pGameRules->GetViewVectors()->m_vDuckHullMax * player->GetModelScale() )
-#define VEC_DUCK_VIEW_SCALED( player )			( g_pGameRules->GetViewVectors()->m_vDuckView * player->GetModelScale() )
-
 #define VEC_DEAD_VIEWHEIGHT	g_pGameRules->GetViewVectors()->m_vDeadViewHeight
 
 
@@ -475,6 +466,11 @@ enum
 	BLOOD_COLOR_BLOB,
 	BLOOD_COLOR_BLOB_FROZEN,
 #endif // HL2_EPISODIC
+
+#if defined( INFESTED_DLL )
+	BLOOD_COLOR_BLOB,
+	BLOOD_COLOR_BLOB_FROZEN,
+#endif // INFESTED_DLL
 
 	BLOOD_COLOR_BRIGHTGREEN,
 };
@@ -902,10 +898,5 @@ enum Class_T
 #define FACTION_NONE				0					// Not assigned a faction.  Entities not assigned a faction will not do faction tests.
 #define LAST_SHARED_FACTION			(FACTION_NONE)
 #define NUM_SHARED_FACTIONS			(FACTION_NONE + 1)
-
-//Tony; including sdk_shareddefs.h because I use it in a _lot_ of places that needs to be seen before many other things.
-#ifdef SDK_DLL
-#include "sdk_shareddefs.h"
-#endif
 
 #endif // SHAREDDEFS_H

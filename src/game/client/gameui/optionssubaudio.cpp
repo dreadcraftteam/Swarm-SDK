@@ -371,7 +371,7 @@ COptionsSubAudioThirdPartyCreditsDlg::COptionsSubAudioThirdPartyCreditsDlg( vgui
 
 #ifdef SWARM_DLL
 	// parent is ignored, since we want look like we're steal focus from the parent (we'll become modal below)
-	SetScheme( "SourceScheme" );
+	SetScheme( "SwarmFrameScheme" );
 #endif
 
 	SetTitle( "#GameUI_ThirdPartyAudio_Title", true );

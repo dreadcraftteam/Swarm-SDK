@@ -315,7 +315,6 @@ public:
 
 	// returns the player name
 	const char *				GetPlayerName();
-
 	virtual const Vector		GetPlayerMins( void ) const; // uses local player
 	virtual const Vector		GetPlayerMaxs( void ) const; // uses local player
 
@@ -387,9 +386,6 @@ public:
 
 	virtual void ExitLadder() {}
 	surfacedata_t *GetLadderSurface( const Vector &origin );
-
-	// ADAPT
-	surfacedata_t *GetSurfaceData( void ) { return m_pSurfaceData; }
 
 	void	ForceButtons( int nButtons );
 	void	UnforceButtons( int nButtons );
@@ -478,7 +474,7 @@ public:
 private:
 	float					m_flWaterJumpTime;  // used to be called teleport_time
 	float					m_flSwimSoundTime;
-public:
+protected:
 	float					m_flStepSoundTime;
 	float					m_surfaceFriction;
 private:
@@ -638,11 +634,7 @@ private:
 	friend class CPortalGameMovement;
 	friend class CASW_MarineGameMovement;
 	friend class CPaintGameMovement;
-#if defined ( SDK_DLL )
-	friend class CSDKGameMovement;
-#endif
-
-public:
+	
 	// Accessors for gamemovement
 	float GetStepSize( void ) const { return m_Local.m_flStepSize; }
 

@@ -60,7 +60,9 @@ extern ConVar weapon_showproficiency;
 ConVar ai_show_hull_attacks( "ai_show_hull_attacks", "0" );
 ConVar ai_force_serverside_ragdoll( "ai_force_serverside_ragdoll", "0" );
 
+#ifdef NEXT_BOT
 ConVar nb_last_area_update_tolerance("nb_last_area_update_tolerance", "4.0", FCVAR_CHEAT, "Distance a character needs to travel in order to invalidate cached area"); // 4.0 tested as sweet spot (for wanderers, at least). More resulted in little benefit, less quickly diminished benefit [7/31/2008 tom]
+#endif
 
 #ifndef _RETAIL
 ConVar ai_use_visibility_cache( "ai_use_visibility_cache", "1" );
@@ -1426,7 +1428,7 @@ void CBaseCombatCharacter::Event_Killed( const CTakeDamageInfo &info )
 			BecomeRagdoll( info, forceVector );
 		}
 	}
-
+	
 #ifdef NEXT_BOT
 	// inform bots
 	TheNextBots().OnKilled(this, info);
@@ -1830,7 +1832,7 @@ void CBaseCombatCharacter::Weapon_Equip( CBaseCombatWeapon *pWeapon )
 		if (!m_hMyWeapons[i]) 
 		{
 			m_hMyWeapons.Set( i, pWeapon );
-//			m_weaponIDToIndex[pWeapon->GetWeaponID()] = (i+1);
+			m_weaponIDToIndex[pWeapon->GetWeaponID()] = (i+1);
 			break;
 		}
 	}

@@ -21,17 +21,12 @@
 
 
 ConVar cl_blobulator_freezing_max_metaball_radius( "cl_blobulator_freezing_max_metaball_radius", 
-													"12.0", 
-													FCVAR_NONE, 
-													"Setting this can create more complex surfaces on large hitboxes at the cost of performance.", 
-													true, 12.0f, true, 100.0f );
-
-
-//PRECACHE_REGISTER_BEGIN( GLOBAL, PrecacheEffectFreezing )
-//	PRECACHE( MATERIAL,"effects/tesla_glow_noz" )
-//	PRECACHE( MATERIAL,"effects/spark" )
-//	PRECACHE( MATERIAL,"effects/combinemuzzle2" )
-//PRECACHE_REGISTER_END()
+												#ifdef INFESTED_DLL
+												  "25.0", // Don't need as much precision in Alien swarm because everything is zoomed out
+												#else
+												  "12.0", 
+												#endif
+												  FCVAR_NONE, "Setting this can create more complex surfaces on large hitboxes at the cost of performance.", true, 12.0f, true, 100.0f );
 
 //-----------------------------------------------------------------------------
 // Networking
@@ -42,7 +37,6 @@ IMPLEMENT_CLIENTCLASS_DT( C_EntityFreezing, DT_EntityFreezing, CEntityFreezing )
 	RecvPropFloat( RECVINFO(m_flFrozen) ),
 	RecvPropBool( RECVINFO(m_bFinishFreezing) ),
 END_RECV_TABLE()
-
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -60,7 +54,6 @@ void C_EntityFreezing::GetRenderBounds( Vector& theMins, Vector& theMaxs )
 	}
 }
 
-
 //-----------------------------------------------------------------------------
 // Yes we bloody are
 //-----------------------------------------------------------------------------
@@ -68,7 +61,6 @@ RenderableTranslucencyType_t C_EntityFreezing::ComputeTranslucencyType( )
 {
 	return RENDERABLE_IS_TRANSLUCENT;
 }
-
 
 //-----------------------------------------------------------------------------
 // On data changed
@@ -88,17 +80,6 @@ void C_EntityFreezing::OnDataChanged( DataUpdateType_t updateType )
 void C_EntityFreezing::ClientThink( void )
 {
 	__asm nop;
-	//C_BaseAnimating *pAnimating = GetMoveParent() ? GetMoveParent()->GetBaseAnimating() : NULL;
-	//if (!pAnimating)
-	//	return;
-
-	//color32 color = pAnimating->GetRenderColor();
-
-	//color.r = color.g = ( 1.0f - m_flFrozen ) * 255.0f;
-
-	//// Setup the entity fade
-	//pAnimating->SetRenderMode( kRenderTransColor );
-	//pAnimating->SetRenderColor( color.r, color.g, color.b, color.a );
 }
 
 //-----------------------------------------------------------------------------
@@ -108,7 +89,5 @@ void C_EntityFreezing::ClientThink( void )
 //-----------------------------------------------------------------------------
 int C_EntityFreezing::DrawModel( int flags, const RenderableInstance_t &instance )
 {
-
-
 	return 1;
 }

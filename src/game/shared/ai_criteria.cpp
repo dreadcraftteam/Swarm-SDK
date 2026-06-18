@@ -18,6 +18,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include <tier0/memdbgon.h>
 
+
+
 BEGIN_SIMPLE_DATADESC( AI_ResponseParams )
 	DEFINE_FIELD( flags,	FIELD_SHORT ),
 	DEFINE_FIELD( odds,	FIELD_SHORT ),	
@@ -33,3 +35,4 @@ BEGIN_SIMPLE_DATADESC( AI_Response )
 	// DEFINE_FIELD( m_pCriteria, FIELD_??? ), // Don't need to save this probably
 	DEFINE_EMBEDDED( m_Params ),
 END_DATADESC()
+

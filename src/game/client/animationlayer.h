@@ -37,7 +37,6 @@ public:
 	bool IsActive( void );
 	float GetFadeout( float flCurTime );
 
-	//void SetOrder(int nOrder);
 	void SetSequence( int nSequence );
 	void SetCycle( float flCycle );
 	void SetPrevCycle( float flCycle );
@@ -62,7 +61,7 @@ public:
 	float	m_flLayerAnimtime;
 	float	m_flLayerFadeOuttime;
 
-//private:
+private:
 	int		m_nOrder;
 	CRangeCheckedVar<int, -1, 65535, 0>		m_nSequence;
 	CRangeCheckedVar<float, -2, 2, 0>		m_flPrevCycle;
@@ -101,27 +100,24 @@ inline C_AnimationLayer::C_AnimationLayer()
 	Reset();
 }
 
-#ifndef CLIENT_DLL
-FORCEINLINE void C_AnimationLayer::SetOrder( int nOrder )
-{
-	m_nOrder = nOrder;
-}
+#ifdef GAME_DLL
 
-FORCEINLINE void C_AnimationLayer::SetSequence( int nSequence )
+inline void C_AnimationLayer::SetSequence( int nSequence )
 {
 	m_nSequence = nSequence;
 }
 
-FORCEINLINE void C_AnimationLayer::SetCycle( float flCycle )
+inline void C_AnimationLayer::SetCycle( float flCycle )
 {
 	m_flCycle = flCycle;
 }
 
-FORCEINLINE void C_AnimationLayer::SetWeight( float flWeight )
+inline void C_AnimationLayer::SetWeight( float flWeight )
 {
 	m_flWeight = flWeight;
 }
-#endif
+
+#endif // GAME_DLL
 
 FORCEINLINE void C_AnimationLayer::SetPrevCycle( float flPrevCycle )
 {

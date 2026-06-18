@@ -1,8 +1,0 @@
-"BaseTimesLightmapTimesDetail"
-{
-	"$baseTexture" "shadertest/BaseTimesLightmapTimesDetail"
-	"$detailScale" 4
-	"$detail" "shadertest/detail"
-	"$detailscale2" .25
-	"$detail2" "shadertest/detail"
-}

@@ -389,7 +389,7 @@ CInfoDescription::CInfoDescription( CPanelListPanel *panel )
 //\r\n\
 // type info:\r\n\
 // BOOL                 no type info\r\n\
-// NUMBER       MIN MAX range, use -1 -1 for no limits\r\n\
+// NUMBER       min max range, use -1 -1 for no limits\r\n\
 // STRING       no type info\r\n\
 // LIST         "" delimited list of options value pairs\r\n\
 //\r\n\

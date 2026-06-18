@@ -63,7 +63,7 @@ CON_COMMAND( ai_debug_node_connect, "Debug the attempted connection between two 
 
 ConVar g_ai_norebuildgraph( "ai_norebuildgraph", "0" );
 
-ConVar g_ai_threadedgraphbuild( "g_ai_threadedgraphbuild", "1", FCVAR_NONE, "If true, use experimental threaded node graph building." );
+ConVar g_ai_threadedgraphbuild( "g_ai_threadedgraphbuild", "0", FCVAR_NONE, "If true, use experimental threaded node graph building." );
 
 //-----------------------------------------------------------------------------
 // CAI_NetworkManager
@@ -1123,7 +1123,7 @@ void CAI_NetworkManager::ThreadedInit( void )
 			// kick off a threaded map build. first, temporarily reset the global ai network
 			// pointer as a hack so all ais think it doesn't exist yet
 			m_ThreadedBuild.pBuildingNetwork = GetNetwork();
-
+#pragma message("Warning: find some way to prevent AI from using network before it's ready, but allowing the TestHull to still instantiate.")
 			// g_pBigAINet = m_pNetwork = NULL;
 			// // fire off a thread to build the map
 			m_ThreadedBuild.nBuildStage = ThreadedGraphBuildData::BUILD_UNDERWAY;

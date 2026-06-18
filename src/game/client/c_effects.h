@@ -157,6 +157,10 @@ private:
 
 	float			m_flDensity;
 
+#ifdef INFESTED_DLL
+	int m_nSnowDustAmount;
+#endif
+
 	// Some state used in rendering and simulation
 	// Used to modify the rain density and wind from the console
 	static ConVar s_raindensity;

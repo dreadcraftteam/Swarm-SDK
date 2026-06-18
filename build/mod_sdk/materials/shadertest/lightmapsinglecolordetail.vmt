@@ -1,6 +1,0 @@
-"LightmappedGeneric"
-{
-	// Original shader: Lightmap
-	"%tooltexture" "shadertest/Lightmap"
-	"$detail" "shadertest/shadertestdetail"
-}

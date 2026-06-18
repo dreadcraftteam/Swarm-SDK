@@ -6,7 +6,7 @@
 
 #include "cbase.h"
 
-#ifdef SDK_DLL
+#if 0
 #include "mp3player.h"
 #include "KeyValues.h"
 #include "FileSystem.h"

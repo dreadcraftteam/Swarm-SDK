@@ -5,10 +5,15 @@
 // $NoKeywords: $
 //=============================================================================//
 #include "cbase.h"
+
 #include "c_baseplayer.h"
+#ifdef INFESTED_DLL
+#include "c_asw_marine.h"
+#endif
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+
 
 ConVar cl_sunlight_ortho_size("cl_sunlight_ortho_size", "0.0", FCVAR_CHEAT, "Set to values greater than 0 for ortho view render projections.");
 ConVar cl_sunlight_depthbias( "cl_sunlight_depthbias", "0.02" );
@@ -136,10 +141,18 @@ void C_SunlightShadowControl::ClientThink()
 
 		HACK_GETLOCALPLAYER_GUARD( "C_SunlightShadowControl::ClientThink" );
 
+#ifdef INFESTED_DLL		// shine sun on your current marine, rather than the player entity
+		C_ASW_Marine *pMarine = C_ASW_Marine::GetLocalMarine();
+		if ( !pMarine )
+			return;
+
+		Vector vPos = ( pMarine->GetAbsOrigin() + vSunDirection2D * m_flNorthOffset ) - vDirection * m_flSunDistance;
+#else
 		if ( !C_BasePlayer::GetLocalPlayer() )
 			return;
 
 		Vector vPos = ( C_BasePlayer::GetLocalPlayer()->GetAbsOrigin() + vSunDirection2D * m_flNorthOffset ) - vDirection * m_flSunDistance;
+#endif
 
 		QAngle angAngles;
 		VectorAngles( vDirection, angAngles );
@@ -208,7 +221,10 @@ void C_SunlightShadowControl::ClientThink()
 		else
 		{
 			g_pClientShadowMgr->UpdateFlashlightState( m_LocalFlashlightHandle, state );
+#ifndef INFESTED_DLL
+#pragma message("TODO: rebuild sunlight projected texture after sunlight control changes.")
 			g_pClientShadowMgr->UpdateProjectedTexture( m_LocalFlashlightHandle, true );
+#endif
 		}
 	}
 	else if ( m_LocalFlashlightHandle != CLIENTSHADOW_INVALID_HANDLE )
