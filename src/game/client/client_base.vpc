@@ -422,7 +422,7 @@ $Project
 		$File	"animatedentitytextureproxy.cpp"
 		$File	"animatedoffsettextureproxy.cpp"
 		$File	"animatedtextureproxy.cpp"
-		$File	"AnimateSpecificTextureProxy.cpp"
+		$File	"animatespecifictextureproxy.cpp"
 		$File	"$SRCDIR\game\shared\animation.cpp"
 		$File	"$SRCDIR\game\shared\base_playeranimstate.cpp"
 		$File	"$SRCDIR\game\shared\baseachievement.cpp"
