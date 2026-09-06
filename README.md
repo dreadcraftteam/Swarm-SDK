@@ -4,12 +4,13 @@ This project was created to simplify the creation of your modifications and game
 Pull requests are welcome!
 
 ## :chart_with_upwards_trend: Features
+- Support HL2 and Episodic (except Alien Swarm)
 - Ability to compile shader binaries (game_shader_dx9.dll with hlsl shaders).
 - Shared ASW gameui for all client projects
 
 ## :pushpin: TODO
 - Restore blobulator surface render code
-- Add HL2, Episodic, Portal, TF2, CSS and DOD projects
+- Add Portal, TF2, CSS and DOD projects
 - Make video backgrounds are shared 
 - Add SDK template (or no?)
 

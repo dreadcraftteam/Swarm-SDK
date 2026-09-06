@@ -1,0 +1,28 @@
+//-----------------------------------------------------------------------------
+//	GAME_SHADER_DX9_HL2.vpc
+//
+//	Project Script for mods to use an an example of how to override shaders
+//-----------------------------------------------------------------------------
+
+$Macro OUTBINNAME	"game_shader_dx9"
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME		"mod_hl2"
+$Include			"$SRCDIR\materialsystem\stdshaders\game_shader_dx9_base.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$PreprocessorDefinitions		"$BASE;PORTAL_ONLY"
+	}
+}
+
+$Project "Shaders (HL2)"
+{
+	$File "lightmappedgeneric_dx9.cpp"
+	$File "lightmappedgeneric_dx9_helper.cpp"
+	$File "lightmappedgeneric_dx9_helper.h"
+	
+	$File "lightmappedpaint_dx9_helper.cpp"
+	$File "lightmappedpaint_dx9_helper.h"
+}
