@@ -1,0 +1,34 @@
+"GameInfo"
+{
+	"game"		"Half-Life 2"
+	"type"		"singleplayer_only"
+
+	GameData	"halflife2.fgd"
+	SupportsDX8     0
+	
+	"FileSystem"
+	{
+		"SteamAppId"		"630"
+		
+		"SearchPaths"
+		{
+			"Game"	"|gameinfo_path|."
+			
+			"Game"	"D:\Windows\Steam\steamapps\common\SourceFilmmaker\game\ep2"
+			"Game"	"D:\Windows\Steam\steamapps\common\SourceFilmmaker\game\episodic"
+			"Game"	"D:\Windows\Steam\steamapps\common\SourceFilmmaker\game\hl2"
+
+			"Game"	"D:\Windows\Steam\steamapps\common\Half-Life 2\ep2"
+			"Game"	"D:\Windows\Steam\steamapps\common\Half-Life 2\episodic"
+			"Game"	"D:\Windows\Steam\steamapps\common\Half-Life 2\hl2"
+			
+			"Game"	"|all_source_engine_paths|ep2"
+			"Game"	"|all_source_engine_paths|episodic"
+			"Game"	"|all_source_engine_paths|hl2"
+
+			"Game"	"swarm"
+			"Game"	"swarm_base"
+			"Game"	"platform"
+		}
+	}
+}

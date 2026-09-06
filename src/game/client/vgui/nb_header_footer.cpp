@@ -4,9 +4,13 @@
 #include "vgui_controls/ImagePanel.h"
 #include <vgui/ISurface.h>
 #include "vgui_hudvideo.h"
+
+#ifdef SWARM_DLL
 #include "asw_video.h"
-#include "VGUIMatSurface/IMatSystemSurface.h"
 #include "asw_gamerules.h"
+#endif
+
+#include "VGUIMatSurface/IMatSystemSurface.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -126,39 +130,22 @@ int C_Background_Movie::SetTextureMaterial()
 
 void C_Background_Movie::Update()
 {
-	if ( engine->IsConnected() && ASWGameRules() )
+	if ( engine->IsConnected() && GameRules() )
 	{
-		int nGameState = ASWGameRules()->GetGameState();
-		if ( nGameState >= ASW_GS_DEBRIEF && ASWGameRules()->GetMissionSuccess() )
-		{
-			nGameState += 10;
-		}
-		if ( nGameState != m_nLastGameState && !( nGameState == ASW_GS_LAUNCHING || nGameState == ASW_GS_INGAME ) )
+		int nGameState = GameRules()->GetGameType();
+		
+		if ( nGameState != m_nLastGameState )
 		{
 			const char *pFilename = NULL;
 #ifdef ASW_BINK_MOVIES
-			if ( ASWGameRules()->GetGameState() >= ASW_GS_DEBRIEF )
+			int nChosenMovie = RandomInt(0, 3);
+			switch (nChosenMovie)
 			{
-				if ( ASWGameRules()->GetMissionSuccess() )
-				{
-					pFilename = "media/SpaceFX.bik";
-				}
-				else
-				{
-					pFilename = "media/BG_Fail.bik";
-				}
-			}
-			else
-			{
-				int nChosenMovie = RandomInt( 0, 3 );
-				switch( nChosenMovie )
-				{
-					case 0: pFilename = "media/BGFX_01.bik"; break;
-					case 1: pFilename = "media/BGFX_02.bik"; break;
-					default:
-					case 2: pFilename = "media/BGFX_03.bik"; break;
-					case 3: pFilename = "media/BG_04_FX.bik"; break;
-				}
+			case 0: pFilename = "media/BGFX_01.bik"; break;
+			case 1: pFilename = "media/BGFX_02.bik"; break;
+			default:
+			case 2: pFilename = "media/BGFX_03.bik"; break;
+			case 3: pFilename = "media/BG_04_FX.bik"; break;
 			}
 #else
 			pFilename = "media/test.avi";

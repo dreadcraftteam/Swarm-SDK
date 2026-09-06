@@ -741,7 +741,7 @@ FUNC_GENERATE_ALL( DEFINE_NON_MEMBER_ITER_RANGE_PARALLEL );
 		const int MAX_THREADS = 16; \
 		int nIdle = g_pThreadPool->NumIdleThreads(); \
 		ITERTYPE1 range = to - from; \
-		int nThreads = min( nIdle + 1, range ); \
+		int nThreads = MIN( nIdle + 1, range ); \
 		if ( nThreads > MAX_THREADS ) \
 		{ \
 			nThreads = MAX_THREADS; \

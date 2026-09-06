@@ -283,10 +283,12 @@ private:
 	void BeginRappel() { m_RappelBehavior.BeginRappel(); }
 
 private:
-	void OnTossedTeleportProjectile( CBaseEntity *pProjectile );
+	void OnTossedTeleportProjectile( CBaseEntity *pProjectile );//EP3T
 	void OnTeleportProjectileAction( CBaseEntity *pProjectile, bool bTeleport );
 
-	void FullyLoadWeaponClips();
+	void FullyLoadWeaponClips();//[EP3T]
+
+	//void FUN_180139cc0();//Maybe its FullyLoadWeaponClips? It does similar stuff Or maybe FullyLoadWeaponClips is optimized in it???
 
 private:
 	int				m_nKickDamage;
