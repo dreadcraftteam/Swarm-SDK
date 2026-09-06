@@ -11,7 +11,7 @@ Pull requests are welcome!
 ## :pushpin: TODO
 - Restore blobulator surface render code
 - Add Portal, TF2, CSS and DOD projects
-- Make video backgrounds are shared 
+- Fix some gameui problems
 - Add SDK template (or no?)
 
 ## :hammer: How to build
