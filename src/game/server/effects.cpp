@@ -1310,7 +1310,7 @@ public:
 
 void CEnvBeverage::Precache ( void )
 {
-	PrecacheModel( "models/can.mdl" );
+	PrecacheModel( "models/props_junk/popcan01a.mdl" );
 }
 
 BEGIN_DATADESC( CEnvBeverage )
@@ -1411,7 +1411,7 @@ LINK_ENTITY_TO_CLASS( item_sodacan, CItemSoda );
 
 void CItemSoda::Precache ( void )
 {
-	PrecacheModel( "models/can.mdl" );
+	PrecacheModel( "models/props_junk/popcan01a.mdl" );
 
 	PrecacheScriptSound( "ItemSoda.Bounce" );
 }
@@ -1422,7 +1422,7 @@ void CItemSoda::Spawn( void )
 	SetSolid( SOLID_NONE );
 	SetMoveType( MOVETYPE_FLYGRAVITY );
 
-	SetModel ( "models/can.mdl" );
+	SetModel ( "models/props_junk/popcan01a.mdl" );
 	UTIL_SetSize ( this, Vector ( 0, 0, 0 ), Vector ( 0, 0, 0 ) );
 
 	SetThink (&CItemSoda::CanThink);

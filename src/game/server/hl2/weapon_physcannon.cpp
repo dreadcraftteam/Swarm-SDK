@@ -1661,6 +1661,9 @@ bool CWeaponPhysCannon::CanHolster( void )
 //-----------------------------------------------------------------------------
 bool CWeaponPhysCannon::Holster( CBaseCombatWeapon *pSwitchingTo )
 {
+	DestroyEffects();
+	StopLoopingSounds();
+
 	//Don't holster this weapon if we're holding onto something
 	if ( m_bActive )
 	{
@@ -3168,8 +3171,8 @@ void CWeaponPhysCannon::DoEffectIdle( void )
 		{
 			CBeam *pBeam = CBeam::BeamCreate( MEGACANNON_BEAM_SPRITE, 1 );
 
-			CBaseEntity *pBeamEnt = pOwner->GetViewModel();
-			pBeam->EntsInit( pBeamEnt, pBeamEnt );
+			CBaseViewModel* vm = ToBasePlayer(GetOwner())->GetViewModel(m_nViewModelIndex);
+			pBeam->EntsInit(vm, vm);
 
 			int	startAttachment;
 			int	sprite;
@@ -3693,7 +3696,7 @@ void CWeaponPhysCannon::StartEffects( void )
 
 	int i;
 	float flScaleFactor = SpriteScaleFactor();
-	CBaseEntity *pBeamEnt = pOwner->GetViewModel();
+	CBaseViewModel* pBeamEnt = pOwner->GetViewModel(m_nViewModelIndex);
 
 	// Create the beams
 	for ( i = 0; i < NUM_BEAMS; i++ )
@@ -3753,7 +3756,7 @@ void CWeaponPhysCannon::StartEffects( void )
 
 		m_hGlowSprites[i]->SetAsTemporary();
 
-		m_hGlowSprites[i]->SetAttachment( pOwner->GetViewModel(), LookupAttachment( attachNames[i] ) );
+		m_hGlowSprites[i]->SetAttachment(pBeamEnt, pBeamEnt->LookupAttachment(attachNames[i]));
 		
 		if ( bIsMegaCannon )
 		{
@@ -4100,7 +4103,7 @@ void CWeaponPhysCannon::DoMegaEffectLaunch( Vector *pos )
 	Vector	endpos = *pos;
 
 	// Check to store off our view model index
-	CBaseViewModel *vm = pOwner->GetViewModel();
+	CBaseViewModel* vm = ToBasePlayer(GetOwner())->GetViewModel(m_nViewModelIndex);
 	
 	int numBeams = random->RandomInt( 1, 2 );
 
@@ -4319,6 +4322,8 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 		break;
 
 	default:
+		DoEffectNone();
+		break;
 	case EFFECT_NONE:
 		DoEffectNone();
 		break;

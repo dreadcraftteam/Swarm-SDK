@@ -445,6 +445,9 @@ C_BasePlayer::~C_BasePlayer()
 //-----------------------------------------------------------------------------
 void C_BasePlayer::Spawn( void )
 {
+#if defined(HL2_CLIENT_DLL) || defined (HL2_EPISODIC)
+	engine->ClientCmd_Unrestricted("sv_pausable 1"); // DREADCRAFT; fix game pause
+#endif
 	// Clear all flags except for FL_FULLEDICT
 	ClearFlags();
 	AddFlag( FL_CLIENT );

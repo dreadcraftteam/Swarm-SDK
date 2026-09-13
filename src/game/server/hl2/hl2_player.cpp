@@ -1124,7 +1124,6 @@ void CHL2_Player::PlayerRunCommand(CUserCmd* ucmd, IMoveHelper* moveHelper)
 //-----------------------------------------------------------------------------
 void CHL2_Player::Spawn(void)
 {
-
 #ifndef HL2MP
 #ifndef PORTAL
 	SetModel("models/player.mdl");
@@ -1149,8 +1148,6 @@ void CHL2_Player::Spawn(void)
 	m_pPlayerAISquad = g_AI_SquadManager.FindCreateSquad(AllocPooledString(PLAYER_SQUADNAME));
 
 	InitSprinting();
-
-	GiveNamedItem("weapon_icegun");
 
 	// Setup our flashlight values
 #ifdef HL2_EPISODIC
