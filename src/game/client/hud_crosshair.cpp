@@ -47,7 +47,15 @@ void CHudCrosshair::ApplySchemeSettings( IScheme *scheme )
 {
 	BaseClass::ApplySchemeSettings( scheme );
 
-	m_pDefaultCrosshair = HudIcons().GetIcon("crosshair_default");
+	// DREADCRAFT; find a better solution than this
+	CHudTexture tempTexture;
+
+	tempTexture.bRenderUsingFont = true;
+	tempTexture.cCharacterInFont = 'Q';
+	Q_strncpy(tempTexture.szTextureFile, "Crosshairs", sizeof(tempTexture.szTextureFile));
+
+	m_pDefaultCrosshair = HudIcons().AddUnsearchableHudIconToList(tempTexture);
+	
 	SetPaintBackgroundEnabled( false );
 
     SetSize( ScreenWidth(), ScreenHeight() );
