@@ -17,10 +17,8 @@
 			"Game"	"D:\Windows\Steam\steamapps\common\SourceFilmmaker\game\ep2"
 			"Game"	"D:\Windows\Steam\steamapps\common\SourceFilmmaker\game\episodic"
 			"Game"	"D:\Windows\Steam\steamapps\common\SourceFilmmaker\game\hl2"
-
-			"Game"	"D:\Windows\Steam\steamapps\common\Half-Life 2\ep2"
-			"Game"	"D:\Windows\Steam\steamapps\common\Half-Life 2\episodic"
-			"Game"	"D:\Windows\Steam\steamapps\common\Half-Life 2\hl2"
+			
+			game+mod	"|gameinfo_path|sound"
 			
 			"Game"	"|all_source_engine_paths|ep2"
 			"Game"	"|all_source_engine_paths|episodic"
