@@ -1,0 +1,58 @@
+//-----------------------------------------------------------------------------
+//	PROJECTS.VGC
+//
+//	Project Configurations for all Alien Swarm(TM) Projects
+//-----------------------------------------------------------------------------
+
+$Project "client"
+{
+	"game\client\client_scratch.vpc" [$SCRATCH]
+	"game\client\client_swarm.vpc" [$SWARM]
+}
+
+$Project "fgdlib"
+{
+	"fgdlib/fgdlib.vpc"
+}
+
+$Project "game_shader_dx9"
+{
+	"materialsystem\stdshaders\game_shader_dx9_scratch.vpc" [$SCRATCH]
+	"materialsystem\stdshaders\game_shader_dx9_swarm.vpc" [$SWARM]
+}
+
+$Project "interfaces"
+{
+	"interfaces\interfaces.vpc"
+}
+
+$Project "meshutils"
+{
+	"meshutils\meshutils.vpc"
+}
+
+$Project "missionchooser"
+{
+	"game\missionchooser\missionchooser_swarm.vpc"	[$SWARM]
+}
+
+$Project "responserules_runtime"
+{
+	"responserules\runtime\responserules_runtime.vpc"
+}
+
+$Project "server"
+{
+	"game\server\server_scratch.vpc" [$SCRATCH]
+	"game\server\server_swarm.vpc" [$SWARM]
+}
+
+$Project "shaderlib"
+{
+	"materialsystem\shaderlib\shaderlib.vpc"
+}
+
+$Project "videocfg"
+{
+	"videocfg/videocfg.vpc"
+}

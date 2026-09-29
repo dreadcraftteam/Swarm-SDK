@@ -1,0 +1,303 @@
+//-----------------------------------------------------------------------------
+//	CLIENT_SCRATCH.VPC
+//
+//	Project Script
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME 	"mod_sdkscratch"
+
+$Include "$SRCDIR\game\client\client_base.vpc"
+
+$Configuration
+{
+	$Compiler
+	{
+		$AdditionalIncludeDirectories	"$BASE;.\sdk;.\hl2;.\sdk\vgui;$SRCDIR\game\client\gameui;$SRCDIR\game\client\sdk\scratchui;..\statemachine;$SRCDIR\game\shared\multiplayer;$SRCDIR\game\shared\sdk"
+		$PreprocessorDefinitions		"$BASE;SDK_CLIENT_DLL;SDK_DLL;GAMEUI_EMBEDDED;GAMEUI_EXPORTS;USE_DETAIL_SHAPES"
+		$TreatWarningsAsErrors			"No (/WX-)"
+	}
+}
+
+$Project "Client (Scratch)"
+{
+	$Folder	"Source Files"
+	{
+		-$File	"$SRCDIR\game\shared\weapon_parse_default.cpp"
+		$File	"c_mod_lesson_stubs.cpp"
+
+		$File	"c_team_objectiveresource.cpp"
+		$File	"c_team_objectiveresource.h"
+		$File	"c_team_train_watcher.cpp"
+		$File	"c_team_train_watcher.h"
+		$File	"hud_voicestatus.cpp"
+		$File	"$SRCDIR\game\shared\predicted_viewmodel.cpp"
+		$File	"$SRCDIR\game\shared\predicted_viewmodel.h"
+		$File	"$SRCDIR\game\shared\teamplay_round_timer.cpp"
+		$File	"$SRCDIR\game\shared\teamplay_round_timer.h"
+		$File	"hud_basedeathnotice.cpp"
+		$File	"hud_basedeathnotice.h"
+		$File	"$SRCDIR\game\shared\playerclass_info_parse.cpp"
+		$File	"$SRCDIR\game\shared\playerclass_info_parse.h"
+		
+		$Folder "GameUI Embedded"
+		{
+			$Folder "Scratch GameUI"
+			{
+				$Folder "Headers"
+				{
+					$File	"sdk\scratchui\basemodframe.h" \
+							"sdk\scratchui\basemodpanel.h" \
+							"sdk\scratchui\basemodui.h" \
+							"sdk\scratchui\gamemodes.h" \
+							"sdk\scratchui\uiavatarimage.h" \
+							"sdk\scratchui\uigamedata.h" \
+							"sdk\scratchui\vachievements.h" \
+							"sdk\scratchui\vaddonassociation.h" \
+							"sdk\scratchui\vaddons.h" \
+							"sdk\scratchui\vattractscreen.h" \
+							"sdk\scratchui\vaudio.h" \
+							"sdk\scratchui\vaudiovideo.h" \
+							"sdk\scratchui\vcloud.h" \
+							"sdk\scratchui\vcontrolleroptions.h" \
+							"sdk\scratchui\vcontrolleroptionsbuttons.h" \
+							"sdk\scratchui\vcontrolleroptionssticks.h" \
+							"sdk\scratchui\vcustomcampaigns.h" \
+							"sdk\scratchui\vdownloadcampaign.h" \
+							"sdk\scratchui\vdownloads.h" \
+							"sdk\scratchui\vdropdownmenu.h" \
+							"sdk\scratchui\vflyoutmenu.h" \
+							"sdk\scratchui\vfooterpanel.h" \
+							"sdk\scratchui\vfoundgames.h" \
+							"sdk\scratchui\vfoundgroupgames.h" \
+							"sdk\scratchui\vfoundpublicgames.h" \
+							"sdk\scratchui\vgamelobby.h" \
+							"sdk\scratchui\vgamelobbychat.h" \
+							"sdk\scratchui\vgameoptions.h" \
+							"sdk\scratchui\vgamesettings.h" \
+							"sdk\scratchui\vgenericconfirmation.h" \
+							"sdk\scratchui\vgenericpanellist.h" \
+							"sdk\scratchui\vgenericwaitscreen.h" \
+							"sdk\scratchui\vgetlegacydata.h" \
+							"sdk\scratchui\vhybridbutton.h" \
+							"sdk\scratchui\vingamechapterselect.h" \
+							"sdk\scratchui\vingamedifficultyselect.h" \
+							"sdk\scratchui\vingamekickplayerlist.h" \
+							"sdk\scratchui\vingamemainmenu.h" \
+							"sdk\scratchui\vjukebox.h" \
+							"sdk\scratchui\vkeyboard.h" \
+							"sdk\scratchui\vkeyboardmouse.h" \
+							"sdk\scratchui\vleaderboard.h" \
+							"sdk\scratchui\vloadingprogress.h" \
+							"sdk\scratchui\vmainmenu.h" \
+							"sdk\scratchui\vmultiplayer.h" \
+							"sdk\scratchui\voptions.h" \
+							"sdk\scratchui\vpasswordentry.h" \
+							"sdk\scratchui\vquickjoin.h" \
+							"sdk\scratchui\vquickjoingroups.h" \
+							"sdk\scratchui\vsignindialog.h" \
+							"sdk\scratchui\vslidercontrol.h" \
+							"sdk\scratchui\vspinnercontrol.h" \
+							"sdk\scratchui\vsteamcloudconfirmation.h" \
+							"sdk\scratchui\vtransitionscreen.h" \
+							"sdk\scratchui\vvideo.h" \
+							"sdk\scratchui\vvoteoptions.h"
+				}
+					$Folder "Win32"
+					{
+						$File	"sdk\scratchui\uiavatarimage.cpp" \
+								"sdk\scratchui\vaddonassociation.cpp" \
+								"sdk\scratchui\vaddons.cpp" \
+								"sdk\scratchui\vcloud.cpp" \
+								"sdk\scratchui\vcustomcampaigns.cpp" \
+								"sdk\scratchui\vdownloadcampaign.cpp" \
+								"sdk\scratchui\vdownloads.cpp" \
+								"sdk\scratchui\vgetlegacydata.cpp" \
+								"sdk\scratchui\vjukebox.cpp" \
+								"sdk\scratchui\vkeyboard.cpp" \
+								"sdk\scratchui\vkeyboardmouse.cpp" \
+								"sdk\scratchui\vsteamcloudconfirmation.cpp"
+					{
+					
+							$Configuration
+							{
+								$Compiler
+								{
+									$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+								}
+							}
+						}
+					}
+					$File	"sdk\scratchui\basemodframe.cpp" \
+							"sdk\scratchui\basemodpanel.cpp" \
+							"sdk\scratchui\gamemodes.cpp" \
+							"sdk\scratchui\uigamedata.cpp" \
+							"sdk\scratchui\uigamedata_invite.cpp" \
+							"sdk\scratchui\uigamedata_storage.cpp" \
+							"sdk\scratchui\vachievements.cpp" \
+							"sdk\scratchui\vattractscreen.cpp" \
+							"sdk\scratchui\vaudio.cpp" \
+							"sdk\scratchui\vaudiovideo.cpp" \
+							"sdk\scratchui\vcontrolleroptions.cpp" \
+							"sdk\scratchui\vcontrolleroptionsbuttons.cpp" \
+							"sdk\scratchui\vcontrolleroptionssticks.cpp" \
+							"sdk\scratchui\vdropdownmenu.cpp" \
+							"sdk\scratchui\vflyoutmenu.cpp" \
+							"sdk\scratchui\vfooterpanel.cpp" \
+							"sdk\scratchui\vfoundgames.cpp" \
+							"sdk\scratchui\vfoundgroupgames.cpp" \
+							"sdk\scratchui\vfoundpublicgames.cpp" \
+							"sdk\scratchui\vgamelobby.cpp" \
+							"sdk\scratchui\vgamelobbychat.cpp" \
+							"sdk\scratchui\vgameoptions.cpp" \
+							"sdk\scratchui\vgamesettings.cpp" \
+							"sdk\scratchui\vgenericconfirmation.cpp" \
+							"sdk\scratchui\vgenericpanellist.cpp" \
+							"sdk\scratchui\vgenericwaitscreen.cpp" \
+							"sdk\scratchui\vhybridbutton.cpp" \
+							"sdk\scratchui\vingamechapterselect.cpp" \
+							"sdk\scratchui\vingamedifficultyselect.cpp" \
+							"sdk\scratchui\vingamekickplayerlist.cpp" \
+							"sdk\scratchui\vingamemainmenu.cpp" \
+							"sdk\scratchui\vleaderboard.cpp" \
+							"sdk\scratchui\vloadingprogress.cpp" \
+							"sdk\scratchui\vmainmenu.cpp" \
+							"sdk\scratchui\vmenubackground.cpp" \
+							"sdk\scratchui\vmultiplayer.cpp" \
+							"sdk\scratchui\voptions.cpp" \
+							"sdk\scratchui\vpasswordentry.cpp" \
+							"sdk\scratchui\vquickjoin.cpp" \
+							"sdk\scratchui\vquickjoingroups.cpp" \
+							"sdk\scratchui\vsignindialog.cpp" \
+							"sdk\scratchui\vslidercontrol.cpp" \
+							"sdk\scratchui\vspinnercontrol.cpp" \
+							"sdk\scratchui\vtransitionscreen.cpp" \
+							"sdk\scratchui\vvideo.cpp" \
+							"sdk\scratchui\vvoteoptions.cpp"
+					{
+						$Configuration
+						{
+							$Compiler
+							{
+								$Create/UsePrecompiledHeader	"Not Using Precompiled Headers"
+							}
+						}
+					}
+			}
+		}
+
+		$Folder	"SDK DLL"
+		{
+			$File	"sdk\c_sdk_vehicle_jeep.cpp"
+			$File	"sdk\c_sdk_vehicle_jeep.h"
+			$File	"sdk\c_sdk_env_sparkler.cpp"
+			$File	"sdk\c_te_firebullets.cpp"
+			$File	"sdk\clientmode_sdk.cpp"
+			$File	"sdk\clientmode_sdk.h"
+			$File	"sdk\sdk_in_main.cpp"
+			$File	"sdk\sdk_prediction.cpp"
+			$File	"$SRCDIR\game\shared\sdk\sdk_shareddefs.cpp"
+			$File	"$SRCDIR\game\shared\sdk\sdk_shareddefs.h"
+			$File	"$SRCDIR\game\shared\sdk\sdk_usermessages.cpp"
+
+			$Folder	"VGUI"
+			{
+				$Folder	"Managed Panels"
+				{
+					$file	"sdk/vgui/nb_button.cpp"
+					$file	"sdk/vgui/nb_button.h"
+					$file	"sdk/vgui/nb_header_footer.cpp"
+					$file	"sdk/vgui/nb_header_footer.h"
+					$file	"sdk/vgui/nb_horiz_list.cpp"
+					$file	"sdk/vgui/nb_horiz_list.h"
+				}
+				
+				$File	"sdk\vgui\sdk_backgroundpanel.cpp"
+				$File	"sdk\vgui\sdk_backgroundpanel.h"
+				$File	"sdk\vgui\sdk_scoreboard.cpp"
+				$File	"sdk\vgui\sdk_scoreboard.h"
+				$File	"sdk\vgui\sdk_spectatorgui.cpp"
+				$File	"sdk\vgui\sdk_spectatorgui.h"
+				$File	"sdk\vgui\sdk_textwindow.cpp"
+				$File	"sdk\vgui\sdk_textwindow.h"
+				$File	"sdk\vgui\sdkviewport.cpp"
+				$File	"sdk\vgui\sdkviewport.h"
+				$File	"sdk\vgui\vgui_rootpanel_sdk.cpp"
+				$File	"sdk\vgui\vgui_rootpanel_sdk.h"
+			}
+
+			$Folder	"Hud Elements"
+			{
+				$File	"sdk\hud\hud_sdkdeathnotice.cpp"
+				$File	"sdk\hud\sdk_hud_ammo.cpp"
+				$File	"sdk\hud\sdk_hud_armor.cpp"
+				$File	"sdk\hud\sdk_hud_chat.cpp"
+				$File	"sdk\hud\sdk_hud_chat.h"
+				$File	"sdk\hud\sdk_hud_damage.cpp"
+				$File	"sdk\hud\sdk_hud_health.cpp"
+				$File	"sdk\hud\sdk_hud_message.cpp"
+				$File	"sdk\hud\sdk_hud_stamina.cpp"
+				$File	"sdk\hud\sdk_hud_stamina.h"
+				$File	"sdk\hud\sdk_hud_targetid.cpp"
+				$File	"sdk\hud\sdk_hud_weaponselection.cpp"				
+			}
+
+			$Folder	"Player"
+			{
+				$File	"sdk\c_sdk_player.cpp"
+				$File	"sdk\c_sdk_player.h"
+				$File	"sdk\c_sdk_player_resource.cpp"
+				$File	"sdk\c_sdk_player_resource.h"
+				$File	"$SRCDIR\game\shared\sdk\sdk_gamemovement.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_player_shared.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_playeranimstate.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_playeranimstate.h"
+				$File	"$SRCDIR\game\shared\sdk\sdk_playerclass_info_parse.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_playerclass_info_parse.h"					
+			}
+
+			$Folder	"Rules"
+			{
+				$File	"$SRCDIR\game\shared\sdk\sdk_gamerules.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_gamerules.h"			
+			}
+
+			$Folder	"Weapons"
+			{
+				$File	"$SRCDIR\game\shared\sdk\sdk_basegrenade_projectile.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_basegrenade_projectile.h"
+				$File	"sdk\sdk_fx_impacts.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_fx_shared.cpp"		
+				$File	"$SRCDIR\game\shared\sdk\sdk_fx_shared.h"
+				$File	"sdk\sdk_fx_tracers.cpp"	
+				$File	"sdk\sdk_fx_weaponfx.cpp"	
+				$File	"$SRCDIR\game\shared\sdk\sdk_weapon_melee.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_weapon_melee.h"
+				$File	"$SRCDIR\game\shared\sdk\sdk_weapon_parse.cpp"
+				$File	"$SRCDIR\game\shared\sdk\sdk_weapon_parse.h"	
+				$File	"$SRCDIR\game\shared\sdk\weapon_basesdkgrenade.cpp"
+				$File	"$SRCDIR\game\shared\sdk\weapon_basesdkgrenade.h"
+				$File	"$SRCDIR\game\shared\sdk\weapon_crowbar.cpp"
+				$File	"$SRCDIR\game\shared\sdk\weapon_grenade.cpp"
+				$File	"$SRCDIR\game\shared\sdk\weapon_grenade.h"
+				$File	"$SRCDIR\game\shared\sdk\weapon_mp5.cpp"
+				$File	"$SRCDIR\game\shared\sdk\weapon_pistol.cpp"
+				$File	"$SRCDIR\game\shared\sdk\weapon_sdkbase.cpp"
+				$File	"$SRCDIR\game\shared\sdk\weapon_sdkbase.h"
+				$File	"$SRCDIR\game\shared\sdk\weapon_shotgun.cpp"
+			}
+
+			$Folder	"Multiplayer"
+			{
+				$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.cpp"
+				$File	"$SRCDIR\game\shared\Multiplayer\multiplayer_animstate.h"
+			}
+		}
+	}
+	
+	$Folder	"Link Libraries"
+	{
+		$Lib "$LIBCOMMON\jpeglib"
+		$Lib "$LIBPUBLIC\vpklib"
+	}
+}

@@ -1,0 +1,14 @@
+Blob_dx9
+{
+    $translucent         "1"
+    $alphatest           "1"
+    $alphatestreference  "0.5"
+    $armature            "1"
+    $prepass             "1"
+    $armwidthexp         "1.5"
+    $armwidthscale       "1.2"
+    $armwidthbias        "0.2"
+    $uvscale             "0.05"
+    $interior            "0"
+    $selfillumfresnel    "0"
+}

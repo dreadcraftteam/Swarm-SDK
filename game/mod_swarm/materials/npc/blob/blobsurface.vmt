@@ -1,0 +1,21 @@
+Blob_dx9
+{
+    $basetexture         "npc/blob/blobsurface"
+    $normalmap           "npc/blob/blobsurface_normal"
+	$opacitytexture			"npc/blob/blobsurface_opacity_erase"
+    
+    $interior            "1"
+    $interiorcolor       "[0.8 0.3 0.3]"
+    $interiorfogstrength "0.15"
+    $interiorrefractstrength "0.02"
+    $interiorrefractblur "0.2"
+    
+    $phongexponent       "2.0"
+    $phongboost          "0.5"
+    
+    $selfillumfresnel    "1"
+    $selfillumtint       "[0.3 0.8 1.0]"
+    $selfillumfresnelparams "[0.0 0.5 2.0]"
+    
+    $glowscale           "6.0"
+}

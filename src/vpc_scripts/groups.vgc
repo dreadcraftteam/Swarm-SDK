@@ -1,0 +1,32 @@
+//-----------------------------------------------------------------------------
+//	GROUPS.VGC
+//
+//	Group Configurations for all Alien Swarm(TM) Projects
+//-----------------------------------------------------------------------------
+
+$Group "game"
+{
+	"client"
+	"missionchooser"
+	"server"
+}
+
+$Group "shaders"
+{
+	"game_shader_dx9"
+	"shaderlib"
+}
+
+$Group "everything"
+{
+	"client"
+	"fgdlib"
+	"game_shader_dx9"
+	"interfaces"
+	"meshutils"
+	"missionchooser"
+	"responserules_runtime"
+	"server"
+	"shaderlib"
+	"videocfg"
+}

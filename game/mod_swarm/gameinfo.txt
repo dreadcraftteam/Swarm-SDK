@@ -1,0 +1,23 @@
+"GameInfo"
+{
+	"game"		"Alien Swarm Mod"
+	"title"		"    "
+	"type"		"multiplayer_only"
+	InstancePath "tilegen/instances/"
+	
+	SupportsDX8     0
+	
+	"FileSystem"
+	{
+		"SteamAppId"	"630"
+		"ToolsAppId"	"211"
+		
+		"SearchPaths"
+		{
+			"Game"	"|gameinfo_path|."
+			"Game"	"swarm"
+			"Game"	"swarm_base"
+			"Game"	"platform"
+		}
+	}
+}

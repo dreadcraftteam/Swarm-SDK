@@ -1,0 +1,19 @@
+Blob_dx9
+{
+    $translucent         "1"
+    $vertexlit           "1"
+	$basetexture         "npc/blob/blobsurface"
+    $normalmap           "npc/blob/blobsurface_normal"
+    $armature            "1"
+    $armwidthexp         "1.5"
+    $armwidthscale       "1.2"
+    $armwidthbias        "0.2"
+    $uvscale             "0.05"
+    $armcolor            "[1.0 0.9 0.8]"
+    $animatearmpulses    "1"
+    $glowscale           "1.0"
+    $selfillumfresnel    "1"
+    $selfillumtint       "[0.5 1.0 0.8]"
+    $selfillumfresnelparams "[0.0 0.5 2.0]"
+    $interior            "0"
+}

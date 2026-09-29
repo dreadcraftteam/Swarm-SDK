@@ -1,0 +1,34 @@
+//========= Copyright Valve Corporation, All rights reserved. ============//
+//
+// Purpose: Blobulator surface rendering
+//
+//========================================================================//
+
+#ifndef C_SURFACERENDER_H
+#define C_SURFACERENDER_H
+
+#include "cbase.h"
+
+#include "view.h"
+#include "view_shared.h"
+#include "iviewrender.h"
+#include "engine/ivdebugoverlay.h"
+
+#ifdef USE_BLOBULATOR
+	#include "../../common/blobulator/Implicit/SweepRenderer.h"
+	#include "../../common/blobulator/Implicit/ProjectingParticleCache.h"
+	#include "../../common/blobulator/Implicit/ImpRenderer.h"
+	#include "../../common/blobulator/Implicit/ImpTiler.h"
+	#include "../../common/blobulator/Implicit/UserFunctions.h"
+	#include "../../common/blobulator/VertexBuffers/IndexTriVertexBuffer.h"
+#endif // USE_BLOBULATOR
+
+void Surface_Draw(IClientRenderable* pClientRenderable, const Vector& vecRenderOrigin, IMaterial* pMaterial, float flCubeWidth, bool bSurfaceNoParticleCull = false);
+void Surface_SafeLightCubeUpdate(const Vector& vecRenderOrigin, Vector4D* cachedCubeColours);
+
+#ifdef USE_BLOBULATOR
+extern CUtlVector<ImpParticleWithFourInterpolants, CUtlMemoryAligned<ImpParticleWithFourInterpolants, 16>> g_SurfaceRenderParticles;
+extern const QAngle g_SurfaceRenderAnglesAngles;
+#endif // USE_BLOBULATOR
+
+#endif // C_SURFACERENDER_H
