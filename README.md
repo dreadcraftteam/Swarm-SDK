@@ -4,10 +4,10 @@ This project was created to simplify the creation of your modifications and game
 Pull requests are welcome!
 
 ## :chart_with_upwards_trend: Features
-- Shared ASW gameui in client (sdk template and swarm)
-- Scratch SDK (sdk template from source sdk 2007 with many improvements)
-- Restored blobulator functionality (and headers)
-- Ability to compile shader binaries
+- Shared ASW gameui in client
+- Scratch SDK (sdk template from SDK 2007 with many improvements)
+- Restored blobulator functionality
+- Ability to compile shader binaries (game_shader_dx9 with HLSL shaders)
 - Many sdk improvements and fixes
 
 ## :pushpin: Current tasks
