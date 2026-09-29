@@ -1,6 +1,0 @@
-"SpriteCard"
-{
-	$basetexture "particle/testSequence/testSequence.vtf"
-	$RAMPTEXTURE "particle/fireGradient.vtf"
-	$EXTRACTGREENALPHA 1
-}

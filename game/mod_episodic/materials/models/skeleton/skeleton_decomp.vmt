@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture"	"Models/skeleton/skeleton_decomp"
-	"$surfaceprop"	"default"
-	"$model"	1
-}

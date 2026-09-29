@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture"	"Models/props_foliage/detail_clusters"
-	"$surfaceprop"	"grass"
-	"$translucent"	1
-}

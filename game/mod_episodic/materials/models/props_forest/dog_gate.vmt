@@ -1,8 +1,0 @@
-
-"VertexLitGeneric"
-{
-	"$surfaceprop"	"metal"
-	"$model" "1"
-	"$baseTexture" "Models/props_forest/dog_gate"
-	
-}

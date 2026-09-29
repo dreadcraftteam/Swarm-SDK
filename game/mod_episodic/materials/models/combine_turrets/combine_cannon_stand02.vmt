@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture"	"Models/combine_turrets/combine_cannon_stand02"	
-
-	"$selfillum" "1"
-}

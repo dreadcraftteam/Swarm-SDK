@@ -1,5 +1,0 @@
-"SpriteCard"
-{
-	$basetexture "particle/smoke2/smoke2"
-	$depthblend 1
-}

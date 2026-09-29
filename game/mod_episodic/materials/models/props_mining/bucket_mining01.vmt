@@ -1,6 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture"	"Models/props_mining/bucket_mining01"
-	"$surfaceprop"	"metal"
-	"$bumpmap"	"Models/props_mining/bucket_mining01_normal"
-}

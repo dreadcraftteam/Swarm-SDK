@@ -1,8 +1,0 @@
-"VertexLitGeneric"
-{
-	"$basetexture"	"Models/Magnusson_teleporter/magnusson_teleporter_fxglow_off"
-	"$surfaceprop"	"Metal"
-	"$model" "1"
-
-}
-

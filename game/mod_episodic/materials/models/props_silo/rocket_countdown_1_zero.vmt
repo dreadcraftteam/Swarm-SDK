@@ -1,6 +1,0 @@
-"UnlitGeneric"
-{
-	"$basetexture"	"Models/props_silo/rocket_countdown_zero"
-	"$surfaceprop"	"default"
-	"$model" "1"
-}

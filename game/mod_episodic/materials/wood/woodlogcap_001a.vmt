@@ -1,7 +1,0 @@
-"LightmappedGeneric"
-{
-	// Original shader: BaseTimesLightmap
-	"$basetexture" "Wood/woodlogcap_001a"
-	"$surfaceprop" "wood"
-	"%keywords" "ep2"
-}
