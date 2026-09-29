@@ -19,6 +19,9 @@
 #include "in_buttons.h"
 #include "physics_prop_ragdoll.h"
 #include "particle_parse.h"
+#include "eventqueue.h"
+#include "player_pickup.h"
+#include "physics.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -31,7 +34,7 @@ ConVar SDK_ShowStateTransitions( "sdk_ShowStateTransitions", "-2", FCVAR_CHEAT, 
 EHANDLE g_pLastDMSpawn;
 
 //--------------------------------------------------------------------------------
-// Player animation event. Sent to the client when a player fires, jumps, reloads, etc..
+// Player animation event.
 //--------------------------------------------------------------------------------
 class CTEPlayerAnimEvent : public CBaseTempEntity
 {
@@ -59,8 +62,6 @@ static CTEPlayerAnimEvent g_TEPlayerAnimEvent( "PlayerAnimEvent" );
 void TE_PlayerAnimEvent( CBasePlayer *pPlayer, PlayerAnimEvent_t event, int nData )
 {
 	CPVSFilter filter( (const Vector&)pPlayer->EyePosition() );
-
-	//Tony; pull the player who is doing it out of the recipientlist, this is predicted!!
 	filter.RemoveRecipient( pPlayer );
 
 	g_TEPlayerAnimEvent.m_hPlayer = pPlayer;
@@ -103,24 +104,17 @@ extern void SendProxy_Origin( const SendProp *pProp, const void *pStruct, const 
 
 BEGIN_SEND_TABLE_NOBASE( CSDKPlayer, DT_SDKLocalPlayerExclusive )
 	SendPropInt( SENDINFO( m_iShotsFired ), 8, SPROP_UNSIGNED ),
-	// send a hi-res origin to the local player for use in prediction
 	SendPropVector	(SENDINFO(m_vecOrigin), -1,  SPROP_NOSCALE|SPROP_CHANGES_OFTEN, 0.0f, HIGH_DEFAULT, SendProxy_Origin ),
-
 	SendPropFloat( SENDINFO_VECTORELEM(m_angEyeAngles, 0), 8, SPROP_CHANGES_OFTEN, -90.0f, 90.0f ),
-//	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 1), 10, SPROP_CHANGES_OFTEN ),
-
 	SendPropInt( SENDINFO( m_ArmorValue ), 8, SPROP_UNSIGNED ),
 END_SEND_TABLE()
 
 BEGIN_SEND_TABLE_NOBASE( CSDKPlayer, DT_SDKNonLocalPlayerExclusive )
-	// send a lo-res origin to other players
 	SendPropVector	(SENDINFO(m_vecOrigin), -1,  SPROP_COORD_MP_LOWPRECISION|SPROP_CHANGES_OFTEN, 0.0f, HIGH_DEFAULT, SendProxy_Origin ),
-
 	SendPropFloat( SENDINFO_VECTORELEM(m_angEyeAngles, 0), 8, SPROP_CHANGES_OFTEN, -90.0f, 90.0f ),
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 1), 10, SPROP_CHANGES_OFTEN ),
 END_SEND_TABLE()
 
-// main table
 IMPLEMENT_SERVERCLASS_ST( CSDKPlayer, DT_SDKPlayer )
 	SendPropExclude( "DT_BaseAnimating", "m_flPoseParameter" ),
 	SendPropExclude( "DT_BaseAnimating", "m_flPlaybackRate" ),	
@@ -131,16 +125,12 @@ IMPLEMENT_SERVERCLASS_ST( CSDKPlayer, DT_SDKPlayer )
 	SendPropExclude( "DT_BaseAnimatingOverlay", "overlay_vars" ),
 	SendPropExclude( "DT_BaseEntity", "m_vecOrigin" ),
 	
-	// playeranimstate and clientside animation takes care of these on the client
 	SendPropExclude( "DT_ServerAnimationData" , "m_flCycle" ),	
 	SendPropExclude( "DT_AnimTimeMustBeFirst" , "m_flAnimTime" ),
 
-	// Data that only gets sent to the local player.
 	SendPropDataTable( SENDINFO_DT( m_Shared ), &REFERENCE_SEND_TABLE( DT_SDKPlayerShared ) ),
 
-	// Data that only gets sent to the local player.
 	SendPropDataTable( "sdklocaldata", 0, &REFERENCE_SEND_TABLE(DT_SDKLocalPlayerExclusive), SendProxy_SendLocalDataTable ),
-	// Data that gets sent to all other players
 	SendPropDataTable( "sdknonlocaldata", 0, &REFERENCE_SEND_TABLE(DT_SDKNonLocalPlayerExclusive), SendProxy_SendNonLocalDataTable ),
 
 	SendPropEHandle( SENDINFO( m_hRagdoll ) ),
@@ -156,17 +146,13 @@ public:
 	DECLARE_CLASS( CSDKRagdoll, CBaseAnimatingOverlay );
 	DECLARE_SERVERCLASS();
 
-	// Transmit ragdolls to everyone.
 	virtual int UpdateTransmitState()
 	{
 		return SetTransmitState( FL_EDICT_ALWAYS );
 	}
 
 public:
-	// In case the client has the player entity, we transmit the player index.
-	// In case the client doesn't have it, we transmit the player's model index, origin, and angles
-	// so they can create a ragdoll in the right place.
-	CNetworkHandle( CBaseEntity, m_hPlayer );	// networked entity handle 
+	CNetworkHandle( CBaseEntity, m_hPlayer );
 	CNetworkVector( m_vecRagdollVelocity );
 	CNetworkVector( m_vecRagdollOrigin );
 };
@@ -200,7 +186,6 @@ void CSDKPlayer::SetupVisibility( CBaseEntity *pViewEntity, unsigned char *pvs, 
 
 CSDKPlayer::CSDKPlayer()
 {
-	//Tony; create our player animation state.
 	m_PlayerAnimState = CreateSDKPlayerAnimState( this );
 	m_iLastWeaponFireUsercmd = 0;
 	
@@ -210,8 +195,10 @@ CSDKPlayer::CSDKPlayer()
 
 	m_angEyeAngles.Init();
 
-	m_pCurStateInfo = NULL;	// no state yet
+	m_pCurStateInfo = NULL;
 
+	m_bPlayUseDenySound = false;
+	m_flTimeUseSuspended = 0.0f;
 }
 
 CSDKPlayer::~CSDKPlayer()
@@ -235,18 +222,12 @@ void CSDKPlayer::PreThink(void)
 {
 	State_PreThink();
 
-	// Riding a vehicle?
 	if ( IsInAVehicle() )	
 	{
-		// make sure we update the client, check for timed damage and update suit even if we are in a vehicle
 		UpdateClientData();		
 		CheckTimeBasedDamage();
-
-		// Allow the suit to recharge when in the vehicle.
 		CheckSuitUpdate();
-		
 		WaterMove();	
-
 		return;
 	}
 
@@ -261,16 +242,21 @@ void CSDKPlayer::PostThink()
 	angles[PITCH] = 0;
 	SetLocalAngles( angles );
 	
-	// Store the eye angles pitch so the client can compute its animation state correctly.
 	m_angEyeAngles = EyeAngles();
 
-    m_PlayerAnimState->Update( m_angEyeAngles[YAW], m_angEyeAngles[PITCH] );
+	m_PlayerAnimState->Update( m_angEyeAngles[YAW], m_angEyeAngles[PITCH] );
+
+	if (m_hUseEntity != NULL)
+	{
+		if (!m_hUseEntity->OnControls(this) || (GetActiveWeapon() && GetActiveWeapon()->GetActivity() == ACT_VM_HOLSTER))
+		{
+			ClearUseEntity();
+		}
+	}
 }
 
 void CSDKPlayer::Precache()
 {
-
-	//Tony; go through our list of player models that we may be using and cache them
 	int i = 0;
 	while( pszPossiblePlayerModels[i] != NULL )
 	{
@@ -282,6 +268,10 @@ void CSDKPlayer::Precache()
 	PrecacheScriptSound( "Player.JumpLanding" );
 	PrecacheScriptSound( "Player.FlashlightOn" );
 	PrecacheScriptSound( "Player.FlashlightOff" );
+
+	PrecacheScriptSound("HL2Player.Use");
+	PrecacheScriptSound("HL2Player.UseDeny");
+	PrecacheScriptSound("HL2Player.TrainUse");
 
 	BaseClass::Precache();
 }
@@ -322,14 +312,13 @@ void CSDKPlayer::GiveDefaultItems()
 
 void CSDKPlayer::SDKPushawayThink(void)
 {
-	// Push physics props out of our way.
 	PerformObstaclePushaway( this );
 	SetNextThink( gpGlobals->curtime + PUSHAWAY_THINK_INTERVAL, SDK_PUSHAWAY_THINK_CONTEXT );
 }
 
 void CSDKPlayer::Spawn()
 {
-	SetModel( SDK_PLAYER_MODEL );	//Tony; basically, leave this alone ;) unless you're not using classes or teams, then you can change it to whatever.
+	SetModel( SDK_PLAYER_MODEL );
 	
 	SetBloodColor( BLOOD_COLOR_RED );
 	
@@ -339,6 +328,9 @@ void CSDKPlayer::Spawn()
 	m_hRagdoll = NULL;
 	
 	BaseClass::Spawn();
+
+	m_bPlayUseDenySound = false;
+	m_flTimeUseSuspended = 0.0f;
 	
 	m_iLastWeaponFireUsercmd = 0;
 
@@ -354,10 +346,9 @@ void CSDKPlayer::Spawn()
 	InitSprinting();
 #endif
 
-	// update this counter, used to not interp players when they spawn
 	m_bSpawnInterpCounter = !m_bSpawnInterpCounter;
 
-	InitSpeeds(); //Tony; initialize player speeds.
+	InitSpeeds();
 
 	SetArmorValue(SpawnArmorValue());
 
@@ -370,10 +361,9 @@ void CSDKPlayer::Spawn()
 
 bool CSDKPlayer::SelectSpawnSpot( const char *pEntClassName, CBaseEntity* &pSpot )
 {
-	// Find the next spawn spot.
 	pSpot = gEntList.FindEntityByClassname( pSpot, pEntClassName );
 
-	if ( pSpot == NULL ) // skip over the null point
+	if ( pSpot == NULL )
 		pSpot = gEntList.FindEntityByClassname( pSpot, pEntClassName );
 
 	CBaseEntity *pFirstSpot = pSpot;
@@ -381,7 +371,6 @@ bool CSDKPlayer::SelectSpawnSpot( const char *pEntClassName, CBaseEntity* &pSpot
 	{
 		if ( pSpot )
 		{
-			// check if pSpot is valid
 			if ( g_pGameRules->IsSpawnPointValid( pSpot, this ) )
 			{
 				if ( pSpot->GetAbsOrigin() == Vector( 0, 0, 0 ) )
@@ -389,26 +378,19 @@ bool CSDKPlayer::SelectSpawnSpot( const char *pEntClassName, CBaseEntity* &pSpot
 					pSpot = gEntList.FindEntityByClassname( pSpot, pEntClassName );
 					continue;
 				}
-
-				// if so, go to pSpot
 				return true;
 			}
 		}
-		// increment pSpot
 		pSpot = gEntList.FindEntityByClassname( pSpot, pEntClassName );
-	} while ( pSpot != pFirstSpot ); // loop if we're not back to the start
+	} while ( pSpot != pFirstSpot );
 
 	DevMsg("CSDKPlayer::SelectSpawnSpot: couldn't find valid spawn point.\n");
 
 	return true;
 }
 
-//-----------------------------------------------------------------------------
-// Purpose: 
-//-----------------------------------------------------------------------------
 void CSDKPlayer::CommitSuicide( bool bExplode /* = false */, bool bForce /*= false*/ )
 {
-	// Don't suicide if we haven't picked a class for the first time, or we're not in active state
 	if (State_Get() != STATE_ACTIVE)
 		return;
 	
@@ -424,7 +406,6 @@ void CSDKPlayer::InitialSpawn( void )
 
 void CSDKPlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr )
 {
-	//Tony; disable prediction filtering, and call the baseclass.
 	CDisablePredictionFiltering disabler;
 	BaseClass::TraceAttack( inputInfo, vecDir, ptr );
 }
@@ -447,7 +428,6 @@ int CSDKPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 
 	bool bCheckFriendlyFire = false;
 	bool bFriendlyFire = friendlyfire.GetBool();
-	//Tony; only check teams in teamplay
 	if ( gpGlobals->teamplay )
 		bCheckFriendlyFire = true;
 
@@ -457,23 +437,18 @@ int CSDKPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		{
 			if ( pInflictor->GetTeamNumber() == GetTeamNumber() && bCheckFriendlyFire)
 			{
-				flDamage *= 0.35; // bullets hurt teammates less
+				flDamage *= 0.35;
 			}
 		}
 
-		// keep track of amount of damage last sustained
 		m_lastDamageAmount = flDamage;
-		// Deal with Armour
 		if ( ArmorValue() && !( info.GetDamageType() & (DMG_FALL | DMG_DROWN)) )
 		{
 			float flNew = flDamage * flArmorRatio;
 			float flArmor = (flDamage - flNew) * flArmorBonus;
 
-			// Does this use more armor than we have?
 			if (flArmor > ArmorValue() )
 			{
-				//armorHit = (int)(flArmor);
-
 				flArmor = ArmorValue();
 				flArmor *= (1/flArmorBonus);
 				flNew = flDamage - flArmor;
@@ -487,7 +462,6 @@ int CSDKPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 					 flArmor = 1;
 
 				SetArmorValue( oldValue - flArmor );
-				//armorHit = oldValue - (int)(pev->armorvalue);
 			}
 			
 			flDamage = flNew;
@@ -495,7 +469,6 @@ int CSDKPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 			info.SetDamage( flDamage );
 		}
 
-		// round damage to integer
 		info.SetDamage( (int)flDamage );
 
 		if ( info.GetDamage() <= 0 )
@@ -508,7 +481,6 @@ int CSDKPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 			WRITE_VEC3COORD( info.GetInflictor()->WorldSpaceCenter() );
 		MessageEnd();
 
-		// Do special explosion damage effect
 		if ( info.GetDamageType() & DMG_BLAST )
 		{
 			OnDamagedByExplosion( info );
@@ -526,13 +498,10 @@ int CSDKPlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 
 int CSDKPlayer::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 {
-	// set damage type sustained
 	m_bitsDamageType |= info.GetDamageType();
 
 	if ( !CBaseCombatCharacter::OnTakeDamage_Alive( info ) )
 		return 0;
-
-	// fire global game event
 
 	IGameEvent * event = gameeventmanager->CreateEvent( "player_hurt" );
 
@@ -557,14 +526,13 @@ int CSDKPlayer::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		if ( attacker->IsPlayer() )
 		{
 			CBasePlayer *player = ToBasePlayer( attacker );
-			event->SetInt("attacker", player->GetUserID() ); // hurt by other player
+			event->SetInt("attacker", player->GetUserID() );
 
 			CBaseEntity *pInflictor = info.GetInflictor();
 			if ( pInflictor )
 			{
 				if ( pInflictor == player )
 				{
-					// If the inflictor is the killer,  then it must be their current weapon doing the damage
 					if ( player->GetActiveWeapon() )
 					{
 						weaponName = player->GetActiveWeapon()->GetClassname();
@@ -572,20 +540,20 @@ int CSDKPlayer::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 				}
 				else
 				{
-					weaponName = STRING( pInflictor->m_iClassname );  // it's just that easy
+					weaponName = STRING( pInflictor->m_iClassname );
 				}
 			}
 		}
 		else
 		{
-			event->SetInt("attacker", 0 ); // hurt by "world"
+			event->SetInt("attacker", 0 );
 		}
 
 		if ( strncmp( weaponName, "weapon_", 7 ) == 0 )
 		{
 			weaponName += 7;
 		}
-		else if( strncmp( weaponName, "grenade", 9 ) == 0 )	//"grenade_projectile"	
+		else if( strncmp( weaponName, "grenade", 9 ) == 0 )	
 		{
 			weaponName = "grenade";
 		}
@@ -606,13 +574,10 @@ bool CSDKPlayer::BecomeRagdollOnClient( const Vector &force )
 	if ( !CanBecomeRagdoll() ) 
 		return false;
 
-	// Become server-side ragdoll if we're flagged to do it
-	//if ( m_spawnflags & SF_ANTLIONGUARD_SERVERSIDE_RAGDOLL )
 	if (c_server_ragdoll.GetBool())
 	{
 		CTakeDamageInfo	info;
 
-		// Fake the info
 		info.SetDamageType( DMG_GENERIC );
 		info.SetDamageForce( force );
 		info.SetDamagePosition( WorldSpaceCenter() );		
@@ -625,14 +590,7 @@ bool CSDKPlayer::BecomeRagdollOnClient( const Vector &force )
 		FixupBurningServerRagdoll( pRagdoll );
 		PhysSetEntityGameFlags( pRagdoll, FVPHYSICS_NO_SELF_COLLISIONS );
 
-		//CBaseEntity *pRagdoll = CreateServerRagdoll( this, 0, info, COLLISION_GROUP_NONE );
-
-		// Transfer our name to the new ragdoll
 		pRagdoll->SetName( GetEntityName() );
-		//pRagdoll->SetCollisionGroup( COLLISION_GROUP_DEBRIS );
-		
-		// Get rid of our old body
-		//UTIL_Remove(this);
 		RemoveDeferred();
 
 		return true;
@@ -645,32 +603,21 @@ void CSDKPlayer::Event_Killed( const CTakeDamageInfo &info )
 {
 	ThrowActiveWeapon();
 
-	// show killer in death cam mode
-	// chopped down version of SetObserverTarget without the team check
 	if( info.GetAttacker() && info.GetAttacker()->IsPlayer() )
 	{
-		// set new target
 		m_hObserverTarget.Set( info.GetAttacker() ); 
-
-		// reset fov to default
 		SetFOV( this, 0 );
 	}
 	else
 		m_hObserverTarget.Set( NULL );
 
-	// Note: since we're dead, it won't draw us on the client, but we don't set EF_NODRAW
-	// because we still want to transmit to the clients in our PVS.
-	//CreateRagdollEntity();
+	State_Transition( STATE_DEATH_ANIM );
 
-	State_Transition( STATE_DEATH_ANIM );	// Transition into the dying state.
-
-	//Tony; after transition, remove remaining items
 	RemoveAllItems( true );
 
 	FlashlightTurnOff();
 
 	BaseClass::Event_Killed( info );
-
 }
 
 void CSDKPlayer::ThrowActiveWeapon(void)
@@ -692,8 +639,7 @@ void CSDKPlayer::ThrowActiveWeapon(void)
 void CSDKPlayer::Weapon_Equip( CBaseCombatWeapon *pWeapon )
 {
 	BaseClass::Weapon_Equip( pWeapon );
-	dynamic_cast<CWeaponSDKBase*>(pWeapon)->SetDieThink( false );	//Make sure the context think for removing is gone!!
-
+	dynamic_cast<CWeaponSDKBase*>(pWeapon)->SetDieThink( false );
 }
 
 void CSDKPlayer::SDKThrowWeapon( CWeaponSDKBase *pWeapon, const Vector &vecForward, const QAngle &vecAngles, float flDiameter  )
@@ -701,7 +647,6 @@ void CSDKPlayer::SDKThrowWeapon( CWeaponSDKBase *pWeapon, const Vector &vecForwa
 	Vector vecOrigin;
 	CollisionProp()->RandomPointInBounds( Vector( 0.5f, 0.5f, 0.5f ), Vector( 0.5f, 0.5f, 1.0f ), &vecOrigin );
 
-	// Nowhere in particular; just drop it.
 	Vector vecThrow;
 	SDKThrowWeaponDir( pWeapon, vecForward, &vecThrow );
 
@@ -713,7 +658,6 @@ void CSDKPlayer::SDKThrowWeapon( CWeaponSDKBase *pWeapon, const Vector &vecForwa
 		
 	if ( tr.startsolid || tr.allsolid || ( tr.fraction < 1.0f && tr.m_pEnt != pWeapon ) )
 	{
-		//FIXME: Throw towards a known safe spot?
 		vecThrow.Negate();
 		VectorMA( vecOrigin, flDiameter, vecThrow, vecOffsetOrigin );
 	}
@@ -743,12 +687,11 @@ void CSDKPlayer::SDKThrowWeaponDir( CWeaponSDKBase *pWeapon, const Vector &vecFo
 
 void CSDKPlayer::PlayerDeathThink()
 {
-	//overridden, do nothing - our states handle this now
+	// overridden, do nothing
 }
 
 void CSDKPlayer::CreateRagdollEntity()
 {
-	// If we already have a ragdoll, don't make another one.
 	CSDKRagdoll *pRagdoll = dynamic_cast< CSDKRagdoll* >( m_hRagdoll.Get() );
 
 	if( pRagdoll )
@@ -760,7 +703,6 @@ void CSDKPlayer::CreateRagdollEntity()
 
 	if ( !pRagdoll )
 	{
-		// create a new one
 		pRagdoll = dynamic_cast< CSDKRagdoll* >( CreateEntityByName( "sdk_ragdoll" ) );
 	}
 
@@ -774,13 +716,9 @@ void CSDKPlayer::CreateRagdollEntity()
 		pRagdoll->m_vecForce = Vector(0,0,0);
 	}
 
-	// ragdolls will be removed on round restart automatically
 	m_hRagdoll = pRagdoll;
 }
 
-//-----------------------------------------------------------------------------
-// Purpose: Destroy's a ragdoll, called when a player is disconnecting.
-//-----------------------------------------------------------------------------
 void CSDKPlayer::DestroyRagdoll( void )
 {
 	CSDKRagdoll *pRagdoll = dynamic_cast<CSDKRagdoll*>( m_hRagdoll.Get() );	
@@ -793,7 +731,7 @@ void CSDKPlayer::DestroyRagdoll( void )
 void CSDKPlayer::DoAnimationEvent( PlayerAnimEvent_t event, int nData )
 {
 	m_PlayerAnimState->DoAnimationEvent( event, nData );
-	TE_PlayerAnimEvent( this, event, nData );	// Send to any clients who can see this guy.
+	TE_PlayerAnimEvent( this, event, nData );
 }
 
 CWeaponSDKBase* CSDKPlayer::GetActiveSDKWeapon() const
@@ -880,16 +818,13 @@ bool CSDKPlayer::ClientCommand( const CCommand &args )
 	}
 	else if ( FStrEq( pcmd, "spectate" ) )
 	{
-		// instantly join spectators
 		HandleCommand_JoinTeam( TEAM_SPECTATOR );
 		return true;
 	}
 	else if ( FStrEq( pcmd, "joingame" ) )
 	{
-		// player just closed MOTD dialog
 		if ( m_iPlayerState == STATE_WELCOME )
 		{
-			// Tony; using teams, go to picking team.
 			State_Transition( STATE_ACTIVE );
 		}
 		
@@ -916,8 +851,6 @@ bool CSDKPlayer::ClientCommand( const CCommand &args )
 	return BaseClass::ClientCommand( args );
 }
 
-// returns true if the selection has been handled and the player's menu 
-// can be closed...false if the menu should be displayed again
 bool CSDKPlayer::HandleCommand_JoinTeam( int team )
 {
 	CSDKGameRules *mp = SDKGameRules();
@@ -930,25 +863,20 @@ bool CSDKPlayer::HandleCommand_JoinTeam( int team )
 
 	if ( team == TEAM_UNASSIGNED )
 	{
-		// Attempt to auto-select a team, may set team to T, CT or SPEC
 		team = mp->SelectDefaultTeam();
 
 		if ( team == TEAM_UNASSIGNED )
 		{
-			// still team unassigned, try to kick a bot if possible	
-			 
 			ClientPrint( this, HUD_PRINTTALK, "#All_Teams_Full" );
-
 			team = TEAM_SPECTATOR;
 		}
 	}
 
 	if ( team == iOldTeam )
-		return true;	// we wouldn't change the team
+		return true;
 
 	if ( team == TEAM_SPECTATOR )
 	{
-		// Prevent this if the cvar is set
 		if ( !mp_allowspectators.GetInt() && !IsHLTV() )
 		{
 			ClientPrint( this, HUD_PRINTTALK, "#Cannot_Be_Spectator" );
@@ -961,16 +889,12 @@ bool CSDKPlayer::HandleCommand_JoinTeam( int team )
 		return true;
 	}
 	
-	// Switch their actual team...
 	ChangeTeam( team );
 
 	return true;
 }
 
 #if defined ( SDK_USE_PRONE )
-//-----------------------------------------------------------------------------
-// Purpose: Initialize prone at spawn.
-//-----------------------------------------------------------------------------
 void CSDKPlayer::InitProne( void )
 {
 	m_Shared.SetProne( false, true );
@@ -984,15 +908,11 @@ void CSDKPlayer::InitSprinting(void)
 	m_Shared.SetSprinting(false);
 }
 
-//-----------------------------------------------------------------------------
-// Purpose: Returns whether or not we are allowed to sprint now.
-//-----------------------------------------------------------------------------
 bool CSDKPlayer::CanSprint()
 {
 	return (
-		//!IsWalking() &&									// Not if we're walking
-		!(m_Local.m_bDucked && !m_Local.m_bDucking) &&	// Nor if we're ducking
-		(GetWaterLevel() != 3));							// Certainly not underwater
+		!(m_Local.m_bDucked && !m_Local.m_bDucking) &&
+		(GetWaterLevel() != 3));
 }
 #endif // SDK_USE_SPRINTING
 
@@ -1018,7 +938,6 @@ void CSDKPlayer::State_Enter( SDKPlayerState newState )
 			Msg( "ShowStateTransitions: entering #%d\n", newState );
 	}
 	
-	// Initialize the new state.
 	if ( m_pCurStateInfo && m_pCurStateInfo->pfnEnterState )
 		(this->*m_pCurStateInfo->pfnEnterState)();
 }
@@ -1041,7 +960,6 @@ void CSDKPlayer::State_PreThink()
 
 CSDKPlayerStateInfo* CSDKPlayer::State_LookupInfo( SDKPlayerState state )
 {
-	// This table MUST match the 
 	static CSDKPlayerStateInfo playerStateInfos[] =
 	{
 		{ STATE_ACTIVE,			"STATE_ACTIVE",			&CSDKPlayer::State_Enter_ACTIVE, NULL, &CSDKPlayer::State_PreThink_ACTIVE },
@@ -1075,16 +993,13 @@ void CSDKPlayer::PhysObjectWake()
 
 void CSDKPlayer::State_Enter_WELCOME()
 {
-	// Important to set MOVETYPE_NONE or our physics object will fall while we're sitting at one of the intro cameras.
 	SetMoveType( MOVETYPE_NONE );
 	AddSolidFlags( FSOLID_NOT_SOLID );
 
 	PhysObjectSleep();
 
-	// Show info panel
 	if ( IsBot() )
 	{
-		// If they want to auto join a team for debugging, pretend they clicked the button.
 		CCommand args;
 		args.Tokenize( "joingame" );
 		ClientCommand( args );
@@ -1094,18 +1009,15 @@ void CSDKPlayer::State_Enter_WELCOME()
 		const ConVar *hostname = cvar->FindVar( "hostname" );
 		const char *title = (hostname) ? hostname->GetString() : "MESSAGE OF THE DAY";
 
-		// open info panel on client showing MOTD:
 		KeyValues *data = new KeyValues("data");
-		data->SetString( "title", title );		// info panel title
-		data->SetString( "type", "1" );			// show userdata from stringtable entry
-		data->SetString( "msg",	"motd" );		// use this stringtable entry
-		data->SetString( "cmd", "joingame" );// exec this command if panel closed
+		data->SetString( "title", title );
+		data->SetString( "type", "1" );
+		data->SetString( "msg",	"motd" );
+		data->SetString( "cmd", "joingame" );
 
 		ShowViewPortPanel( PANEL_INFO, true, data );
 
 		data->deleteThis();
-
-
 	}	
 }
 
@@ -1113,11 +1025,9 @@ void CSDKPlayer::MoveToNextIntroCamera()
 {
 	m_pIntroCamera = gEntList.FindEntityByClassname( m_pIntroCamera, "point_viewcontrol" );
 
-	// if m_pIntroCamera is NULL we just were at end of list, start searching from start again
 	if(!m_pIntroCamera)
 		m_pIntroCamera = gEntList.FindEntityByClassname(m_pIntroCamera, "point_viewcontrol");
 
-	// find the target
 	CBaseEntity *Target = NULL;
 	
 	if( m_pIntroCamera )
@@ -1125,25 +1035,23 @@ void CSDKPlayer::MoveToNextIntroCamera()
 		Target = gEntList.FindEntityByName( NULL, STRING(m_pIntroCamera->m_target) );
 	}
 
-	// if we still couldn't find a camera, goto T spawn
 	if(!m_pIntroCamera)
 		m_pIntroCamera = gEntList.FindEntityByClassname(m_pIntroCamera, "info_player_terrorist");
 
-	SetViewOffset( vec3_origin );	// no view offset
-	UTIL_SetSize( this, vec3_origin, vec3_origin ); // no bbox
+	SetViewOffset( vec3_origin );
+	UTIL_SetSize( this, vec3_origin, vec3_origin );
 
-	if( !Target ) //if there are no cameras(or the camera has no target, find a spawn point and black out the screen
+	if( !Target )
 	{
 		if ( m_pIntroCamera.IsValid() )
 			SetAbsOrigin( m_pIntroCamera->GetAbsOrigin() + VEC_VIEW );
 
 		SetAbsAngles( QAngle( 0, 0, 0 ) );
 		
-		m_pIntroCamera = NULL;  // never update again
+		m_pIntroCamera = NULL;
 		return;
 	}
 	
-
 	Vector vCamera = Target->GetAbsOrigin() - m_pIntroCamera->GetAbsOrigin();
 	Vector vIntroCamera = m_pIntroCamera->GetAbsOrigin();
 	
@@ -1160,7 +1068,6 @@ void CSDKPlayer::MoveToNextIntroCamera()
 
 void CSDKPlayer::State_PreThink_WELCOME()
 {
-	// Update whatever intro camera it's at.
 	if( m_pIntroCamera && (gpGlobals->curtime >= m_fIntroCamTime) )
 	{
 		MoveToNextIntroCamera();
@@ -1171,25 +1078,18 @@ void CSDKPlayer::State_Enter_DEATH_ANIM()
 {
 	if ( HasWeapons() )
 	{
-		// we drop the guns here because weapons that have an area effect and can kill their user
-		// will sometimes crash coming back from CBasePlayer::Killed() if they kill their owner because the
-		// player class sometimes is freed. It's safer to manipulate the weapons once we know
-		// we aren't calling into any of their code anymore through the player pointer.
 		PackDeadPlayerItems();
 	}
 
-	// Used for a timer.
 	m_flDeathTime = gpGlobals->curtime;
 
-	StartObserverMode( OBS_MODE_DEATHCAM );	// go to observer mode
+	StartObserverMode( OBS_MODE_DEATHCAM );
 
-	RemoveEffects( EF_NODRAW );	// still draw player body
+	RemoveEffects( EF_NODRAW );
 }
 
 void CSDKPlayer::State_PreThink_DEATH_ANIM()
 {
-	// If the anim is done playing, go to the next state (waiting for a keypress to 
-	// either respawn the guy or put him into observer mode).
 	if ( GetFlags() & FL_ONGROUND )
 	{
 		float flForward = GetAbsVelocity().Length() - 20;
@@ -1206,19 +1106,16 @@ void CSDKPlayer::State_PreThink_DEATH_ANIM()
 		}
 	}
 
-	if ( gpGlobals->curtime >= (m_flDeathTime + SDK_PLAYER_DEATH_TIME ) )	// let the death cam stay going up to min spawn time.
+	if ( gpGlobals->curtime >= (m_flDeathTime + SDK_PLAYER_DEATH_TIME ) )
 	{
 		m_lifeState = LIFE_DEAD;
-
 		StopAnimation();
-
 		AddEffects( EF_NOINTERP );
 
 		if ( GetMoveType() != MOVETYPE_NONE && (GetFlags() & FL_ONGROUND) )
 			SetMoveType( MOVETYPE_NONE );
 	}
 
-	//Tony; if we're now dead, and not changing classes, spawn
 	if ( m_lifeState == LIFE_DEAD )
 	{
 		State_Transition( STATE_ACTIVE );
@@ -1227,16 +1124,13 @@ void CSDKPlayer::State_PreThink_DEATH_ANIM()
 
 void CSDKPlayer::State_Enter_OBSERVER_MODE()
 {
-	// Always start a spectator session in roaming mode
 	m_iObserverLastMode = OBS_MODE_ROAMING;
 
 	if( m_hObserverTarget == NULL )
 	{
-		// find a new observer target
 		CheckObserverSettings();
 	}
 
-	// Change our observer target to the nearest teammate
 	CTeam *pTeam = GetGlobalTeam( GetTeamNumber() );
 
 	CBasePlayer *pPlayer;
@@ -1272,27 +1166,21 @@ void CSDKPlayer::State_Enter_OBSERVER_MODE()
 
 void CSDKPlayer::State_PreThink_OBSERVER_MODE()
 {
-
-	//Tony; if we're in eye, or chase, validate the target - if it's invalid, find a new one, or go back to roaming
 	if (  m_iObserverMode == OBS_MODE_IN_EYE || m_iObserverMode == OBS_MODE_CHASE )
 	{
-		//Tony; if they're not on a spectating team use the cbaseplayer validation method.
 		if ( GetTeamNumber() != TEAM_SPECTATOR )
 			ValidateCurrentObserverTarget();
 		else
 		{
 			if ( !IsValidObserverTarget( m_hObserverTarget.Get() ) )
 			{
-				// our target is not valid, try to find new target
 				CBaseEntity * target = FindNextObserverTarget( false );
 				if ( target )
 				{
-					// switch to new valid target
 					SetObserverTarget( target );	
 				}
 				else
 				{
-					// let player roam around
 					ForceObserverMode( OBS_MODE_ROAMING );
 				}
 			}
@@ -1307,7 +1195,6 @@ void CSDKPlayer::State_Enter_ACTIVE()
     m_Local.m_iHideHUD = 0;
 	PhysObjectWake();
 
-	//Tony; call spawn again now -- remember; when we add respawn timers etc, to just put them into the spawn queue, and let the queue respawn them.
 	Spawn();
 }
 
@@ -1343,10 +1230,125 @@ void CSDKPlayer::NoteWeaponFired( void )
 
 bool CSDKPlayer::WantsLagCompensationOnEntity( const CBasePlayer *pPlayer, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const
 {
-	// No need to lag compensate at all if we're not attacking in this command and
-	// we haven't attacked recently.
 	if ( !( pCmd->buttons & IN_ATTACK ) && (pCmd->command_number - m_iLastWeaponFireUsercmd > 5) )
 		return false;
 
 	return BaseClass::WantsLagCompensationOnEntity( pPlayer, pCmd, pEntityTransmitBits );
+}
+
+//-----------------------------------------------------------------------------
+// PlayerUse - handles +USE, finds entity, calls AcceptInput("Use")
+//-----------------------------------------------------------------------------
+void CSDKPlayer::PlayerUse(void)
+{
+	// Was use pressed or released?
+	if (!((m_nButtons | m_afButtonPressed | m_afButtonReleased) & IN_USE))
+		return;
+
+	// Tracker 3926:  We can't +USE something if we're climbing a ladder
+	if (GetMoveType() == MOVETYPE_LADDER)
+	{
+		return;
+	}
+
+	if (m_flTimeUseSuspended > gpGlobals->curtime)
+	{
+		// Something has temporarily stopped us being able to USE things.
+		// Obviously, this should be used very carefully.(sjb)
+		return;
+	}
+
+	if (m_afButtonPressed & IN_USE)
+	{
+		// Signal that we want to play the deny sound, unless the user is +USEing on a ladder!
+		// The sound is emitted in ItemPostFrame, since that occurs after GameMovement::ProcessMove which
+		// lets the ladder code unset this flag.
+		m_bPlayUseDenySound = true;
+	}
+
+	BaseClass::PlayerUse();
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CSDKPlayer::PickupObject(CBaseEntity* pObject, bool bLimitMassAndSize)
+{
+	if (!pObject)
+		return;
+
+	if (GetGroundEntity() == pObject)
+		return;
+
+	IPhysicsObject* pPhysics = pObject->VPhysicsGetObject();
+	if (!pPhysics)
+		return;
+
+	if (bLimitMassAndSize)
+	{
+		float flMass = pPhysics->GetMass();
+		if (flMass > 35.0f)
+			return;
+
+		EmitSound("HL2Player.Use");
+
+		const Vector& size = pObject->CollisionProp()->OBBSize();
+		if (size.x > 128.0f || size.y > 128.0f || size.z > 128.0f)
+			return;
+	}
+
+	if (pObject->HasNPCsOnIt())
+		return;
+
+	PlayerPickupObject(this, pObject);
+}
+
+//-----------------------------------------------------------------------------
+bool CSDKPlayer::IsHoldingEntity(CBaseEntity* pEnt)
+{
+	return PlayerPickupControllerIsHoldingEntity(m_hUseEntity, pEnt);
+}
+
+//-----------------------------------------------------------------------------
+float CSDKPlayer::GetHeldObjectMass(IPhysicsObject* pHeldObject)
+{
+	return PlayerPickupGetHeldObjectMass(m_hUseEntity, pHeldObject);
+}
+
+//-----------------------------------------------------------------------------
+void CSDKPlayer::ForceDropOfCarriedPhysObjects(CBaseEntity* pOnlyIfHoldingThis)
+{
+	if (PhysIsInCallback())
+	{
+		variant_t value;
+		g_EventQueue.AddEvent(this, "ForceDropPhysObjects", value, 0.01f, pOnlyIfHoldingThis, this);
+		return;
+	}
+
+	ClearUseEntity();
+}
+
+void CSDKPlayer::ItemPostFrame(void)
+{
+	if (m_hUseEntity == NULL)
+	{
+		BaseClass::ItemPostFrame();
+	}
+	else
+	{
+		CalcViewModelView(EyePosition(), EyeAngles());
+
+		CBaseViewModel* pVM = GetViewModel();
+		if (pVM)
+		{
+			pVM->StudioFrameAdvance();
+			pVM->DispatchAnimEvents(pVM->GetOwningWeapon());
+		}
+
+		m_hUseEntity->Use(this, this, USE_SET, 2);
+	}
+
+	if (m_bPlayUseDenySound)
+	{
+		m_bPlayUseDenySound = false;
+	}
 }

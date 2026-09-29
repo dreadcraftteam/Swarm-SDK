@@ -2832,14 +2832,11 @@ bool CBasePlayer::IsUseableEntity( CBaseEntity *pEntity, unsigned int requiredCa
 //-----------------------------------------------------------------------------
 bool CBasePlayer::CanPickupObject( CBaseEntity *pObject, float massLimit, float sizeLimit )
 {
-	// UNDONE: Make this virtual and move to HL2 player
-#if defined( HL2_DLL ) 
+#if defined( HL2_DLL ) || defined ( SDK_DLL ) // anyway dont working in asw engine
 	//Must be valid
 	if ( pObject == NULL )
 		return false;
 
-
-	
 	//Must move with physics
 	if ( pObject->GetMoveType() != MOVETYPE_VPHYSICS )
 		return false;
@@ -4509,23 +4506,26 @@ void CBasePlayer::PostThink()
 			
 			VPROF_SCOPE_END();
 
-			VPROF_SCOPE_BEGIN( "CBasePlayer::PostThink-Use" );
+			VPROF_SCOPE_BEGIN("CBasePlayer::PostThink-Use");
 			// Handle controlling an entity
-			if ( m_hUseEntity != NULL )
-			{ 
+			if (m_hUseEntity != NULL)
+			{
 				// if they've moved too far from the gun, or deployed another weapon, unuse the gun
-				if ( m_hUseEntity->OnControls( this ) && 
-					( !GetActiveWeapon() || GetActiveWeapon()->IsEffectActive( EF_NODRAW ) ||
-					( GetActiveWeapon()->GetActivity() == ACT_VM_HOLSTER ) 
-		
-					) )
-				{  
-					m_hUseEntity->Use( this, this, USE_SET, 2 );	// try fire the gun
-				}
-				else
+				if (m_hUseEntity != NULL && !FClassnameIs(m_hUseEntity, "player_pickup"))
 				{
-					// they've moved off the controls
-					ClearUseEntity();
+					// if they've moved too far from the gun, or deployed another weapon, unuse the gun
+					if (m_hUseEntity->OnControls(this) &&
+						(!GetActiveWeapon() || GetActiveWeapon()->IsEffectActive(EF_NODRAW) ||
+							(GetActiveWeapon()->GetActivity() == ACT_VM_HOLSTER)
+							))
+					{
+						m_hUseEntity->Use(this, this, USE_SET, 2);	// try fire the gun
+					}
+					else
+					{
+						// they've moved off the controls
+						ClearUseEntity();
+					}
 				}
 			}
 			VPROF_SCOPE_END();

@@ -565,7 +565,7 @@ public:
 	virtual bool			CanBreatheUnderwater() const { return false; }
 	virtual bool			CanRecoverCurrentDrowningDamage( void ) const { return true; }// Are we allowed to later recover the drowning damage we are taking right now?  (Not, can we right now recover drowning damage.)
 	virtual void			PlayerUse( void );
-	virtual void			PlayUseDenySound() {}
+	virtual void			PlayUseDenySound() { EmitSound("HL2Player.UseDeny"); }
 
 	virtual CBaseEntity		*FindUseEntity( void );
 	virtual bool			IsUseableEntity( CBaseEntity *pEntity, unsigned int requiredCaps );

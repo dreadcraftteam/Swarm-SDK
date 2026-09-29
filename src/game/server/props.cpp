@@ -3082,24 +3082,19 @@ float CPhysicsProp::GetCarryDistanceOffset( void )
 // Purpose: 
 //-----------------------------------------------------------------------------
 int CPhysicsProp::ObjectCaps()
-{ 
+{
 	int caps = BaseClass::ObjectCaps() | FCAP_WCEDIT_POSITION;
 
-	if ( HasSpawnFlags( SF_PHYSPROP_ENABLE_PICKUP_OUTPUT ) )
+	if (HasSpawnFlags(SF_PHYSPROP_ENABLE_PICKUP_OUTPUT))
 	{
 		caps |= FCAP_IMPULSE_USE;
 	}
-	else if ( CBasePlayer::CanPickupObject( this, 35, 128 ) )
+	else
 	{
 		caps |= FCAP_IMPULSE_USE;
-
-		if( hl2_episodic.GetBool() && HasInteraction( PROPINTER_PHYSGUN_CREATE_FLARE )  )
-		{
-			caps |= FCAP_USE_IN_RADIUS;
-		}
 	}
 
-	if( HasSpawnFlags( SF_PHYSPROP_RADIUS_PICKUP ) )
+	if (HasSpawnFlags(SF_PHYSPROP_RADIUS_PICKUP))
 	{
 		caps |= FCAP_USE_IN_RADIUS;
 	}
@@ -3114,17 +3109,17 @@ int CPhysicsProp::ObjectCaps()
 //			useType - 
 //			value - 
 //-----------------------------------------------------------------------------
-void CPhysicsProp::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_TYPE useType, float value )
+void CPhysicsProp::Use(CBaseEntity* pActivator, CBaseEntity* pCaller, USE_TYPE useType, float value)
 {
-	CBasePlayer *pPlayer = ToBasePlayer( pActivator );
-	if ( pPlayer )
+	CBasePlayer* pPlayer = ToBasePlayer(pActivator);
+	if (pPlayer)
 	{
-		if ( HasSpawnFlags( SF_PHYSPROP_ENABLE_PICKUP_OUTPUT ) )
+		if (HasSpawnFlags(SF_PHYSPROP_ENABLE_PICKUP_OUTPUT))
 		{
-			m_OnPlayerUse.FireOutput( this, this );
+			m_OnPlayerUse.FireOutput(this, this);
 		}
 
-		pPlayer->PickupObject( this );
+		pPlayer->PickupObject(this);
 	}
 }
 

@@ -11,17 +11,18 @@
 #include "server_class.h"
 #include "sdk_playeranimstate.h"
 #include "sdk_player_shared.h"
+#include "player_pickup.h"
 
 // Function table for each player state.
 class CSDKPlayerStateInfo
 {
 public:
 	SDKPlayerState m_iPlayerState;
-	const char *m_pStateName;
-	
-	void (CSDKPlayer::*pfnEnterState)();	// Init and deinit the state.
-	void (CSDKPlayer::*pfnLeaveState)();
-	void (CSDKPlayer::*pfnPreThink)();	// Do a PreThink() in this state.
+	const char* m_pStateName;
+
+	void (CSDKPlayer::* pfnEnterState)();	// Init and deinit the state.
+	void (CSDKPlayer::* pfnLeaveState)();
+	void (CSDKPlayer::* pfnPreThink)();	// Do a PreThink() in this state.
 };
 
 //-----------------------------------------------------------------------------
@@ -30,7 +31,7 @@ public:
 class CSDKPlayer : public CBaseMultiplayerPlayer
 {
 public:
-	DECLARE_CLASS( CSDKPlayer, CBaseMultiplayerPlayer );
+	DECLARE_CLASS(CSDKPlayer, CBaseMultiplayerPlayer);
 	DECLARE_SERVERCLASS();
 	DECLARE_PREDICTABLE();
 	DECLARE_DATADESC();
@@ -38,15 +39,15 @@ public:
 	CSDKPlayer();
 	~CSDKPlayer();
 
-	static CSDKPlayer *CreatePlayer( const char *className, edict_t *ed );
-	static CSDKPlayer* Instance( int iEnt );
+	static CSDKPlayer* CreatePlayer(const char* className, edict_t* ed);
+	static CSDKPlayer* Instance(int iEnt);
 
 	// This passes the event to the client's and server's CPlayerAnimState.
-	void DoAnimationEvent( PlayerAnimEvent_t event, int nData = 0 );
+	void DoAnimationEvent(PlayerAnimEvent_t event, int nData = 0);
 
-	virtual int FlashlightIsOn( void );
-	virtual void FlashlightTurnOn( void );
-	virtual void FlashlightTurnOff( void );
+	virtual int FlashlightIsOn(void);
+	virtual void FlashlightTurnOn(void);
+	virtual void FlashlightTurnOff(void);
 
 	virtual void PreThink();
 	virtual void PostThink();
@@ -57,52 +58,64 @@ public:
 	virtual void GiveDefaultItems();
 
 	// Animstate handles this.
-	void SetAnimation( PLAYER_ANIM playerAnim ) { return; }
+	void SetAnimation(PLAYER_ANIM playerAnim) { return; }
 
 	virtual void Precache();
-	virtual int			OnTakeDamage( const CTakeDamageInfo &inputInfo );
-	virtual int			OnTakeDamage_Alive( const CTakeDamageInfo &info );
-	virtual void Event_Killed( const CTakeDamageInfo &info );
-	virtual void TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vecDir, trace_t *ptr );
-	virtual void LeaveVehicle( const Vector &vecExitPoint, const QAngle &vecExitAngles );
-	
+	virtual int			OnTakeDamage(const CTakeDamageInfo& inputInfo);
+	virtual int			OnTakeDamage_Alive(const CTakeDamageInfo& info);
+	virtual void Event_Killed(const CTakeDamageInfo& info);
+	virtual void TraceAttack(const CTakeDamageInfo& inputInfo, const Vector& vecDir, trace_t* ptr);
+	virtual void LeaveVehicle(const Vector& vecExitPoint, const QAngle& vecExitAngles);
+
 	CWeaponSDKBase* GetActiveSDKWeapon() const;
-	virtual void	CreateViewModel( int viewmodelindex = 0 );
+	virtual void	CreateViewModel(int viewmodelindex = 0);
 
-	virtual void	CheatImpulseCommands( int iImpulse );
-	
-	virtual int		SpawnArmorValue( void ) const { return m_iSpawnArmorValue; }
-	virtual void	SetSpawnArmorValue( int i ) { m_iSpawnArmorValue = i; }
+	virtual void	CheatImpulseCommands(int iImpulse);
 
-	CNetworkQAngle( m_angEyeAngles );	// Copied from EyeAngles() so we can send it to the client.
-	CNetworkVar( int, m_iShotsFired );	// number of shots fired recently
+	virtual int		SpawnArmorValue(void) const { return m_iSpawnArmorValue; }
+	virtual void	SetSpawnArmorValue(int i) { m_iSpawnArmorValue = i; }
+
+	CNetworkQAngle(m_angEyeAngles);
+	CNetworkVar(int, m_iShotsFired);
 
 	// Tracks our ragdoll entity.
-	CNetworkHandle( CBaseEntity, m_hRagdoll );	// networked entity handle 
+	CNetworkHandle(CBaseEntity, m_hRagdoll);
 
 	void PhysObjectSleep();
 	void PhysObjectWake();
 
 	// Player avoidance
-	virtual	bool		ShouldCollide( int collisionGroup, int contentsMask ) const;
+	virtual	bool		ShouldCollide(int collisionGroup, int contentsMask) const;
 	void SDKPushawayThink(void);
 
-// In shared code.
+	virtual void PlayerUse(void);
+	virtual void PickupObject(CBaseEntity* pObject, bool bLimitMassAndSize = true);
+	virtual bool IsHoldingEntity(CBaseEntity* pEnt);
+	virtual void ForceDropOfCarriedPhysObjects(CBaseEntity* pOnlyIfHoldingThis = NULL);
+	virtual float GetHeldObjectMass(IPhysicsObject* pHeldObject);
+	virtual bool IsFollowingPhysics(void) { return false; }
+	virtual void ItemPostFrame(void);
+
+private:
+	bool m_bPlayUseDenySound;
+	float m_flTimeUseSuspended;
+
+	// In shared code.
 public:
-	void FireBullet( 
-		Vector vecSrc, 
-		const QAngle &shootAngles, 
-		float vecSpread, 
-		int iDamage, 
+	void FireBullet(
+		Vector vecSrc,
+		const QAngle& shootAngles,
+		float vecSpread,
+		int iDamage,
 		int iBulletType,
-		CBaseEntity *pevAttacker,
+		CBaseEntity* pevAttacker,
 		bool bDoEffects,
 		float x,
-		float y );
+		float y);
 
-	CNetworkVarEmbedded( CSDKPlayerShared, m_Shared );
-	virtual void			PlayerDeathThink( void );
-	virtual bool		ClientCommand( const CCommand &args );
+	CNetworkVarEmbedded(CSDKPlayerShared, m_Shared);
+	virtual void			PlayerDeathThink(void);
+	virtual bool		ClientCommand(const CCommand& args);
 
 	void IncreaseShotsFired() { m_iShotsFired++; if (m_iShotsFired > 16) m_iShotsFired = 16; }
 	void DecreaseShotsFired() { m_iShotsFired--; if (m_iShotsFired < 0) m_iShotsFired = 0; }
@@ -110,42 +123,39 @@ public:
 	int GetShotsFired() { return m_iShotsFired; }
 
 #if defined ( SDK_USE_SPRINTING )
-	void SetSprinting( bool bIsSprinting );
+	void SetSprinting(bool bIsSprinting);
 #endif // SDK_USE_SPRINTING
-	// Returns true if the player is allowed to attack.
-	bool CanAttack( void );
+	bool CanAttack(void);
 
 	virtual int GetPlayerStance();
 
-	// Called whenever this player fires a shot.
 	void NoteWeaponFired();
-	virtual bool WantsLagCompensationOnEntity( const CBasePlayer *pPlayer, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const;
+	virtual bool WantsLagCompensationOnEntity(const CBasePlayer* pPlayer, const CUserCmd* pCmd, const CBitVec<MAX_EDICTS>* pEntityTransmitBits) const;
 
-//------------------------------------------------------------------------------------------------
-// Player state management.
-//------------------------------------------------------------------------------------------------
+	//------------------------------------------------------------------------------------------------
+	// Player state management.
+	//------------------------------------------------------------------------------------------------
 public:
 
-	void State_Transition( SDKPlayerState newState );
-	SDKPlayerState State_Get() const;				// Get the current state.
+	void State_Transition(SDKPlayerState newState);
+	SDKPlayerState State_Get() const;
 
-	virtual bool	ModeWantsSpectatorGUI( int iMode ) { return ( iMode != OBS_MODE_DEATHCAM && iMode != OBS_MODE_FREEZECAM ); }
+	virtual bool	ModeWantsSpectatorGUI(int iMode) { return (iMode != OBS_MODE_DEATHCAM && iMode != OBS_MODE_FREEZECAM); }
 
 private:
-	bool SelectSpawnSpot( const char *pEntClassName, CBaseEntity* &pSpot );
+	bool SelectSpawnSpot(const char* pEntClassName, CBaseEntity*& pSpot);
 
-	void State_Enter( SDKPlayerState newState );	// Initialize the new state.
-	void State_Leave();								// Cleanup the previous state.
-	void State_PreThink();							// Update the current state.
+	void State_Enter(SDKPlayerState newState);
+	void State_Leave();
+	void State_PreThink();
 
-	// Specific state handler functions.
 	void State_Enter_WELCOME();
 	void State_PreThink_WELCOME();
 
 	void State_Enter_PICKINGTEAM();
 	void State_Enter_PICKINGCLASS();
 
-public: //Tony; I had this private but I need it public for initial spawns.
+public:
 	void MoveToNextIntroCamera();
 private:
 
@@ -158,82 +168,74 @@ private:
 	void State_Enter_DEATH_ANIM();
 	void State_PreThink_DEATH_ANIM();
 
-	// Find the state info for the specified state.
-	static CSDKPlayerStateInfo* State_LookupInfo( SDKPlayerState state );
+	static CSDKPlayerStateInfo* State_LookupInfo(SDKPlayerState state);
 
-	// This tells us which state the player is currently in (joining, observer, dying, etc).
-	// Each state has a well-defined set of parameters that go with it (ie: observer is movetype_noclip, non-solid,
-	// invisible, etc).
-	CNetworkVar( SDKPlayerState, m_iPlayerState );
+	CNetworkVar(SDKPlayerState, m_iPlayerState);
 
-	CSDKPlayerStateInfo *m_pCurStateInfo;			// This can be NULL if no state info is defined for m_iPlayerState.
-	bool HandleCommand_JoinTeam( int iTeam );
+	CSDKPlayerStateInfo* m_pCurStateInfo;
+	bool HandleCommand_JoinTeam(int iTeam);
 
-	bool BecomeRagdollOnClient( const Vector &force );
+	bool BecomeRagdollOnClient(const Vector& force);
 
 #if defined ( SDK_USE_PRONE )
-	void InitProne( void );
+	void InitProne(void);
 #endif // SDK_USE_PRONE
 
 #if defined ( SDK_USE_SPRINTING )
-	void InitSprinting( void );
-	bool IsSprinting( void );
-	bool CanSprint( void );
+	void InitSprinting(void);
+	bool IsSprinting(void);
+	bool CanSprint(void);
 #endif // SDK_USE_SPRINTING
 
-	void InitSpeeds( void ); //Tony; called EVERY spawn on server and client after class has been chosen (if any!)
+	void InitSpeeds(void);
 
-	// from CBasePlayer
-	void			SetupVisibility( CBaseEntity *pViewEntity, unsigned char *pvs, int pvssize );
+	void			SetupVisibility(CBaseEntity* pViewEntity, unsigned char* pvs, int pvssize);
 
-	bool			CanMove( void ) const;
+	bool			CanMove(void) const;
 
 	virtual void	SharedSpawn();
 
-	virtual const Vector	GetPlayerMins( void ) const; // uses local player
-	virtual const Vector	GetPlayerMaxs( void ) const; // uses local player
+	virtual const Vector	GetPlayerMins(void) const;
+	virtual const Vector	GetPlayerMaxs(void) const;
 
-	virtual void		CommitSuicide( bool bExplode = false, bool bForce = false );
+	virtual void		CommitSuicide(bool bExplode = false, bool bForce = false);
 
 private:
-	// Last usercmd we shot a bullet on.
 	int m_iLastWeaponFireUsercmd;
 
-	virtual void Weapon_Equip( CBaseCombatWeapon *pWeapon );		//Tony; override so diethink can be cleared
-	virtual void ThrowActiveWeapon( void );
-	virtual void SDKThrowWeapon( CWeaponSDKBase *pWeapon, const Vector &vecForward, const QAngle &vecAngles, float flDiameter  );
-	virtual void SDKThrowWeaponDir( CWeaponSDKBase *pWeapon, const Vector &vecForward, Vector *pVecThrowDir );
-	// When the player joins, it cycles their view between trigger_camera entities.
-	// This is the current camera, and the time that we'll switch to the next one.
+	virtual void Weapon_Equip(CBaseCombatWeapon* pWeapon);
+	virtual void ThrowActiveWeapon(void);
+	virtual void SDKThrowWeapon(CWeaponSDKBase* pWeapon, const Vector& vecForward, const QAngle& vecAngles, float flDiameter);
+	virtual void SDKThrowWeaponDir(CWeaponSDKBase* pWeapon, const Vector& vecForward, Vector* pVecThrowDir);
+
 	EHANDLE m_pIntroCamera;
 	float m_fIntroCamTime;
 
 	void CreateRagdollEntity();
-	void DestroyRagdoll( void );
+	void DestroyRagdoll(void);
 
+	CSDKPlayerAnimState* m_PlayerAnimState;
 
-	CSDKPlayerAnimState *m_PlayerAnimState;
-
-	CNetworkVar( bool, m_bSpawnInterpCounter );
+	CNetworkVar(bool, m_bSpawnInterpCounter);
 
 	int m_iSpawnArmorValue;
-	IMPLEMENT_NETWORK_VAR_FOR_DERIVED( m_ArmorValue );
+	IMPLEMENT_NETWORK_VAR_FOR_DERIVED(m_ArmorValue);
 public:
 #if defined ( SDK_USE_PRONE )
-	bool m_bUnProneToDuck;		//Tony; GAMEMOVEMENT USED VARIABLE
+	bool m_bUnProneToDuck;
 #endif // SDK_USE_PRONE
 
 };
 
-inline CSDKPlayer *ToSDKPlayer( CBaseEntity *pEntity )
+inline CSDKPlayer* ToSDKPlayer(CBaseEntity* pEntity)
 {
-	if ( !pEntity || !pEntity->IsPlayer() )
+	if (!pEntity || !pEntity->IsPlayer())
 		return NULL;
 
 #ifdef _DEBUG
-	Assert( dynamic_cast<CSDKPlayer*>( pEntity ) != 0 );
+	Assert(dynamic_cast<CSDKPlayer*>(pEntity) != 0);
 #endif
-	return static_cast< CSDKPlayer* >( pEntity );
+	return static_cast<CSDKPlayer*>(pEntity);
 }
 
 inline SDKPlayerState CSDKPlayer::State_Get() const

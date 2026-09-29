@@ -1294,7 +1294,6 @@ void CBasePlayer::PlayerUse ( void )
 	// Found an object
 	if ( pUseEntity )
 	{
-
 		//!!!UNDONE: traceline here to prevent +USEing buttons through walls			
 
 		int caps = pUseEntity->ObjectCaps();

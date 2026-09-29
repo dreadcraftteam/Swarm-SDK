@@ -26,6 +26,7 @@
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+#include <igameresources.h>
 
 // The minimum time a hud hint for a weapon should be on screen. If we switch away before
 // this, then teh hud hint counter will be deremented so the hint will be shown again, as
@@ -1384,14 +1385,28 @@ bool CBaseCombatWeapon::Holster( CBaseCombatWeapon *pSwitchingTo )
 { 
 	MDLCACHE_CRITICAL_SECTION();
 
+	Msg("[Holster] Called on %s\n", GetClassname());
+
 	// cancel any reload in progress.
 	m_bInReload = false; 
 
-	// kill any think functions
 	SetThink(NULL);
 
-	// Send holster animation
-	SendWeaponAnim( ACT_VM_HOLSTER );
+	if (m_hOwner.Get() )
+	{
+		Msg("[Holster] Owner dead, returning true\n");
+		return true;
+	}
+
+	if (!IsWeaponVisible())
+	{
+		Msg("[Holster] Weapon not visible, returning true\n");
+		return true;
+	}
+
+	Msg("[Holster] Calling SendWeaponAnim(ACT_VM_HOLSTER)\n");
+	SendWeaponAnim(ACT_VM_HOLSTER);
+	Msg("[Holster] SendWeaponAnim done\n");
 
 	// Some weapon's don't have holster anims yet, so detect that
 	float flSequenceDuration = 0;
