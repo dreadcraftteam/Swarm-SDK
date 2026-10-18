@@ -22,6 +22,7 @@
 
 #include "decals.h"
 #include "util_shared.h"
+#include "ammodef.h"
 
 #ifdef CLIENT_DLL
 	#include "c_sdk_player.h"
@@ -158,13 +159,40 @@ void CSDKPlayer::FireBullet(
 		// add damage to entity that we hit
 
 #ifdef GAME_DLL
-		CTakeDamageInfo info( pevAttacker, pevAttacker, fCurrentDamage, iDamageType );
-		CalculateBulletDamageForce( &info, iBulletType, vecDir, tr.endpos );
-		tr.m_pEnt->DispatchTraceAttack( info, vecDir, &tr );
+		CTakeDamageInfo info(pevAttacker, pevAttacker, fCurrentDamage, iDamageType);
+		info.SetDamagePosition(tr.endpos);
+		info.SetDamageType(info.GetDamageType() & ~DMG_PREVENT_PHYSICS_FORCE);
+		
+		int iAmmoIndex = -1;
 
-		TraceAttackToTriggers( info, tr.startpos, tr.endpos, vecDir );
+		if (pevAttacker && pevAttacker->IsPlayer())
+		{
+			CBaseCombatWeapon* pWpn = ToBasePlayer(pevAttacker)->GetActiveWeapon();
+			
+			if (pWpn)
+			{
+				iAmmoIndex = pWpn->GetPrimaryAmmoType();
+			}
+		}
 
-		ApplyMultiDamage();
+		if (iAmmoIndex < 1 || iAmmoIndex >= GetAmmoDef()->NumAmmoTypes())
+		{
+			iAmmoIndex = GetAmmoDef()->Index("mp5");
+		}
+
+		float flPhysForce = GetAmmoDef()->DamageForce(iAmmoIndex) * 25;
+
+		if (flPhysForce <= 0.0f)
+		{
+			flPhysForce = 1.0f;
+		}
+
+		Vector vecForce = vecDir * fCurrentDamage * flPhysForce;
+		info.SetDamageForce(vecForce);
+
+		info.SetAmmoType(iAmmoIndex);
+
+		tr.m_pEnt->TakeDamage(info);
 #endif
 }
 
