@@ -78,6 +78,7 @@ END_DATADESC()
 void CNPC_Surface::Precache()
 {
 	PrecacheModel("models/Hydra.mdl");
+	PrecacheEffect("watersplash");
 	BaseClass::Precache();
 }
 
@@ -153,9 +154,34 @@ void CNPC_Surface::VPhysicsCollision(int index, gamevcollisionevent_t* pEvent)
 {
 	BaseClass::VPhysicsCollision(index, pEvent);
 
+	// the sphere hit is:  i = pEvent->pObjects[index]->GetGameIndex();
+	// CBaseEntity *pHit = pEvent->pEntities[!index];
 	int nSphere = pEvent->pObjects[index]->GetGameIndex();
 
 	m_bContact[nSphere] = true;
+
+	static int count = 0;
+	count++;
+
+	if (count % 10 == 0)
+	{
+		// Create splash effect
+		CEffectData	data;
+		data.m_fFlags = 0;
+
+		Vector pos;
+		pEvent->pObjects[index]->GetPosition(&pos, NULL);
+
+		Vector fountainOrigin(-1980, -1792, 1);
+		Vector rad = pos - fountainOrigin;
+		data.m_vOrigin = pos + Vector(0, 0, 5.0f);
+
+		// FIXME: needs to be the correct vector for the impact!
+		rad.NormalizeInPlace();
+		data.m_vNormal = Vector( 0, 0, 1 );
+		data.m_flScale = 0.1f;
+		DispatchEffect("watersplash", data);
+	}
 }
 
 //-----------------------------------------------------------------------------
