@@ -58,8 +58,6 @@ public:
 	virtual bool	GetSoundSpatialization(SpatializationInfo_t& info);
 
 	IMaterial* m_pMaterial;
-	IMaterial* m_pArmatureMaterialPrePass;
-	IMaterial* m_pArmatureMaterialMain;
 
 	CUtlVector< Vector	> m_vecSurfacePos;
 	CUtlVector< CInterpolatedVar< Vector > > m_iv_vecSurfacePos;
@@ -97,8 +95,6 @@ END_RECV_TABLE()
 C_NPC_Surface::C_NPC_Surface()
 {
 	m_pMaterial = NULL;
-	m_pArmatureMaterialPrePass = NULL;
-	m_pArmatureMaterialMain = NULL;
 
 	m_vecSurfacePos.EnsureCount(MAX_SURFACE_ELEMENTS);
 	m_iv_vecSurfacePos.EnsureCount(MAX_SURFACE_ELEMENTS);
