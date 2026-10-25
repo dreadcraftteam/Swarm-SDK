@@ -32,6 +32,6 @@ void calcVertexNormalNColorUVTan(float, float, float, int, CornerInfo const*, Co
 void calcVertexNormalNColor(float, float, float, int, CornerInfo const*, CornerInfo const*, IndexTriVertexBuffer*);
 void calcVertexNormalNColorTanNoUV(float, float, float, int, CornerInfo const*, CornerInfo const*, IndexTriVertexBuffer*);
 void calcVertexNormalNTexCoord4(float, float, float, int, CornerInfo const*, CornerInfo const*, IndexTriVertexBuffer*);
-//void calcVertexNormalNColorUVTanForBlob(float, float, float, int, CornerInfo const*, CornerInfo const*, IndexTriVertexBuffer*);
+void calcVertexNormalNColorUVTanForBlob(float, float, float, int, CornerInfo const*, CornerInfo const*, IndexTriVertexBuffer*);
 
 #endif // USERFUNCTIONS_H

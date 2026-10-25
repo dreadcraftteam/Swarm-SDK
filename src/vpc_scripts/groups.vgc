@@ -28,5 +28,6 @@ $Group "everything"
 	"responserules_runtime"
 	"server"
 	"shaderlib"
+	"valve_avi"
 	"videocfg"
 }

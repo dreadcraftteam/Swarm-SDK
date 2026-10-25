@@ -1,0 +1,3 @@
+If this dlls don't loading by Alien Swarm engine, put their to "Steam/SteamApps/Common/Alien Swarm/bin/" folder!
+
+damnit.

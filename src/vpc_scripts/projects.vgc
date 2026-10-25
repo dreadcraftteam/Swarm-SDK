@@ -52,6 +52,11 @@ $Project "shaderlib"
 	"materialsystem\shaderlib\shaderlib.vpc"
 }
 
+$Project "valve_avi"
+{
+	"valve_avi/valve_avi.vpc"
+}
+
 $Project "videocfg"
 {
 	"videocfg/videocfg.vpc"
