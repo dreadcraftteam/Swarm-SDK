@@ -1,5 +1,5 @@
 ## :alien: Alien Swarm SDK
-This project was created to simplify the creation of your modifications and games on the Alien Swarm engine (Source Engine: Alien Swarm engine branch). Access to the Alien Swarm source code is provided here. Please note that some of the projects available here are ports from leaked CSGO sources (VideoCFG, Interfaces and MeshUtils), therefore, if you are planning to release a game on Steam based on this SDK, then you need to delete these projects.
+This project was created to simplify the creation of your modifications and games on the Alien Swarm engine (Source Engine: Alien Swarm engine branch). Access to the Alien Swarm source code is provided here. Please note that some of the projects available here are ports from leaked CSGO sources, therefore, if you are planning to release a game on Steam based on this SDK, then you need to delete these projects.
 
 Pull requests are welcome!
 
