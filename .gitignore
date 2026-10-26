@@ -83,6 +83,8 @@ src/lib/public/interfaces.lib
 src/lib/public/responserules_runtime.lib
 src/lib/public/shaderlib.lib
 src/lib/public/videocfg.lib
+!src/lib/common/**
+!game/bin/**
 
 # shader files
 *.tmp
