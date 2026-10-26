@@ -67,18 +67,6 @@ static bool g_bDisableVolumeChanges = false;
 // We don't support the alpha channel in bink files due to dx8.  Can make it work if necessary.
 //#define SUPPORT_BINK_ALPHA
 
-// -----------------------------------------------------------------------
-// Local compatibility helpers - not present in the ASW engine branch
-// -----------------------------------------------------------------------
-static inline bool IsGameConsole()
-{
-#if defined( _GAMECONSOLE )
-	return true;
-#else
-	return false;
-#endif
-}
-
 class CBIKMaterial;
 
 PathTypeFilter_t GetMoviePathFilter()
@@ -103,7 +91,15 @@ public:
 	virtual void RegenerateTextureBits( ITexture *pTexture, IVTFTexture *pVTFTexture, Rect_t *pRect );
 	virtual void Release();
 
-	virtual bool HasPreallocatedScratchTexture() const { return IsGameConsole() ? bink_use_preallocated_scratch_texture.GetBool() : false; }
+	virtual bool HasPreallocatedScratchTexture() const
+	{
+	#if defined( _GAMECONSOLE )
+		return bink_use_preallocated_scratch_texture.GetBool();
+	#else
+		return false;
+	#endif
+	}
+
 	virtual IVTFTexture *GetPreallocatedScratchTexture();
 
 private:
@@ -127,7 +123,15 @@ public:
 	virtual void RegenerateTextureBits( ITexture *pTexture, IVTFTexture *pVTFTexture, Rect_t *pRect );
 	virtual void Release();
 
-	virtual bool HasPreallocatedScratchTexture() const { return IsGameConsole() ? bink_use_preallocated_scratch_texture.GetBool() : false; }
+	virtual bool HasPreallocatedScratchTexture() const
+	{
+	#if defined( _GAMECONSOLE )
+		return bink_use_preallocated_scratch_texture.GetBool();
+	#else
+		return false;
+	#endif
+	}
+
 	virtual IVTFTexture *GetPreallocatedScratchTexture();
 
 private:
@@ -151,7 +155,15 @@ public:
 	virtual void RegenerateTextureBits( ITexture *pTexture, IVTFTexture *pVTFTexture, Rect_t *pRect );
 	virtual void Release();
 
-	virtual bool HasPreallocatedScratchTexture() const { return IsGameConsole() ? bink_use_preallocated_scratch_texture.GetBool() : false; }
+	virtual bool HasPreallocatedScratchTexture() const
+	{
+	#if defined( _GAMECONSOLE )
+		return bink_use_preallocated_scratch_texture.GetBool();
+	#else
+		return false;
+	#endif
+	}
+
 	virtual IVTFTexture *GetPreallocatedScratchTexture();
 
 private:
@@ -174,7 +186,15 @@ public:
 	virtual void RegenerateTextureBits( ITexture *pTexture, IVTFTexture *pVTFTexture, Rect_t *pRect );
 	virtual void Release();
 
-	virtual bool HasPreallocatedScratchTexture() const { return IsGameConsole() ? bink_use_preallocated_scratch_texture.GetBool() : false; }
+	virtual bool HasPreallocatedScratchTexture() const
+	{
+	#if defined( _GAMECONSOLE )
+		return bink_use_preallocated_scratch_texture.GetBool();
+	#else
+		return false;
+	#endif
+	}
+
 	virtual IVTFTexture *GetPreallocatedScratchTexture();
 
 private:
