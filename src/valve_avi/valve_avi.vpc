@@ -31,8 +31,7 @@ $Project "Valve AVI"
 	$Folder	"Source Files"
 	{
 		$File	"avi.cpp" [$WINDOWS]
-		$File	"avi_osx.cpp" [$OSXALL]
-		$File	"bink.cpp" [!$OSXALL]
+		$File	"bink.cpp"
 	}
 
 	$Folder	"Header Files"

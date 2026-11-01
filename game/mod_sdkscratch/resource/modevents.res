@@ -50,4 +50,15 @@
 	"spec_target_updated"
 	{
 	}
+
+	"jukebox_play_random"
+	{
+		"fadeintime"	"float"
+		"defaulttrack"	"string"
+	}
+
+	"jukebox_stop"
+	{
+		"fadeouttime	"float"
+	}
 }

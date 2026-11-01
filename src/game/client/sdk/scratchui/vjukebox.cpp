@@ -35,6 +35,9 @@
 #ifdef SWARM_DLL
 #include "asw_vgui_music_importer.h"
 #include "c_asw_jukebox.h"
+#elif SDK_DLL
+#include "sdk_vgui_music_importer.h"
+#include "c_sdk_jukebox.h"
 #endif
 #include <vgui_controls/ListPanel.h>
 
@@ -151,6 +154,8 @@ void JukeboxListItem::SetTrackIndex( int nTrackIndex )
 	m_nTrackIndex = nTrackIndex;
 #ifdef SWARM_DLL
 	m_LblName->SetText( g_ASWJukebox.GetTrackName( m_nTrackIndex ) );
+#elif SDK_DLL
+	m_LblName->SetText( g_SDKJukebox.GetTrackName( m_nTrackIndex ) );
 #endif
 }
 
@@ -300,10 +305,13 @@ void VJukebox::Activate()
 {
 	BaseClass::Activate();
 
+	// Reload the music playlist	
 #ifdef SWARM_DLL
-	// Reload the music playlist
 	if( g_ASWJukebox.GetTrackCount() == 0 )
 		g_ASWJukebox.Init();
+#elif SDK_DLL
+	if( g_SDKJukebox.GetTrackCount() == 0 )
+		g_SDKJukebox.Init();
 #endif
 
 	UpdateTrackList();
@@ -316,8 +324,8 @@ void VJukebox::UpdateTrackList()
 #ifdef SWARM_DLL
 	// Add the addons to the list panel 
 	int nTracks = g_ASWJukebox.GetTrackCount();
-#else
-	int nTracks;
+#elif SDK_DLL
+	int nTracks = g_SDKJukebox.GetTrackCount();
 #endif
 
 	KeyValues *kv = new KeyValues("item");
@@ -326,6 +334,8 @@ void VJukebox::UpdateTrackList()
 	{		
 #ifdef SWARM_DLL
 		g_ASWJukebox.PrepareTrackKV( i, kv );
+#elif SDK_DLL
+		g_SDKJukebox.PrepareTrackKV( i, kv );
 #endif
 		m_GplTrackList->AddItem(kv, 0, false, false);
 	}
@@ -380,11 +390,13 @@ void VJukebox::OnCommand(const char *command)
 		OnKeyCodePressed( KEY_XBUTTON_B );
 #ifdef SWARM_DLL
 		g_ASWJukebox.SavePlaylist();
+#elif SDK_DLL
+		g_SDKJukebox.SavePlaylist();
 #endif
 	}
 	else if ( FStrEq( command, "AddTrackButton" ) )
 	{
-#ifdef SWARM_DLL
+#if defined (SWARM_DLL) || defined (SDK_DLL)
 		MusicImporterDialog::OpenImportDialog( this );
 #endif
 	}
@@ -394,10 +406,14 @@ void VJukebox::OnCommand(const char *command)
 		{
 #ifdef SWARM_DLL
 			g_ASWJukebox.MarkTrackForDeletion( m_GplTrackList->GetSelectedItem( i ) );
+#elif SDK_DLL
+			g_SDKJukebox.MarkTrackForDeletion( m_GplTrackList->GetSelectedItem( i ) );
 #endif
 		}
 #ifdef SWARM_DLL
 		g_ASWJukebox.Cleanup();
+#elif SDK_DLL
+		g_SDKJukebox.Cleanup();
 #endif
 		UpdateTrackList();
 	}
