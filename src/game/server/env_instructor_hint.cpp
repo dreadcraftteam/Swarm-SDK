@@ -12,6 +12,8 @@
 #ifdef INFESTED_DLL
 	#include "asw_marine.h"
 	#include "asw_player.h"
+#elif defined( SDK_DLL )
+    #include "sdk_player.h"
 #endif
 
 // memdbgon must be the last include file in a .cpp file!!!
@@ -120,6 +122,32 @@ void CEnvInstructorHint::InputShowHint( inputdata_t &inputdata )
 		if ( pMarine )
 		{
 			pActivator = pMarine->GetCommander();
+		}
+#elif defined( SDK_DLL )
+		if ( inputdata.value.StringID() != NULL_STRING )
+		{
+			CBaseEntity *pTarget = gEntList.FindEntityByName( NULL, inputdata.value.String() );
+			pActivator = ToSDKPlayer( pTarget );
+			
+			if ( pActivator )
+			{
+				bFilterByActivator = true;
+			}
+		}
+
+		if ( !pActivator )
+		{
+			pActivator = ToSDKPlayer( inputdata.pActivator );
+			
+			if ( pActivator )
+			{
+				bFilterByActivator = true;
+			}
+		}
+
+		if ( !pActivator && !GameRules()->IsMultiplayer() )
+		{
+			pActivator = UTIL_GetLocalPlayer();
 		}
 #else
 		if ( inputdata.value.StringID() != NULL_STRING )
