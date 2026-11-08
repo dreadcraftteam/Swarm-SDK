@@ -11,9 +11,9 @@ Pull requests are welcome!
 - Many sdk improvements and fixes
 
 ## :pushpin: Current tasks
-- Add game instructor implementation for scratch sdk
 - Add more functionality for surfacerender.cpp
 - Restore Ep3 and L4D shaders
+- WebM video support in all engine
 
 ## :hammer: How to build
 1. Download Visual Studio 2010 (or VS2010 build tools with VS2022)
