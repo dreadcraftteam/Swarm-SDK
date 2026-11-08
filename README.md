@@ -7,13 +7,13 @@ Pull requests are welcome!
 - Shared ASW gameui in client
 - Scratch SDK (sdk template from SDK 2007 with many improvements)
 - Restored blobulator functionality
-- Ability to compile shader binaries (game_shader_dx9 with HLSL shaders)
+- Ability to compile shader binaries (game_shader_dx9 and HLSL shaders)
 - Many sdk improvements and fixes
 
 ## :pushpin: Current tasks
 - Add more functionality for surfacerender.cpp
 - Restore Ep3 and L4D shaders
-- WebM video support in all engine
+- Support for WebM video throughout the engine
 
 ## :hammer: How to build
 1. Download Visual Studio 2010 (or VS2010 build tools with VS2022)
