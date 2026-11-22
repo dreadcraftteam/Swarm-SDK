@@ -24,8 +24,6 @@ $Project "Client (Scratch)"
 	$Folder	"Source Files"
 	{
 		-$File	"$SRCDIR\game\shared\weapon_parse_default.cpp"
-		$File	"c_mod_lesson_stubs.cpp"
-
 		$File	"c_team_objectiveresource.cpp"
 		$File	"c_team_objectiveresource.h"
 		$File	"c_team_train_watcher.cpp"
